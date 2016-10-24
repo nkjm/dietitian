@@ -18,11 +18,11 @@ angular.module("dietitian")
     };
 
     $scope.config = {};
-    $scope.config.targetCalorie = 3200;
-    $scope.config.targetCarb = 100;
-    $scope.config.targetProtein = 150;
-    $scope.config.targetFat = 80;
-    $scope.config.targetFiber = 5;
+    $scope.config.targetCalorie = 2650;
+    $scope.config.targetCarb = 65;
+    $scope.config.targetProtein = 60;
+    $scope.config.targetFat = 30;
+    $scope.config.targetFiber = 20;
     $scope.config.targetAsh = 20;
 
     $scope.ui.refreshTodayCalorieChart = 1;
