@@ -6,6 +6,8 @@ const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_MID = process.env.LINE_MID;
 const BOT_ADMIN_LINE_MID = process.env.BOT_ADMIN_LINE_MID;
 const crypto = require('crypto');
+const request = require('request');
+const Promise = require('bluebird');
 
 module.exports = class LineBot {
 
@@ -18,7 +20,33 @@ module.exports = class LineBot {
         return true;
     }
 
-    static sendMessage(){
+    static reply(replyToken, message){
+        return new Promise(function(resolve, reject){
+            let headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + LINE_CHANNEL_ACCESS_TOKEN
+            };
+            let form = {
+                replyToken: replyToken,
+                messages: [{
+                    type: 'text',
+                    text: message
+                }]
+            }
+            let url = 'https://api.line.me/v2/bot/message/reply';
+            request({
+                url: url,
+                method: 'POST',
+                headers: headers,
+                form: form
+            }, function (error, response, body) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
     }
 
 };

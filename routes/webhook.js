@@ -23,6 +23,8 @@ router.post('/', (req, res, next) => {
     let person = {
         line_id: req.body.events[0].source.userId
     }
+    let replyToken = req.body.events[0].replyToken;
+
     TextMiner.getFoodListFromMessage(message)
     .then(
         function(foodList){
@@ -54,17 +56,21 @@ router.post('/', (req, res, next) => {
             }
 
             // 完了メッセージをユーザーに送信。
-            // *personは存在している前提
-            /*
-            let message = ''; // 栄養摂取状況にもとづいたメッセージを作成。
-            LineBot.sendMessage(person, message);
-            */
+            let message = 'いいっすねー。'; // 栄養摂取状況にもとづいたメッセージを作成。
+            LineBot.reply(replyToken, message);
 
+
+        },
+        function(error){
+            Promise.reject(error);
+        }
+    ).then(
+        function(response){
             return res.status(200).end();
         },
         function(error){
-            console.log(error.message);
-            return res.json(error);
+            console.log(error);
+            return res.status(200).end();
         }
     );
 });
