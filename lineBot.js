@@ -26,7 +26,7 @@ module.exports = class LineBot {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + LINE_CHANNEL_ACCESS_TOKEN
             };
-            let form = {
+            let body = {
                 replyToken: replyToken,
                 messages: [{
                     type: 'text',
@@ -40,7 +40,8 @@ module.exports = class LineBot {
                 url: url,
                 method: 'POST',
                 headers: headers,
-                form: form
+                body: body,
+                json: true
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
