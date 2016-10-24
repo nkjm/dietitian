@@ -8,7 +8,7 @@ const app = require('../app');
 router.get('/', (req, res, next) => {
     // 仮のユーザー情報
     let person = {
-        id: '12345',
+        line_id: 'U35df722ecd249c60b104ee32448bfaae',
         lastname: '中嶋',
         firstname: '一樹',
         sex: 'male',
@@ -21,8 +21,8 @@ router.get('/', (req, res, next) => {
     };
 
     // Socket.IOのチャネル(Name Space)をオープン。
-    if (!cache.get(person.id)){
-        let channel = app.io.of('/' + person.id);
+    if (!cache.get(person.line_id)){
+        let channel = app.io.of('/' + person.line_id);
 
         // Socket.IOでListenするEventを登録。
         channel.on('connection', function(socket){
@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => {
         });
 
         // Channelを共有キャッシュに保存。
-        cache.put(person.id, channel);
+        cache.put(person.line_id, channel);
     }
 
     // UIを出力。

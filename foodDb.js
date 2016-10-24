@@ -3,7 +3,7 @@
 const request = require('request');
 const Promise = require('bluebird');
 //const dbPrefix = 'https://apex.oracle.com/pls/apex/evangelist/nutrition';
-const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/nutrition';
+const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
 
 module.exports = class foodDb {
     static getFoodListWithNutrition(foodList){

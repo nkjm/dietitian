@@ -8,5 +8,5 @@ angular.module("dietitian")
     }
 
     // Connect to My Channel.
-    socket.connect(person.id);
+    socket.connect(person.line_id);
 });

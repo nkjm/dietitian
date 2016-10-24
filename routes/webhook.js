@@ -17,10 +17,12 @@ router.post('/', (req, res, next) => {
         return res.status(401).send('Signature validation failed.');
     }
     console.log('Signature validation succeeded.');
-    console.log(req.body.events);
 
     // テキストメッセージから食品リストを抽出する。
     let message = req.body.events[0].message.text;
+    let person = {
+        line_id: req.body.events[0].source.userId
+    }
     TextMiner.getFoodListFromMessage(message)
     .then(
         function(foodList){
@@ -36,7 +38,7 @@ router.post('/', (req, res, next) => {
             // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
             let dietDate = '2016-10-24';
             let dietType = 'dinner';
-            return PersonalHistoryDb.saveFoodListAsDietHistory(person.id, dietDate, dietType, foodListWithNutrition);
+            return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
         },
         function(error){
             console.log(error.message);
@@ -46,7 +48,7 @@ router.post('/', (req, res, next) => {
         function(savedDietHistoryList){
 
             // WebSocketを通じて更新を通知
-            let channel = cache.get(person.id);
+            let channel = cache.get(person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
@@ -58,7 +60,7 @@ router.post('/', (req, res, next) => {
             LineBot.sendMessage(person, message);
             */
 
-            return res.status(200);
+            return res.status(200).end();
         },
         function(error){
             console.log(error.message);
@@ -70,10 +72,9 @@ router.post('/', (req, res, next) => {
 router.get('/test', (req, res, next) => {
 
     // 仮のテスト用データ
-    const message = '納豆';
-    const person = {
-        id: '12345',
-        name: '中嶋 一樹'
+    let message = '納豆';
+    let person = {
+        line_id: 'U35df722ecd249c60b104ee32448bfaae',
     }
 
     // テキストメッセージから食品リストを抽出する。
@@ -92,7 +93,7 @@ router.get('/test', (req, res, next) => {
             // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
             let dietDate = '2016-10-24';
             let dietType = 'breakfast';
-            return PersonalHistoryDb.saveFoodListAsDietHistory(person.id, dietDate, dietType, foodListWithNutrition);
+            return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
         },
         function(error){
             console.log(error.message);
@@ -102,7 +103,7 @@ router.get('/test', (req, res, next) => {
         function(savedDietHistoryList){
 
             // WebSocketを通じて更新を通知
-            let channel = cache.get(person.id);
+            let channel = cache.get(person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
@@ -114,7 +115,7 @@ router.get('/test', (req, res, next) => {
             LineBot.sendMessage(person, message);
             */
 
-            res.json({message: 'Diet History Saved.'});
+            res.status(200).end();
         },
         function(error){
             console.log(error.message);

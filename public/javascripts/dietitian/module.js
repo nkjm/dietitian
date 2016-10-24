@@ -8,7 +8,7 @@ angular.module("dietitian", [])
     this.dbPrefix = location.protocol + '//' + location.host + '/personalHistoryDb';
 
     this.getTodayHistory = function(){
-        var url = this.dbPrefix + "/person/" + person.id + "/diet_history/today";
+        var url = this.dbPrefix + "/person/" + person.line_id + "/diet_history/today";
         return $http({
             url: url,
             method: "get"

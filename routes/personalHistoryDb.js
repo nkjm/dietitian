@@ -6,8 +6,8 @@ const cache = require('memory-cache');
 const app = require('../app');
 const PersonalHistoryDb = require('../personalHistoryDb');
 
-router.get('/person/:personId/diet_history/today', (req, res, next) => {
-    PersonalHistoryDb.getTodayHistory(req.params.personId)
+router.get('/person/:lineId/diet_history/today', (req, res, next) => {
+    PersonalHistoryDb.getTodayHistory(req.params.lineId)
     .then(
         function(history){
             res.json(history);

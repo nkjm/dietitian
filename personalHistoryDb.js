@@ -3,16 +3,16 @@
 const request = require('request');
 const Promise = require('bluebird');
 const mecab = require('mecab-async');
-const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/nutrition';
+const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
 
 module.exports = class personalHistoryDb {
-    static getTodayHistory(personId){
+    static getTodayHistory(lineId){
         return new Promise(function(resolve, reject){
             let headers = {
                 'Content-Type': 'application/json'
             };
             request({
-                url: dbPrefix + '/person/' + personId + '/diet_history/today',
+                url: dbPrefix + '/person/' + lineId + '/diet_history/today',
                 method: 'GET',
                 headers: headers,
                 json: true,
@@ -30,7 +30,7 @@ module.exports = class personalHistoryDb {
         });
     }
 
-    static saveFoodListAsDietHistory(personId, dietDate, dietType, foodList){
+    static saveFoodListAsDietHistory(lineId, dietDate, dietType, foodList){
         return new Promise(function(resolve, reject){
             let savedFoodList = [];
             for (let food of foodList){
@@ -38,7 +38,7 @@ module.exports = class personalHistoryDb {
                     continue;
                 }
                 let dietHistory = {
-                    person_id: personId,
+                    line_id: lineId,
                     food: food.food_name,
                     diet_date: dietDate,
                     diet_type: dietType,
