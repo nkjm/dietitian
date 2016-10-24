@@ -35,7 +35,7 @@ module.exports = class LineBot {
             }
             let url = 'https://api.line.me/v2/bot/message/reply';
             console.log(headers);
-            console.log(form);
+            console.log(body);
             request({
                 url: url,
                 method: 'POST',
