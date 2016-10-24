@@ -28,8 +28,7 @@ router.post('/', (req, res, next) => {
     .then(
         function(person){
             // メッセージから食品を抽出する。
-            console.log(message);
-            TextMiner.getFoodListFromMessage(message);
+            return TextMiner.getFoodListFromMessage(message);
         },
         function(error){
             return Promise.reject(error);
