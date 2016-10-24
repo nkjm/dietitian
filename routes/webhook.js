@@ -8,6 +8,7 @@ const Promise = require('bluebird');
 const TextMiner = require('../textMiner');
 const FoodDb = require('../foodDb');
 const PersonalHistoryDb = require('../personalHistoryDb');
+const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 
 router.post('/', (req, res, next) => {
@@ -24,10 +25,12 @@ router.post('/', (req, res, next) => {
     let replyToken = req.body.events[0].replyToken;
 
     // ユーザー情報を取得する。
-    PersonalHistoryDb.getPerson(line_id)
+    const personDb = new PersonDb();
+    personDb.getPerson(line_id)
     .then(
         function(person){
             // メッセージから食品を抽出する。
+            personDb._person = person;
             return TextMiner.getFoodListFromMessage(message);
         },
         function(error){
@@ -36,7 +39,6 @@ router.post('/', (req, res, next) => {
     )
     .then(
         function(foodList){
-            console.log(foodList);
             // 食品リストの食品それぞれについて、栄養情報を取得する。
             return FoodDb.getFoodListWithNutrition(foodList);
         },
@@ -50,7 +52,7 @@ router.post('/', (req, res, next) => {
             // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
             let dietDate = '2016-10-24';
             let dietType = 'dinner';
-            return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
+            return PersonalHistoryDb.saveFoodListAsDietHistory(personDb._person.line_id, dietDate, dietType, foodListWithNutrition);
         },
         function(error){
             console.log(error.message);
@@ -60,13 +62,13 @@ router.post('/', (req, res, next) => {
         function(savedDietHistoryList){
             console.log(savedDietHistoryList);
             // WebSocketを通じて更新を通知
-            let channel = cache.get(person.line_id);
+            let channel = cache.get(personDb._person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
 
             // 残り必要カロリーを取得。
-            return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height);
+            return PersonalHistoryDb.getCalorieToGo(personDb._person.line_id, personDb._person.birthday, personDb._person.height);
         },
         function(error){
             return Promise.reject(error);
