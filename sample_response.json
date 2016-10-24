@@ -1,0 +1,7 @@
+[{
+    type: 'message',
+    replyToken: 'c45908a697e5404bbccffced93f8c6e5',
+    source: { userId: 'U35df722ecd249c60b104ee32448bfaae', type: 'user' },
+    timestamp: 1477282658824,
+    message: { type: 'text', id: '5102459505986', text: 'こんにちは' }
+}]

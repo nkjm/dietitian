@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="dietitian">
+
+<head>
+<title>私の栄養士：茂子</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"></meta>
+<meta charset="UTF-8">
+<link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/chart.js/dist/Chart.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/module.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/rootCtl.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/todayCtl.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/thisWeekCtl.js"></script>
+<script>
+angular.module("dietitian")
+.constant("person", <%- JSON.stringify(person) %>);
+</script>
+</head>
+
+<style>
+body {
+    font-size: 12pt;
+    color: #666;
+}
+.profile_attr_label {
+    font-weight:bold;
+    border-bottom: solid 1px #ddd;
+    padding:10px 0;
+}
+.profile_attr_value {
+    padding: 10px 0;
+    font-size: 1.5em;
+}
+</style>
+
+<body>
+    <div class="container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px; width: 80%;" ng-cloak="true">
+        <!-- Person Profile -->
+        <div id="person_profile" class="row" style="margin-bottom: 40px;">
+            <div id="person_icon" class="col-sm-3">
+                <img ng-src="{{ui.person.icon_url}}" class="img-circle" height="175"></img>
+            </div>
+
+            <div class="col-sm-9">
+                <div id="person_fullname" style="margin-bottom:10px;">
+                    <span style="font-size: 36pt">{{ui.person.lastname}} {{ui.person.firstname}}</span>
+                </div>
+
+                <div class="row" style="text-align:center;">
+                    <div id="person_height" class="col-sm-3">
+                        <div class="profile_attr_label">身長</div>
+                        <div class="profile_attr_value">{{ui.person.height}} cm</div>
+                    </div>
+                    <div id="person_weight" class="col-sm-3">
+                        <div class="profile_attr_label">体重</div>
+                        <div class="profile_attr_value">{{ui.person.weight}} kg</div>
+                    </div>
+                    <div id="person_weight" class="col-sm-3">
+                        <div class="profile_attr_label">血液型</div>
+                        <div class="profile_attr_value">{{ui.person.blood}} 型</div>
+                    </div>
+                    <div id="person_age" class="col-sm-3">
+                        <div class="profile_attr_label">年齢</div>
+                        <div class="profile_attr_value">{{ui.person.age}} 歳</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tab Bar -->
+        <ul class="nav nav-tabs" ng-init="ui.currentTab = 'today'" style="margin-bottom: 10px;">
+            <li ng-class="(ui.currentTab == 'today') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'today')">今日</a></li>
+            <li ng-class="(ui.currentTab == 'this_week') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'this_week')">今週</a></li>
+            <li ng-class="(ui.currentTab == 'this_month') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'this_month')">今月</a></li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div>
+            <!-- Today Tab-->
+            <div id="tab_today" ng-show="ui.currentTab == 'today'" style="padding:10px 5px;">
+                <% include ./components/tab_today %>
+            </div>
+
+            <!-- This Week Tab-->
+            <div id="tab_this_week" ng-show="ui.currentTab == 'this_week'" style="padding:0 5px;">
+                <% include ./components/tab_this_week %>
+            </div>
+
+            <!-- This Month Tab-->
+            <div id="tab_this_month" ng-show="ui.currentTab == 'this_month'" style="padding:0 5px;">
+                <% include ./components/tab_this_month %>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

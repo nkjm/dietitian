@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{dietTypeLabel}}</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>食品</th>
+                    <th>炭水化物</th>
+                    <th>たんぱく質</th>
+                    <th>脂肪</th>
+                    <th>食物繊維</th>
+                    <th>灰分</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="diet in dietList">
+                    <td>{{diet.food || 0}}</td>
+                    <td>{{diet.carb || 0}}g</td>
+                    <td>{{diet.protein || 0}}g</td>
+                    <td>{{diet.fat || 0}}g</td>
+                    <td>{{diet.fiber || 0}}g</td>
+                    <td>{{diet.ash || 0}}g</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
