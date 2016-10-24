@@ -3,12 +3,12 @@
 module.exports = class calorieCalc {
     static getRequiredCalorie(birthday, height, sex){
         const properWeight = Math.round(height * height * 0.0022);
-        console.log('pw:' + properWeight);
         const age = Math.floor(((new Date()).getTime() - birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
-        console.log('age:' + age);
         let baseCalorieFactor;
         if (sex == 'female'){
-            if (age <= 14){
+            if (age < 12){
+                baseCalorieFactor = 25; // 中嶋予想
+            } else if (age <= 14){
                 baseCalorieFactor = 29.6;
             } else if (age <= 17){
                 baseCalorieFactor = 25.3;
@@ -22,7 +22,9 @@ module.exports = class calorieCalc {
                 baseCalorieFactor = 17; // 中嶋予想。
             }
         } else if (sex == 'male'){
-            if (age <= 14){
+            if (age < 12){
+                baseCalorieFactor = 26; // 中嶋予想
+            } else if (age <= 14){
                 baseCalorieFactor = 31;
             } else if (age <= 17){
                 baseCalorieFactor = 27;
@@ -36,9 +38,7 @@ module.exports = class calorieCalc {
                 baseCalorieFactor = 17; // 中嶋予想。
             }
         }
-        console.log('baseCalorieFactor:' + baseCalorieFactor);
         const baseCalorie = properWeight * baseCalorieFactor;
-        console.log('baseCalorie:' + baseCalorie);
         let activityFactor;
         // Activity Factor
         if (age <= 2){
@@ -56,9 +56,7 @@ module.exports = class calorieCalc {
         } else {
             activityFactor = 1.7;
         }
-        console.log('activityFactor:' + activityFactor);
         const requiredCalorie = baseCalorie * activityFactor;
-        console.log('requiredCalorie:' + requiredCalorie);
         return requiredCalorie;
     }
 };
