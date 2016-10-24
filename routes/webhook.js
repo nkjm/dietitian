@@ -18,14 +18,23 @@ router.post('/', (req, res, next) => {
     }
     console.log('Signature validation succeeded.');
 
-    // テキストメッセージから食品リストを抽出する。
+    // Webhookへのリクエストから必要な情報を抜き出す。
     let message = req.body.events[0].message.text;
-    let person = {
-        line_id: req.body.events[0].source.userId
-    }
+    let line_id = req.body.events[0].source.userId;
     let replyToken = req.body.events[0].replyToken;
 
-    TextMiner.getFoodListFromMessage(message)
+    // ユーザー情報を取得する。
+    PersonalHistoryDb.getPerson(line_id)
+    .then(
+        function(person){
+            console.log(person);
+            // メッセージから食品を抽出する。
+            TextMiner.getFoodListFromMessage(message);
+        },
+        function(error){
+            return Promise.reject(error);
+        }
+    )
     .then(
         function(foodList){
             // 食品リストの食品それぞれについて、栄養情報を取得する。
@@ -33,7 +42,7 @@ router.post('/', (req, res, next) => {
         },
         function(error){
             console.log(error.message);
-            Promise.reject(error);
+            return Promise.reject(error);
         }
     ).then(
         function(foodListWithNutrition){
@@ -44,26 +53,43 @@ router.post('/', (req, res, next) => {
         },
         function(error){
             console.log(error.message);
-            Promise.reject(error);
+            return Promise.reject(error);
         }
     ).then(
         function(savedDietHistoryList){
-
             // WebSocketを通じて更新を通知
             let channel = cache.get(person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
 
-            // 完了メッセージをユーザーに送信。
-            let message = 'いいっすねー。'; // 栄養摂取状況にもとづいたメッセージを作成。
+            // 残り必要カロリーを取得。
+            return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height);
+        },
+        function(error){
+            return Promise.reject(error);
+        }
+    ).then(
+        function(calorieToGo){
+            console.log(calorieToGo);
+            // メッセージをユーザーに送信。
+            if (calorieToGo > 0){
+                let message = '満タンまであと' + calorieToGo + 'kcalですよー。';
+            } else if (calorieToGo < 0){
+                let message = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
+            } else if (calorieToGo == 0){
+                let message = 'カロリー、ちょうど満タンです！';
+            } else {
+                let message = 'あれ、満タンまであとどれくらいだろう・・';
+            }
             return LineBot.reply(replyToken, message);
         },
         function(error){
-            Promise.reject(error);
+            return Promise.reject(error);
         }
     ).then(
         function(response){
+            // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
             console.log(response);
             return res.status(200).end();
         },

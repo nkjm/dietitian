@@ -8,8 +8,7 @@ angular.module("dietitian")
         carb: 0,
         protein: 0,
         fat: 0,
-        fiber: 0,
-        ash: 0
+        fiber: 0
     }
     $scope.ui.dietListByType = {
         breakfast: [],
@@ -23,7 +22,6 @@ angular.module("dietitian")
     $scope.config.targetProtein = 60;
     $scope.config.targetFat = 30;
     $scope.config.targetFiber = 20;
-    $scope.config.targetAsh = 20;
 
     $scope.ui.refreshTodayCalorieChart = 1;
     $scope.ui.refreshTodayNutritionChart = 1;
@@ -48,14 +46,13 @@ angular.module("dietitian")
             }
         };
         var data = {
-            labels: ["炭水化物", "たんぱく質", "脂肪", "食物繊維", "灰分"],
+            labels: ["炭水化物", "たんぱく質", "脂肪", "食物繊維"],
             datasets: [{
                 data: [
                     Math.round(nutrition.carb * 100 / $scope.config.targetCarb),
                     Math.round(nutrition.protein * 100 / $scope.config.targetProtein),
                     Math.round(nutrition.fat * 100 / $scope.config.targetFat),
-                    Math.round(nutrition.fiber * 100 / $scope.config.targetFiber),
-                    Math.round(nutrition.ash * 100 / $scope.config.targetAsh)
+                    Math.round(nutrition.fiber * 100 / $scope.config.targetFiber)
                 ],
                 backgroundColor: [
                     "#FF6384",
@@ -127,7 +124,6 @@ angular.module("dietitian")
             $scope.ui.todayNutrition.protein += diet.protein || 0;
             $scope.ui.todayNutrition.fat += diet.fat || 0;
             $scope.ui.todayNutrition.fiber += diet.fiber || 0;
-            $scope.ui.todayNutrition.ash += diet.ash || 0;
         });
         $scope.refreshTodayCalorieChart();
         $scope.refreshTodayNutritionChart();
