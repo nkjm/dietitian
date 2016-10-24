@@ -7,7 +7,7 @@ const CalorieCalc = require('./calorieCalc');
 const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
 
 module.exports = class personalHistoryDb {
-    static getCalorieToGo(lineId, birthday, height){
+    static getCalorieToGo(lineId, birthday, height, sex){
         return new Promise(function(resolve, reject){
             let headers = {
                 'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ module.exports = class personalHistoryDb {
                 } else {
                     if (response.body && response.body.today_total_calorie){
                         let today_total_calorie = response.body.today_total_calorie;
-                        let calorieToGo = CalorieCalc.getRequiredCalorie(birthday, height) - today_total_calorie;
+                        let calorieToGo = CalorieCalc.getRequiredCalorie(birthday, height, sex) - today_total_calorie;
                         resolve(calorieToGo);
                     } else {
                         reject({message:'Failed to get total calorie of today. It seems PersonalHistoryDb is out of order.'});

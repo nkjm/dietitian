@@ -66,7 +66,7 @@ router.post('/', (req, res, next) => {
             }
 
             // 残り必要カロリーを取得。
-            return PersonalHistoryDb.getCalorieToGo(personDb._person.line_id, personDb._person.birthday, personDb._person.height);
+            return PersonalHistoryDb.getCalorieToGo(personDb._person.line_id, personDb._person.birthday, personDb._person.height, personDb._person.sex);
         },
         function(error){
             return Promise.reject(error);
@@ -93,7 +93,6 @@ router.post('/', (req, res, next) => {
     ).then(
         function(response){
             // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-            console.log(response);
             return res.status(200).end();
         },
         function(error){

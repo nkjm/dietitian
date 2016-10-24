@@ -1,12 +1,41 @@
 'use strict';
 
 module.exports = class calorieCalc {
-    static getRequiredCalorie(birthday, height){
+    static getRequiredCalorie(birthday, height, sex){
         const properWeight = Math.round(height * height * 0.0022);
         console.log('pw:' + properWeight);
         const age = Math.floor(((new Date()).getTime() - birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
         console.log('age:' + age);
-        const baseCalorieFactor = 27;
+        let baseCalorieFactor;
+        if (sex == 'female'){
+            if (12 <= age <= 14){
+                baseCalorieFactor = 29.6;
+            } else if (age <= 17){
+                baseCalorieFactor = 25.3;
+            } else if (age <= 29){
+                baseCalorieFactor = 23.6;
+            } else if (age <= 49){
+                baseCalorieFactor = 21.7;
+            } else if (age <= 69){
+                baseCalorieFactor = 20.7;
+            } else {
+                baseCalorieFactor = 17; // 中嶋予想。
+            }
+        } else if (sex == 'male'){
+            if (12 <= age <= 14){
+                baseCalorieFactor = 31;
+            } else if (age <= 17){
+                baseCalorieFactor = 27;
+            } else if (age <= 29){
+                baseCalorieFactor = 24;
+            } else if (age <= 49){
+                baseCalorieFactor = 22.3;
+            } else if (age <= 69){
+                baseCalorieFactor = 21.5;
+            } else {
+                baseCalorieFactor = 17; // 中嶋予想。
+            }
+        }
         const baseCalorie = properWeight * baseCalorieFactor;
         console.log('baseCalorie:' + baseCalorie);
         let activityFactor;
