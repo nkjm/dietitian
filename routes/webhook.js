@@ -48,7 +48,6 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(foodListWithNutrition){
-            console.log(foodListWithNutrition);
             // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
             let dietDate = '2016-10-24';
             let dietType = 'dinner';
@@ -60,7 +59,6 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(savedDietHistoryList){
-            console.log(savedDietHistoryList);
             // WebSocketを通じて更新を通知
             let channel = cache.get(personDb._person.line_id);
             if (channel){
@@ -77,14 +75,15 @@ router.post('/', (req, res, next) => {
         function(calorieToGo){
             console.log(calorieToGo);
             // メッセージをユーザーに送信。
+            let message;
             if (calorieToGo > 0){
-                let message = '満タンまであと' + calorieToGo + 'kcalですよー。';
+                message = '満タンまであと' + calorieToGo + 'kcalですよー。';
             } else if (calorieToGo < 0){
-                let message = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
+                message = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
             } else if (calorieToGo == 0){
-                let message = 'カロリー、ちょうど満タンです！';
+                message = 'カロリー、ちょうど満タンです！';
             } else {
-                let message = 'あれ、満タンまであとどれくらいだろう・・';
+                message = 'あれ、満タンまであとどれくらいだろう・・';
             }
             return LineBot.reply(replyToken, message);
         },

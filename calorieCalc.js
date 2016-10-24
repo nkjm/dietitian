@@ -3,9 +3,12 @@
 module.exports = class calorieCalc {
     static getRequiredCalorie(birthday, height){
         const properWeight = Math.round(height * height * 0.0022);
+        console.log('pw:' + properWeight);
         const age = Math.floor(((new Date()).getTime() - birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
+        console.log('age:' + age);
         const baseCalorieFactor = 27;
         const baseCalorie = properWeight * baseCalorieFactor;
+        console.log('baseCalorie:' + baseCalorie);
         let activityFactor;
         // Activity Factor
         if (age <= 2){
@@ -23,8 +26,9 @@ module.exports = class calorieCalc {
         } else {
             activityFactor = 1.7;
         }
+        console.log('activityFactor:' + activityFactor);
         const requiredCalorie = baseCalorie * activityFactor;
-
+        console.log('requiredCalorie:' + requiredCalorie);
         return requiredCalorie;
     }
 };
