@@ -6,22 +6,22 @@ module.exports = class calorieCalc {
         const age = Math.floor(((new Date()).getTime() - birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
         const baseCalorieFactor = 27;
         const baseCalorie = properWeight * baseCalorieFactor;
-
+        let activityFactor;
         // Activity Factor
         if (age <= 2){
-            const activityFactor = 1.35;
+            activityFactor = 1.35;
         } else if (age <= 5){
-            const activityFactor = 1.45;
+            activityFactor = 1.45;
         } else if (age <= 7){
-            const activityFactor = 1.55;
+            activityFactor = 1.55;
         } else if (age <= 9){
-            const activityFactor = 1.60;
+            activityFactor = 1.60;
         } else if (age <= 14){
-            const activityFactor = 1.65;
+            activityFactor = 1.65;
         } else if (age <= 69){
-            const activityFactor = 1.75;
+            activityFactor = 1.75;
         } else {
-            const activityFactor = 1.7;
+            activityFactor = 1.7;
         }
         const requiredCalorie = baseCalorie * activityFactor;
 
