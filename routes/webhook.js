@@ -57,15 +57,14 @@ router.post('/', (req, res, next) => {
 
             // 完了メッセージをユーザーに送信。
             let message = 'いいっすねー。'; // 栄養摂取状況にもとづいたメッセージを作成。
-            LineBot.reply(replyToken, message);
-
-
+            return LineBot.reply(replyToken, message);
         },
         function(error){
             Promise.reject(error);
         }
     ).then(
         function(response){
+            console.log(response);
             return res.status(200).end();
         },
         function(error){
