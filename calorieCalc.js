@@ -8,7 +8,7 @@ module.exports = class calorieCalc {
         console.log('age:' + age);
         let baseCalorieFactor;
         if (sex == 'female'){
-            if (12 <= age <= 14){
+            if (age <= 14){
                 baseCalorieFactor = 29.6;
             } else if (age <= 17){
                 baseCalorieFactor = 25.3;
@@ -22,7 +22,7 @@ module.exports = class calorieCalc {
                 baseCalorieFactor = 17; // 中嶋予想。
             }
         } else if (sex == 'male'){
-            if (12 <= age <= 14){
+            if (age <= 14){
                 baseCalorieFactor = 31;
             } else if (age <= 17){
                 baseCalorieFactor = 27;
@@ -36,6 +36,7 @@ module.exports = class calorieCalc {
                 baseCalorieFactor = 17; // 中嶋予想。
             }
         }
+        console.log('baseCalorieFactor:' + baseCalorieFactor);
         const baseCalorie = properWeight * baseCalorieFactor;
         console.log('baseCalorie:' + baseCalorie);
         let activityFactor;
