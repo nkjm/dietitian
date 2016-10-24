@@ -27,7 +27,6 @@ router.post('/', (req, res, next) => {
     PersonalHistoryDb.getPerson(line_id)
     .then(
         function(person){
-            console.log(person);
             // メッセージから食品を抽出する。
             TextMiner.getFoodListFromMessage(message);
         },
@@ -37,6 +36,7 @@ router.post('/', (req, res, next) => {
     )
     .then(
         function(foodList){
+            console.log(foodList);
             // 食品リストの食品それぞれについて、栄養情報を取得する。
             return FoodDb.getFoodListWithNutrition(foodList);
         },
@@ -46,6 +46,7 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(foodListWithNutrition){
+            console.log(foodListWithNutrition);
             // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
             let dietDate = '2016-10-24';
             let dietType = 'dinner';
@@ -57,6 +58,7 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(savedDietHistoryList){
+            console.log(savedDietHistoryList);
             // WebSocketを通じて更新を通知
             let channel = cache.get(person.line_id);
             if (channel){
