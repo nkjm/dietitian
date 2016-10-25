@@ -156,10 +156,15 @@ router.post('/', (req, res, next) => {
         console.log(threadList);
 
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
-        if (threadList.thread[threadList.thread.length - 1].type == 'foodList'){
-            foodListWithNutrition = threadList.thread[threadList.thread.length - 1].foodList;
-            console.log(foodListWithNutrition);
-        } else {
+        for (let thread of threadList.thread){
+            if (thread.type == 'foodList' && thread.foodList.length > 0){
+                console.log('Found foodList');
+                foodListWithNutrition = thread.foodList;
+                console.log(foodListWithNutrition);
+            }
+        }
+
+        if (!foodListWithNutrition){
             // あるはずの食事履歴が見当たらないので終了。
             return res.status(200).end();
         }

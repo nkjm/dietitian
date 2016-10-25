@@ -47,15 +47,12 @@ const CalorieCalc = require('./calorieCalc');
              LineBot.pushMessage(lineId, message)
              .then(
                  function(response){
-                     const thread = {
-                         thread: [{
-                             timestamp: (new Date()).getTime(),
-                             source: 'dietitian',
-                             type: 'askDietType'
-                         }]
+                     let conversation = {
+                         timestamp: (new Date()).getTime(),
+                         source: 'dietitian',
+                         type: 'askDietType'
                      }
-                     const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-                     cache.put('thread-' + lineId, thread, timeToExpire);
+                     dietitian.pushToThread(lineId, conversation);
                      resolve();
                  },
                  function(error){
@@ -66,16 +63,13 @@ const CalorieCalc = require('./calorieCalc');
      }
 
      static saveFoodList(lineId, foodList){
-         const thread = {
-             thread: [{
-                 timestamp: (new Date()).getTime(),
-                 source: 'user',
-                 type: 'foodList',
-                 foodList: foodList
-             }]
+         let conversation = {
+             timestamp: (new Date()).getTime(),
+             source: 'user',
+             type: 'foodList',
+             foodList: foodList
          }
-         const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-         cache.put('thread-' + lineId, thread, timeToExpire);
+         dietitian.pushToThread(lineId, conversation);
      }
 
      static whatDidYouEat(lineId, dietType){
@@ -92,18 +86,14 @@ const CalorieCalc = require('./calorieCalc');
              LineBot.pushMessage(lineId, message)
              .then(
                  function(){
-                     const thread = {
-                         thread: [{
-                             timestamp: (new Date()).getTime(),
-                             source: 'dietitian',
-                             type: 'whatDidYouEat',
-                             dietType: dietType,
-                             dietDate: (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate()
-                         }]
+                     let conversation = {
+                         timestamp: (new Date()).getTime(),
+                         source: 'dietitian',
+                         type: 'whatDidYouEat',
+                         dietType: dietType,
+                         dietDate: (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate()
                      }
-                     //const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-                     const timeToExpire = 1000 * 60 * 1 // 1分
-                     cache.put('thread-' + lineId, thread, timeToExpire);
+                     dietitian.pushToThread(lineId, conversation);
                      resolve();
                  },
                  function(error){
@@ -111,6 +101,17 @@ const CalorieCalc = require('./calorieCalc');
                  }
              )
          });
+     }
+
+     static pushToThread(lineId, conversation){
+         let thread = cache.get('thread-' + lineId);
+         if (thread && thread.thread && thread.thread.length > 0){
+             thread.thread.push(conversation);
+         } else {
+             thread = {thread: [conversation]}
+         }
+         const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
+         cache.put('thread-' + lineId, thread, timeToExpire);
      }
 
      static getDietTypeLabel(dietType){
