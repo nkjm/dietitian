@@ -57,6 +57,7 @@ router.post('/', (req, res, next) => {
             if (thread){
                 // 事前の会話が存在している場合。
                 let latestMessage = thread.thread[thread.thread.length - 1];
+                console.log(latestMessage);
                 if (latestMessage.source == 'dietitian' && latestMessage.type == 'whatDidYouEat'){
                     // Botが何を食べたか聞いていた場合。Diet TypeとDiet Dateは特定されているため、食事履歴の保存に進む。
                     dietDate = latestMessage.dietDate;

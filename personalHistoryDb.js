@@ -22,7 +22,7 @@ module.exports = class personalHistoryDb {
                 if (error) {
                     reject(error);
                 } else {
-                    if (response.body && response.body.today_total_calorie){
+                    if (response.body && (typeof response.body.today_total_calorie != "undefined")){
                         let today_total_calorie = response.body.today_total_calorie;
                         let calorieToGo = CalorieCalc.getRequiredCalorie(birthday, height, sex) - today_total_calorie;
                         resolve(calorieToGo);

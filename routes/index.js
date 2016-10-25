@@ -16,6 +16,7 @@ router.get('/:line_id', (req, res, next) => {
     personDb.getPerson(req.params.line_id)
     .then(
         function(person){
+            console.log(person);
             person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex);
             personDb.person = person;
 

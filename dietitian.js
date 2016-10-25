@@ -89,7 +89,7 @@ const CalorieCalc = require('./calorieCalc');
                              source: 'dietitian',
                              type: 'whatDidYouEat',
                              dietType: dietType,
-                             dietDate: (new Date()).getFullYear() + '-' + (new Date()).getMonth() + '-' + (new Date()).getDate()
+                             dietDate: (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate()
                          }]
                      }
                      //const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
