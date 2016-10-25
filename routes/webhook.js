@@ -55,9 +55,9 @@ router.post('/', (req, res, next) => {
             let dietType;
 
             if (thread){
+                console.log("Found thread.");
                 // 事前の会話が存在している場合。
                 let latestMessage = thread.thread[thread.thread.length - 1];
-                console.log(latestMessage);
                 if (latestMessage.source == 'dietitian' && latestMessage.type == 'whatDidYouEat'){
                     // Botが何を食べたか聞いていた場合。Diet TypeとDiet Dateは特定されているため、食事履歴の保存に進む。
                     dietDate = latestMessage.dietDate;
@@ -73,7 +73,6 @@ router.post('/', (req, res, next) => {
             Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
             //// どの食事か質問する。
             Dietitian.askDietType(personDb.person.line_id);
-            console.log("hoge");
             res.status(200).end();
         },
         function(error){
@@ -82,7 +81,8 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(savedDietHistoryList){
-            console.log(savedDietHistoryList);
+            // スレッド（会話）を削除
+            cache.del('thread-' + personDb.person.line_id);
 
             // WebSocketを通じて更新を通知
             let channel = cache.get('channel-' + personDb.person.line_id);
@@ -101,7 +101,7 @@ router.post('/', (req, res, next) => {
             // メッセージをユーザーに送信。
             let messageText;
             if (calorieToGo > 0){
-                messageText = '満タンまであと' + calorieToGo + 'kcalですよー。';
+                messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
             } else if (calorieToGo < 0){
                 messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
             } else if (calorieToGo == 0){
