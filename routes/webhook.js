@@ -151,9 +151,14 @@ router.post('/', (req, res, next) => {
         let threadList = cache.get('thread-' + lineId);
         let foodListWithNutrition;
 
+        console.log(dietType);
+        console.log(dietDate);
+        console.log(threadList);
+
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
         if (threadList.thread[threadList.thread.length - 1].type == 'foodList'){
             foodListWithNutrition = threadList.thread[threadList.thread.length - 1].foodList;
+            console.log(foodListWithNutrition);
         } else {
             // あるはずの食事履歴が見当たらないので終了。
             return res.status(200).end();
@@ -175,6 +180,7 @@ router.post('/', (req, res, next) => {
         .then(
             function(savedDietHistoryList){
                 // スレッド（会話）を削除
+                console.log('Deleting Thread');
                 cache.del('thread-' + personDb.person.line_id);
 
                 // WebSocketを通じて更新を通知
@@ -191,6 +197,7 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(calorieToGo){
+                console.log(calorieToGo);
                 // メッセージをユーザーに送信。
                 let messageText;
                 if (calorieToGo > 0){
