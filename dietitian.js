@@ -23,18 +23,24 @@ const CalorieCalc = require('./calorieCalc');
                      actions: [{
                          "type":"postback",
                          "label":"朝食",
-                         "data":"postback_type=answer_diet_type&diet_type=breakfast"
+                         "data": JSON.stringify({
+                             postbackType:'answerDietType',
+                             dietType:'breakfast'
+                         })
                      },{
                          "type":"postback",
                          "label":"昼食",
                          "data": JSON.stringify({
-                             postback_type:'answer_diet_type',
-                             diet_type:'lunch'
+                             postbackType:'answerDietType',
+                             dietType:'lunch'
                          })
                      },{
                          "type":"postback",
                          "label":"夕食",
-                         "data":"postback_type=answer_diet_type&diet_type=dinner"
+                         "data": JSON.stringify({
+                             postbackType:'answerDietType',
+                             dietType:'dinner'
+                         })
                      }]
                  }
              };

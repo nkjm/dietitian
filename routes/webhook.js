@@ -37,8 +37,9 @@ router.post('/', (req, res, next) => {
         let p = personDb.getPerson(lineId)
         .then(
             function(person){
-                // メッセージから食品を抽出する。
                 personDb.person = person;
+
+                // メッセージから食品を抽出する。
                 return TextMiner.getFoodListFromMessage(message);
             },
             function(error){
@@ -144,9 +145,83 @@ router.post('/', (req, res, next) => {
             }
         );
     } else if (eventType == 'postback'){
-        let postbackData = req.body.events[0].postback.data;
-        console.log(postbackData);
-        console.log(JSON.parse(postbackData));
+        let postbackData = JSON.parse(req.body.events[0].postback.data);
+        let dietType = postbackData.dietType;
+        let dietDate = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate();
+        let threadList = cache.get('thread-' + lineId);
+        let foodListWithNutrition;
+
+        // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
+        if (threadList.thread[threadList.thread.length - 1].type == 'foodList'){
+            foodListWithNutrition = threadList.thread[threadList.thread.length - 1].foodList;
+        } else {
+            // あるはずの食事履歴が見当たらないので終了。
+            return res.status(200).end();
+        }
+
+        const personDb = new PersonDb();
+        let p = personDb.getPerson(lineId)
+        .then(
+            function(person){
+                personDb.person = person;
+
+                // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.lineId, dietDate, dietType, foodListWithNutrition);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(savedDietHistoryList){
+                // スレッド（会話）を削除
+                cache.del('thread-' + personDb.person.line_id);
+
+                // WebSocketを通じて更新を通知
+                let channel = cache.get('channel-' + personDb.person.line_id);
+                if (channel){
+                    channel.emit('personalHistoryUpdated', savedDietHistoryList);
+                }
+
+                // 残り必要カロリーを取得。
+                return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        ).then(
+            function(calorieToGo){
+                // メッセージをユーザーに送信。
+                let messageText;
+                if (calorieToGo > 0){
+                    messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
+                } else if (calorieToGo < 0){
+                    messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
+                } else if (calorieToGo == 0){
+                    messageText = 'カロリー、ちょうど満タンです！';
+                } else {
+                    messageText = 'あれ、満タンまであとどれくらいだろう・・';
+                }
+                let message = {
+                    type: 'text',
+                    text: messageText
+                }
+                return LineBot.replyMessage(replyToken, message);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        ).then(
+            function(response){
+                // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
+                res.status(200).end();
+            },
+            function(error){
+                console.log(error);
+                res.status(200).end();
+            }
+        );
+
         res.status(200).end();
     }
 });
