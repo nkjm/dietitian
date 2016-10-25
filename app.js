@@ -3,6 +3,7 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const favicon = require('serve-favicon');
 const REST_PORT = (process.env.PORT || 3000);
 
 const app = express();
@@ -16,6 +17,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(bodyParser.json({
     verify: function(req, res, buf, encoding) {
         req.rawBody = buf;

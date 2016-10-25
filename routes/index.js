@@ -8,15 +8,22 @@ const PersonDb = require('../personDb');
 const Promise = require('bluebird');
 const CalorieCalc = require('../calorieCalc');
 
+Promise.config({
+    // Enable cancellation
+    cancellation: true
+});
+
 router.get('/:line_id', (req, res, next) => {
     if (!req.params.line_id){
         return res.error(400).send('Line id not set.');
     }
     let personDb = new PersonDb();
-    personDb.getPerson(req.params.line_id)
+    let p = personDb.getPerson(req.params.line_id)
     .then(
         function(person){
-            console.log(person);
+            if (!person){
+                p.cancel();
+            }
             person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex);
             personDb.person = person;
 
