@@ -80,12 +80,13 @@ router.post('/', (req, res, next) => {
             Dietitian.askDietType(personDb.person.line_id)
             .then(
                 function(){
-                    p.cancel();
+                    res.status(200).end();
                 },
                 function(error){
                     return Promise.reject(error);
                 }
             );
+            p.cancel();
         },
         function(error){
             console.log(error.message);
