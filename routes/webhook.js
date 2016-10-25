@@ -69,9 +69,9 @@ router.post('/', (req, res, next) => {
 
             // 事前の会話がなかった場合。
             //// 食品リスト（栄養情報含む）をスレッドに保存する。
-            Dietitian.saveFoodList(lineId, foodListWithNutrition);
+            Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
             //// どの食事か質問する。
-            Dietitian.askDietType(lineId);
+            Dietitian.askDietType(personDb.person.line_id);
             res.status(200).end();
         },
         function(error){
