@@ -17,7 +17,6 @@ angular.module("dietitian")
     };
 
     $scope.config = {};
-    //$scope.config.targetCalorie = 2650;
     $scope.config.targetCarb = 65;
     $scope.config.targetProtein = 60;
     $scope.config.targetFat = 30;
@@ -37,11 +36,11 @@ angular.module("dietitian")
     function drawTodayNutrition(nutrition){
         var ctx = document.getElementById("today_nutrition");
         var options = {
-            scales: {
+            scale: {
                 ticks: {
-                    max: 100,
-                    min: 0,
-                    stepSize: 25
+                    stepSize: 25,
+                    beginAtZero: true,
+                    max: 100
                 }
             }
         };
@@ -74,28 +73,24 @@ angular.module("dietitian")
         });
     }
 
-    function drawTodayCalorie(todayCaloriePercentage){
+    function drawTodayCalorie(requiredCalorie, todayCalorie){
         var ctx = document.getElementById("today_calorie");
         var options = {
-            responsive: false
+            responsive: false,
         };
+
+        if (todayCalorie > requiredCalorie){
+            requiredCalorie = todayCalorie;
+        }
         var data = {
-            labels: [
-                "摂取済み",
-                "残り"
-            ],
-            datasets: [
-                {
-                    data: [todayCaloriePercentage, 100 - todayCaloriePercentage],
-                    backgroundColor: [
-                        "#FF6384",
-                        "#DDDDDD"
-                    ],
-                    hoverBackgroundColor: [
-                        "#FF6384",
-                        "#DDDDDD"
-                    ]
-                }]
+            labels: ["摂取済み","残り"],
+            datasets: [{
+                data: [todayCalorie, requiredCalorie - todayCalorie],
+                backgroundColor: [
+                    "#FF6384",
+                    "#DDDDDD"
+                ]
+            }]
         };
         if ($scope.ui.todayCalorieChart){
             $scope.ui.todayCalorieChart.destroy();
@@ -135,7 +130,7 @@ angular.module("dietitian")
         }
         $scope.ui.todayCaloriePercentage = Math.round(100 * $scope.ui.todayCalorie / person.requiredCalorie);
         $scope.ui.todayCalorieToGo = person.requiredCalorie - $scope.ui.todayCalorie;
-        drawTodayCalorie($scope.ui.todayCaloriePercentage);
+        drawTodayCalorie(person.requiredCalorie, $scope.ui.todayCalorie);
     });
 
     $scope.$watch("ui.refreshTodayCalorieChart", function(newVal, oldVal){
