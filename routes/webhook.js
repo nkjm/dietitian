@@ -72,6 +72,7 @@ router.post('/', (req, res, next) => {
             Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
             //// どの食事か質問する。
             Dietitian.askDietType(personDb.person.line_id);
+            console.log("hoge");
             res.status(200).end();
         },
         function(error){
@@ -80,6 +81,8 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(savedDietHistoryList){
+            console.log(savedDietHistoryList);
+
             // WebSocketを通じて更新を通知
             let channel = cache.get('channel-' + personDb.person.line_id);
             if (channel){
