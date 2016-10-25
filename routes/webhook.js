@@ -12,6 +12,11 @@ const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
 
+Promise.config({
+    // Enable cancellation
+    cancellation: true
+});
+
 router.post('/', (req, res, next) => {
 
     // Signature Validation
@@ -76,13 +81,12 @@ router.post('/', (req, res, next) => {
             .then(
                 function(){
                     res.status(200).end();
-                    p.break();
+                    p.cancel();
                 },
                 function(error){
                     return Promise.reject(error);
                 }
             );
-            p.break();
         },
         function(error){
             console.log(error.message);
