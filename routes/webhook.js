@@ -10,6 +10,7 @@ const FoodDb = require('../foodDb');
 const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
+const Dietitian = require('../dietitian');
 
 router.post('/', (req, res, next) => {
 
@@ -30,7 +31,7 @@ router.post('/', (req, res, next) => {
     .then(
         function(person){
             // メッセージから食品を抽出する。
-            personDb._person = person;
+            personDb.person = person;
             return TextMiner.getFoodListFromMessage(message);
         },
         function(error){
@@ -48,10 +49,30 @@ router.post('/', (req, res, next) => {
         }
     ).then(
         function(foodListWithNutrition){
-            // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
-            let dietDate = '2016-10-24';
-            let dietType = 'dinner';
-            return PersonalHistoryDb.saveFoodListAsDietHistory(personDb._person.line_id, dietDate, dietType, foodListWithNutrition);
+            // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
+            let thread = cache.get(personDb.person.line_id);
+            let dietDate;
+            let dietType;
+
+            if (thread){
+                // 事前の会話が存在している場合。
+                let latestMessage = thread.thread[thread.length - 1];
+                if (latestMessage.source == 'dietitian' && latestMessage.question == 'what'){
+                    // Botが何を食べたか聞いていた場合。Diet TypeとDiet Dateは特定されているため、食事履歴の保存に進む。
+                    dietDate = latestMessage.dietDate;
+                    dietType = latestMessage.dietType;
+
+                    // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                    return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
+                }
+            }
+
+            // 事前の会話がなかった場合。
+            //// 食品リスト（栄養情報含む）をスレッドに保存する。
+            Dietitian.saveFoodList(lineId, foodListWithNutrition);
+            //// どの食事か質問する。
+            Dietitian.askDietType(lineId);
+            res.status(200).end();
         },
         function(error){
             console.log(error.message);
@@ -60,32 +81,35 @@ router.post('/', (req, res, next) => {
     ).then(
         function(savedDietHistoryList){
             // WebSocketを通じて更新を通知
-            let channel = cache.get(personDb._person.line_id);
+            let channel = cache.get(personDb.person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
 
             // 残り必要カロリーを取得。
-            return PersonalHistoryDb.getCalorieToGo(personDb._person.line_id, personDb._person.birthday, personDb._person.height, personDb._person.sex);
+            return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
         },
         function(error){
             return Promise.reject(error);
         }
     ).then(
         function(calorieToGo){
-            console.log(calorieToGo);
             // メッセージをユーザーに送信。
-            let message;
+            let messageText;
             if (calorieToGo > 0){
-                message = '満タンまであと' + calorieToGo + 'kcalですよー。';
+                messageText = '満タンまであと' + calorieToGo + 'kcalですよー。';
             } else if (calorieToGo < 0){
-                message = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
+                messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
             } else if (calorieToGo == 0){
-                message = 'カロリー、ちょうど満タンです！';
+                messageText = 'カロリー、ちょうど満タンです！';
             } else {
-                message = 'あれ、満タンまであとどれくらいだろう・・';
+                messageText = 'あれ、満タンまであとどれくらいだろう・・';
             }
-            return LineBot.reply(replyToken, message);
+            let message = {
+                type: 'text',
+                text: messageText
+            }
+            return LineBot.replyMessage(replyToken, message);
         },
         function(error){
             return Promise.reject(error);
@@ -93,15 +117,16 @@ router.post('/', (req, res, next) => {
     ).then(
         function(response){
             // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-            return res.status(200).end();
+            res.status(200).end();
         },
         function(error){
             console.log(error);
-            return res.status(200).end();
+            res.status(200).end();
         }
     );
 });
 
+/*
 router.get('/test', (req, res, next) => {
 
     // 仮のテスト用データ
@@ -141,13 +166,6 @@ router.get('/test', (req, res, next) => {
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }
 
-            // 完了メッセージをユーザーに送信。
-            // *personは存在している前提
-            /*
-            let message = ''; // 栄養摂取状況にもとづいたメッセージを作成。
-            LineBot.sendMessage(person, message);
-            */
-
             res.status(200).end();
         },
         function(error){
@@ -156,5 +174,6 @@ router.get('/test', (req, res, next) => {
         }
     );
 });
+*/
 
 module.exports = router;

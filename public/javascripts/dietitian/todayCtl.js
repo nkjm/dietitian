@@ -17,7 +17,7 @@ angular.module("dietitian")
     };
 
     $scope.config = {};
-    $scope.config.targetCalorie = 2650;
+    //$scope.config.targetCalorie = 2650;
     $scope.config.targetCarb = 65;
     $scope.config.targetProtein = 60;
     $scope.config.targetFat = 30;
@@ -133,8 +133,8 @@ angular.module("dietitian")
         if (newVal == oldVal){
             return;
         }
-        $scope.ui.todayCaloriePercentage = Math.round(100 * $scope.ui.todayCalorie / $scope.config.targetCalorie);
-        $scope.ui.todayCalorieToGo = $scope.config.targetCalorie - $scope.ui.todayCalorie;
+        $scope.ui.todayCaloriePercentage = Math.round(100 * $scope.ui.todayCalorie / person.requiredCalorie);
+        $scope.ui.todayCalorieToGo = person.requiredCalorie - $scope.ui.todayCalorie;
         drawTodayCalorie($scope.ui.todayCaloriePercentage);
     });
 

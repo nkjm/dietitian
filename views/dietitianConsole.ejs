@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html ng-app="dietitianConsole">
+
+<head>
+<title>栄養士コンソール</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"></meta>
+<meta charset="UTF-8">
+<link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="javascripts/dietitianConsole/module.js"></script>
+<script type="text/javascript" src="javascripts/dietitianConsole/rootCtl.js"></script>
+<script>
+angular.module("dietitianConsole")
+.constant("personList", <%- JSON.stringify(personList) %>);
+</script>
+</head>
+
+<style>
+body {
+    font-size: 12pt;
+    color: #666;
+}
+</style>
+
+<body>
+    <div class="container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px; width: 80%;" ng-cloak="true">
+
+            <!-- List group -->
+            <div class="media" ng-repeat="person in ui.personList">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object" ng-src="{{person.icon_url}}" alt="{{person.lastname}}のアイコン" height="100" width="100">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h3 class="media-heading">{{person.lastname}} {{person.firstname}}</h3>
+                    <button type="button" class="btn btn-primary" ng-click="askDiet(person.line_id, 'breakfast')">朝食を確認</button>
+                    <button type="button" class="btn btn-primary" ng-click="askDiet(person.line_id, 'lunch')">昼食を確認</button>
+                    <button type="button" class="btn btn-primary" ng-click="askDiet(person.line_id, 'dinner')">夕食を確認</button>
+                </div>
+            </div>
+
+    </div>
+</body>
+
+</html>

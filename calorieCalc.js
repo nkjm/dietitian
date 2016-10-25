@@ -56,7 +56,7 @@ module.exports = class calorieCalc {
         } else {
             activityFactor = 1.7;
         }
-        const requiredCalorie = baseCalorie * activityFactor;
+        const requiredCalorie = Math.round(baseCalorie * activityFactor);
         return requiredCalorie;
     }
 };

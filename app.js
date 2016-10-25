@@ -38,9 +38,11 @@ exports.io = require('socket.io')(server);
 // -----------------------------------------------------------------------------
 // ルーター設定
 
+const route_dietitianConsole = require('./routes/dietitianConsole');
 const route_webhook = require('./routes/webhook');
 const route_personalHistoryDb = require('./routes/personalHistoryDb');
 const route_index = require('./routes/index');
+app.use('/dietitianConsole', route_dietitianConsole);
 app.use('/webhook', route_webhook);
 app.use('/personalHistoryDb', route_personalHistoryDb);
 app.use('/', route_index);

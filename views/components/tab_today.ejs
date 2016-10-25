@@ -5,14 +5,14 @@
     </div>
     <div class="row" style="margin: 0 auto 60px auto; width: 80%;">
         <div class="col-sm-6">
-            <div style="text-align:center; margin: 0px auto 0 auto; border-bottom: solid 1px #ddd; margin-bottom: 20px; width:65%;">
+            <div style="text-align:center; margin: 0px auto 0 auto; border-bottom: solid 1px #ddd; margin-bottom: 20px; width:100%;">
                 <div style="font-size: 1.3em; text-align:center;"><span class="glyphicon glyphicon-fire"></span>&nbsp;カロリー充足率</div>
-                <span style="font-size: 85pt; margin:0; padding:0;">{{ui.todayCaloriePercentage}}</span>&nbsp;<span style="font-size:4.0em;">%</span>
+                <span style="font-size: 85pt;">{{ui.todayCaloriePercentage}}</span><span style="font-size:30pt;">&nbsp;%</span>
             </div>
             <div style="text-align:center;">
                 <span ng-if="ui.todayCaloriePercentage < 100" style="font-size: 1.3em;">満タンまであと {{ui.todayCalorieToGo}}kcal</span>
                 <span ng-if="ui.todayCaloriePercentage == 100" style="font-size: 1.3em;">ジャストミート</span>
-                <span ng-if="ui.todayCaloriePercentage > 100" style="font-size: 1.3em;">{{ui.todayCalorieToGo * -1}}kcal 超過しています</span>
+                <span ng-if="ui.todayCaloriePercentage > 100" style="font-size: 1.3em; color:#FF6384;">{{ui.todayCalorieToGo * -1}}kcal 超過しています</span>
             </div>
         </div>
         <div class="col-sm-6">
