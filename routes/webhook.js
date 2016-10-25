@@ -151,21 +151,17 @@ router.post('/', (req, res, next) => {
         let threadList = cache.get('thread-' + lineId);
         let foodListWithNutrition;
 
-        console.log(dietType);
-        console.log(dietDate);
-        console.log(threadList);
-
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
         for (let thread of threadList.thread){
             if (thread.type == 'foodList' && thread.foodList.length > 0){
                 console.log('Found foodList');
                 foodListWithNutrition = thread.foodList;
-                console.log(foodListWithNutrition);
             }
         }
 
         if (!foodListWithNutrition){
             // あるはずの食事履歴が見当たらないので終了。
+            console.log('FoodList not found');
             return res.status(200).end();
         }
 
@@ -176,7 +172,7 @@ router.post('/', (req, res, next) => {
                 personDb.person = person;
 
                 // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
-                return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.lineId, dietDate, dietType, foodListWithNutrition);
+                return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
             },
             function(error){
                 return Promise.reject(error);
@@ -202,7 +198,6 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(calorieToGo){
-                console.log(calorieToGo);
                 // メッセージをユーザーに送信。
                 let messageText;
                 if (calorieToGo > 0){
