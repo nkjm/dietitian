@@ -46,7 +46,7 @@ const CalorieCalc = require('./calorieCalc');
                          }]
                      }
                      const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-                     cache.put(lineId, threads, timeToExpire);
+                     cache.put(lineId, thread, timeToExpire);
                      resolve();
                  },
                  function(error){
@@ -57,8 +57,8 @@ const CalorieCalc = require('./calorieCalc');
      }
 
      static saveFoodList(lineId, foodList){
-         const threads = {
-             threads: [{
+         const thread = {
+             thread: [{
                  timestamp: (new Date()).getTime(),
                  source: 'user',
                  type: 'foodList',
@@ -66,7 +66,7 @@ const CalorieCalc = require('./calorieCalc');
              }]
          }
          const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-         cache.put(lineId, threads, timeToExpire);
+         cache.put(lineId, thread, timeToExpire);
      }
 
      static whatDidYouEat(lineId, dietType){
@@ -83,8 +83,8 @@ const CalorieCalc = require('./calorieCalc');
              LineBot.pushMessage(lineId, message)
              .then(
                  function(){
-                     const threads = {
-                         threads: [{
+                     const thread = {
+                         thread: [{
                              timestamp: (new Date()).getTime(),
                              source: 'dietitian',
                              type: 'whatDidYouEat',
@@ -94,7 +94,7 @@ const CalorieCalc = require('./calorieCalc');
                      }
                      //const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
                      const timeToExpire = 1000 * 60 * 1 // 1分
-                     cache.put(lineId, threads, timeToExpire);
+                     cache.put(lineId, thread, timeToExpire);
                      resolve();
                  },
                  function(error){
