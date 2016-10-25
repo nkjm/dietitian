@@ -221,8 +221,6 @@ router.post('/', (req, res, next) => {
                 res.status(200).end();
             }
         );
-
-        res.status(200).end();
     }
 });
 
