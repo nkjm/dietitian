@@ -13,12 +13,13 @@ const CalorieCalc = require('./calorieCalc');
 
      static askDietType(lineId){
          return new Promise(function(resolve, reject){
-
+             let messageText = 'それってどの食事でしたっけ？';
              let message = {
                  type: 'template',
+                 altText: messageText,
                  template: {
                      type: 'buttons',
-                     text: 'どの食事でしたっけ？',
+                     text: messageText,
                      actions: [{
                          "type":"postback",
                          "label":"朝食",
@@ -34,10 +35,9 @@ const CalorieCalc = require('./calorieCalc');
                      }]
                  }
              };
-
              LineBot.pushMessage(lineId, message)
              .then(
-                 function(){
+                 function(response){
                      const thread = {
                          thread: [{
                              timestamp: (new Date()).getTime(),

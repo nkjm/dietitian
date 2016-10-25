@@ -72,17 +72,16 @@ router.post('/', (req, res, next) => {
             //// 食品リスト（栄養情報含む）をスレッドに保存する。
             Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
             //// どの食事か質問する。
-            console.log("asking diet type.");
             Dietitian.askDietType(personDb.person.line_id)
             .then(
                 function(){
                     res.status(200).end();
-                    p.break();
                 },
                 function(error){
                     return Promise.reject(error);
                 }
-            )
+            );
+            p.break();
         },
         function(error){
             console.log(error.message);
