@@ -144,8 +144,9 @@ router.post('/', (req, res, next) => {
             }
         );
     } else if (eventType == 'postback'){
-        let postbackData = JSON.parse(req.body.events[0].postback.data);
+        let postbackData = req.body.events[0].postback.data;
         console.log(postbackData);
+        console.log(JSON.parse(postbackData));
         res.status(200).end();
     }
 });
