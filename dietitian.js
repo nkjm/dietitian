@@ -13,7 +13,7 @@ const CalorieCalc = require('./calorieCalc');
 
      static askDietType(lineId){
          return new Promise(function(resolve, reject){
-             let messageText = 'それってどの食事でしたっけ？';
+             let messageText = 'それってどの食事？';
              let message = {
                  type: 'template',
                  altText: messageText,
@@ -27,7 +27,7 @@ const CalorieCalc = require('./calorieCalc');
                      },{
                          "type":"postback",
                          "label":"昼食",
-                         "data":"postback_type=answer_diet_type&diet_type=lunch"
+                         "data":"{postback_type':'answer_diet_type',diet_type:'lunch'}"
                      },{
                          "type":"postback",
                          "label":"夕食",
