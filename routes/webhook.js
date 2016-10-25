@@ -27,7 +27,7 @@ router.post('/', (req, res, next) => {
 
     // ユーザー情報を取得する。
     const personDb = new PersonDb();
-    personDb.getPerson(line_id)
+    let p = personDb.getPerson(line_id)
     .then(
         function(person){
             // メッセージから食品を抽出する。
@@ -72,8 +72,17 @@ router.post('/', (req, res, next) => {
             //// 食品リスト（栄養情報含む）をスレッドに保存する。
             Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
             //// どの食事か質問する。
-            Dietitian.askDietType(personDb.person.line_id);
-            res.status(200).end();
+            console.log("asking diet type.");
+            Dietitian.askDietType(personDb.person.line_id)
+            .then(
+                function(){
+                    res.status(200).end();
+                    p.break();
+                },
+                function(error){
+                    return Promise.reject(error);
+                }
+            )
         },
         function(error){
             console.log(error.message);
