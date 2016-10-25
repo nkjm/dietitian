@@ -76,6 +76,7 @@ router.post('/', (req, res, next) => {
             .then(
                 function(){
                     res.status(200).end();
+                    p.break();
                 },
                 function(error){
                     return Promise.reject(error);
