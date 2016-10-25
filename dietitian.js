@@ -27,7 +27,10 @@ const CalorieCalc = require('./calorieCalc');
                      },{
                          "type":"postback",
                          "label":"昼食",
-                         "data":"{'postback_type':'answer_diet_type','diet_type':'lunch'}"
+                         "data": JSON.stringify({
+                             postback_type:'answer_diet_type',
+                             diet_type:'lunch'
+                         })
                      },{
                          "type":"postback",
                          "label":"夕食",
