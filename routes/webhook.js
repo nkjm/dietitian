@@ -50,14 +50,13 @@ router.post('/', (req, res, next) => {
     ).then(
         function(foodListWithNutrition){
             // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
-            let thread = cache.get(personDb.person.line_id);
+            let thread = cache.get('thread-' + personDb.person.line_id);
             let dietDate;
             let dietType;
 
             if (thread){
                 // 事前の会話が存在している場合。
                 let latestMessage = thread.thread[thread.thread.length - 1];
-                console.log(latestMessage);
                 if (latestMessage.source == 'dietitian' && latestMessage.question == 'what'){
                     // Botが何を食べたか聞いていた場合。Diet TypeとDiet Dateは特定されているため、食事履歴の保存に進む。
                     dietDate = latestMessage.dietDate;
@@ -82,7 +81,7 @@ router.post('/', (req, res, next) => {
     ).then(
         function(savedDietHistoryList){
             // WebSocketを通じて更新を通知
-            let channel = cache.get(personDb.person.line_id);
+            let channel = cache.get('channel-' + personDb.person.line_id);
             if (channel){
                 channel.emit('personalHistoryUpdated', savedDietHistoryList);
             }

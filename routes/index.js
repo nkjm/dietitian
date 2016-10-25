@@ -20,7 +20,7 @@ router.get('/:line_id', (req, res, next) => {
             personDb.person = person;
 
             // Socket.IOのチャネル(Name Space)をオープン。
-            if (!cache.get(personDb.person.line_id)){
+            if (!cache.get('channel-' + personDb.person.line_id)){
                 let channel = app.io.of('/' + personDb.person.line_id);
 
                 // Socket.IOでListenするEventを登録。
@@ -32,7 +32,7 @@ router.get('/:line_id', (req, res, next) => {
                 });
 
                 // Channelを共有キャッシュに保存。
-                cache.put(personDb.person.line_id, channel);
+                cache.put('channel-' + personDb.person.line_id, channel);
             }
 
             // UIを出力。

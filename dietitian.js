@@ -46,7 +46,7 @@ const CalorieCalc = require('./calorieCalc');
                          }]
                      }
                      const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-                     cache.put(lineId, thread, timeToExpire);
+                     cache.put('thread-' + lineId, thread, timeToExpire);
                      resolve();
                  },
                  function(error){
@@ -66,7 +66,7 @@ const CalorieCalc = require('./calorieCalc');
              }]
          }
          const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-         cache.put(lineId, thread, timeToExpire);
+         cache.put('thread-' + lineId, thread, timeToExpire);
      }
 
      static whatDidYouEat(lineId, dietType){
@@ -94,7 +94,7 @@ const CalorieCalc = require('./calorieCalc');
                      }
                      //const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
                      const timeToExpire = 1000 * 60 * 1 // 1分
-                     cache.put(lineId, thread, timeToExpire);
+                     cache.put('thread-' + lineId, thread, timeToExpire);
                      resolve();
                  },
                  function(error){
