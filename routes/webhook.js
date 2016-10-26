@@ -56,7 +56,7 @@ router.post('/', (req, res, next) => {
                         type: 'text',
                         text: 'ごめんなさい。何食べたのかわからなかったわ。'
                     }
-                    LineBot.replayMessage(replyToken, message)
+                    LineBot.replyMessage(replyToken, message)
                     .then(
                         function(){
                             res.status(200).end();
