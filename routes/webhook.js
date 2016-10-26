@@ -31,6 +31,8 @@ router.post('/', (req, res, next) => {
     let lineId = req.body.events[0].source.userId;
 
     if (eventType == 'message'){
+        // イベントがメッセージだった場合の処理。
+
         let message = req.body.events[0].message.text;
         // ユーザー情報を取得する。
         const personDb = new PersonDb();
@@ -145,6 +147,8 @@ router.post('/', (req, res, next) => {
             }
         );
     } else if (eventType == 'postback'){
+        // イベントがPostbackだった場合の処理。
+
         let postbackData = JSON.parse(req.body.events[0].postback.data);
         let dietType = postbackData.dietType;
         let dietDate = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate();

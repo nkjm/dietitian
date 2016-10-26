@@ -15,6 +15,7 @@ module.exports = class foodDb {
             Promise.all(gotFoodList)
             .then(
                 function(foodList){
+                    console.log(foodList);
                     resolve(foodList);
                 },
                 function(error){
