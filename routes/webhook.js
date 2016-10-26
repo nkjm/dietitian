@@ -70,6 +70,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 // 食品リストの食品それぞれについて、栄養情報を取得する。
+                console.log('Getting Food List with Nutrition.');
                 return FoodDb.getFoodListWithNutrition(foodList);
             },
             function(error){
@@ -78,6 +79,25 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(foodListWithNutrition){
+                // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
+                if (foodListWithNutrition.length == 0){
+                    let message = {
+                        type: 'text',
+                        text: 'ごめんなさい。食べたものの栄養情報がわからないわ。'
+                    }
+                    LineBot.replyMessage(replyToken, message)
+                    .then(
+                        function(){
+                            res.status(200).end();
+                        },
+                        function(error){
+                            console.log(error);
+                            res.status(200).end();
+                        }
+                    );
+                    p.cancel();
+                }
+
                 // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
                 let thread = cache.get('thread-' + personDb.person.line_id);
                 let dietDate;
@@ -93,6 +113,7 @@ router.post('/', (req, res, next) => {
                         dietType = latestMessage.dietType;
 
                         // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                        console.log('Saving Diet History.');
                         return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
                     }
                 }
@@ -128,6 +149,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 // 残り必要カロリーを取得。
+                console.log('Getting Calorie To Go.');
                 return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
             },
             function(error){
@@ -138,11 +160,11 @@ router.post('/', (req, res, next) => {
                 // メッセージをユーザーに送信。
                 let messageText;
                 if (calorieToGo > 0){
-                    messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
+                    messageText = 'はーい、了解。満タンまであと' + calorieToGo + 'kcalですよー。';
                 } else if (calorieToGo < 0){
                     messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
                 } else if (calorieToGo == 0){
-                    messageText = 'カロリー、ちょうど満タンです！';
+                    messageText = 'カロリー、ちょうど満タンですよ！';
                 } else {
                     messageText = 'あれ、満タンまであとどれくらいだろう・・';
                 }
@@ -150,6 +172,7 @@ router.post('/', (req, res, next) => {
                     type: 'text',
                     text: messageText
                 }
+                console.log('Replying to the user.');
                 return LineBot.replyMessage(replyToken, message);
             },
             function(error){
@@ -195,6 +218,7 @@ router.post('/', (req, res, next) => {
                 personDb.person = person;
 
                 // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                console.log('Saveing Diet History.');
                 return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
             },
             function(error){
@@ -214,6 +238,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 // 残り必要カロリーを取得。
+                console.log('Getting Calorie To Go.');
                 return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
             },
             function(error){
@@ -236,6 +261,7 @@ router.post('/', (req, res, next) => {
                     type: 'text',
                     text: messageText
                 }
+                console.log('Replying to the user.');
                 return LineBot.replyMessage(replyToken, message);
             },
             function(error){

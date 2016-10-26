@@ -15,8 +15,20 @@ module.exports = class foodDb {
             Promise.all(gotFoodList)
             .then(
                 function(foodList){
-                    console.log(foodList);
-                    resolve(foodList);
+                    let identifiedFoodList = [];
+                    for (let food of foodList){
+                        if (food && typeof food.food_id != 'undefined' && food.food_id != null){
+                            identifiedFoodList.push(food);
+                        }
+                    }
+                    if (identifiedFoodList.length == 0){
+                        console.log('We could not identify any of the food you provided.');
+                    } else {
+                        console.log('Here are the foods we could identify.');
+                        console.log(identifiedFoodList);
+                    }
+
+                    resolve(identifiedFoodList);
                 },
                 function(error){
                     reject(error);

@@ -27,7 +27,7 @@ module.exports = class textMiner {
             }
 
             // 食品リストを返す。0個であれば空の配列を返す
-            if (foodList.length > 0){
+            if (foodList.length == 0){
                 console.log('According to TextMiner, Food not found in message');
             }
             resolve(foodList);
