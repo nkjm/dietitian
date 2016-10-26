@@ -26,12 +26,11 @@ module.exports = class textMiner {
                 }
             }
 
-            // 食品リストが1つ以上認識されていれば食品リストを返す。そうでなければエラーメッセージを返す。
+            // 食品リストを返す。0個であれば空の配列を返す
             if (foodList.length > 0){
-                resolve(foodList);
-            } else {
-                reject({message: 'Food not found.'});
+                console.log('According to TextMiner, Food not found in message');
             }
+            resolve(foodList);
         });
     }
 };

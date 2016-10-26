@@ -50,6 +50,25 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(foodList){
+                // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
+                if (foodList.length == 0){
+                    let message = {
+                        type: 'text',
+                        text: 'ごめんなさい。何食べたのかわからなかったわ。'
+                    }
+                    LineBot.replayMessage(replyToken, message)
+                    .then(
+                        function(){
+                            res.status(200).end();
+                        },
+                        function(error){
+                            console.log(error);
+                            res.status(200).end();
+                        }
+                    );
+                    p.cancel();
+                }
+
                 // 食品リストの食品それぞれについて、栄養情報を取得する。
                 return FoodDb.getFoodListWithNutrition(foodList);
             },
