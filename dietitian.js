@@ -13,7 +13,7 @@ const CalorieCalc = require('./calorieCalc');
 
      static askDietType(lineId){
          return new Promise(function(resolve, reject){
-             let messageText = 'どの食事で食べたの？';
+             let messageText = 'どの食事でいただいたの？';
              let message = {
                  type: 'template',
                  altText: messageText,
