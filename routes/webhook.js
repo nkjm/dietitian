@@ -97,6 +97,7 @@ router.post('/', (req, res, next) => {
                         }
                     );
                     p.cancel();
+                    return;
                 }
 
                 // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
@@ -133,6 +134,7 @@ router.post('/', (req, res, next) => {
                     }
                 );
                 p.cancel();
+                return;
             },
             function(error){
                 console.log(error.message);
