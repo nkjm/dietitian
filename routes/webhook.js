@@ -67,6 +67,7 @@ router.post('/', (req, res, next) => {
                         }
                     );
                     p.cancel();
+                    return;
                 }
 
                 // 食品リストの食品それぞれについて、栄養情報を取得する。
