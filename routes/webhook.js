@@ -84,7 +84,7 @@ router.post('/', (req, res, next) => {
                 if (foodListWithNutrition.length == 0){
                     let message = {
                         type: 'text',
-                        text: 'ごめんなさい。食べたものの栄養情報がわからないわ。'
+                        text: 'ごめんなさい。食べた物の栄養情報がわからなかったわ。'
                     }
                     LineBot.replyMessage(replyToken, message)
                     .then(
