@@ -64,17 +64,10 @@ router.post('/', (req, res, next) => {
             function(foodList){
                 // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                 if (foodList.length == 0){
-                    let message = {
-                        type: 'text',
-                        text: 'ごめんなさい。何食べたのかわからなかったわ。'
-                    }
-                    LineBot.replyMessage(replyToken, message)
+                    console.log('No food word found.');
+                    Dietitian.apologize(replyToken)
                     .then(
                         function(){
-                            res.status(200).end();
-                        },
-                        function(error){
-                            console.log(error);
                             res.status(200).end();
                         }
                     );
@@ -94,17 +87,10 @@ router.post('/', (req, res, next) => {
             function(foodListWithNutrition){
                 // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                 if (foodListWithNutrition.length == 0){
-                    let message = {
-                        type: 'text',
-                        text: 'ごめんなさい。食べた物の栄養情報がわからなかったわ。'
-                    }
-                    LineBot.replyMessage(replyToken, message)
+                    console.log('No food identified.');
+                    Dietitian.apologize(replyToken)
                     .then(
                         function(){
-                            res.status(200).end();
-                        },
-                        function(error){
-                            console.log(error);
                             res.status(200).end();
                         }
                     );
@@ -116,7 +102,6 @@ router.post('/', (req, res, next) => {
                 let thread = cache.get('thread-' + personDb.person.line_id);
                 let dietDate;
                 let dietType;
-
                 if (thread){
                     console.log("Found thread.");
                     // 事前の会話が存在している場合。
@@ -140,9 +125,6 @@ router.post('/', (req, res, next) => {
                 .then(
                     function(){
                         res.status(200).end();
-                    },
-                    function(error){
-                        return Promise.reject(error);
                     }
                 );
                 p.cancel();
@@ -173,7 +155,7 @@ router.post('/', (req, res, next) => {
         ).then(
             function(calorieToGo){
                 // 残りカロリーに応じたメッセージを送信する。
-                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo)
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo);
             },
             function(error){
                 return Promise.reject(error);
@@ -255,23 +237,8 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(calorieToGo){
-                // メッセージをユーザーに送信。
-                let messageText;
-                if (calorieToGo > 0){
-                    messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
-                } else if (calorieToGo < 0){
-                    messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
-                } else if (calorieToGo == 0){
-                    messageText = 'カロリー、ちょうど満タンです！';
-                } else {
-                    messageText = 'あれ、満タンまであとどれくらいだろう・・';
-                }
-                let message = {
-                    type: 'text',
-                    text: messageText
-                }
-                console.log('Replying to the user.');
-                return LineBot.replyMessage(replyToken, message);
+                // 残りカロリーに応じたメッセージを送信する。
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo);
             },
             function(error){
                 return Promise.reject(error);

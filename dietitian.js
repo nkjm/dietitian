@@ -8,6 +8,15 @@ require('date-utils');
 
  module.exports = class dietitian {
 
+     static apologize(replyToken){
+         let message = {
+             type: 'text',
+             text: 'ごめんなさい、何食べたのかわからなかったわ。'
+         }
+         console.log('Replying apologies.');
+         return LineBot.replyMessage(replyToken, message);
+     }
+
      static replyBasedOnCalorieToGo(replyToken, calorieToGo){
          let messageText;
          if (calorieToGo > 0){
@@ -28,54 +37,47 @@ require('date-utils');
      }
 
      static askDietType(lineId){
-         return new Promise(function(resolve, reject){
-             let messageText = 'どの食事でいただいたの？';
-             let message = {
-                 type: 'template',
-                 altText: messageText,
-                 template: {
-                     type: 'buttons',
-                     text: messageText,
-                     actions: [{
-                         "type":"postback",
-                         "label":"朝食",
-                         "data": JSON.stringify({
-                             postbackType:'answerDietType',
-                             dietType:'breakfast'
-                         })
-                     },{
-                         "type":"postback",
-                         "label":"昼食",
-                         "data": JSON.stringify({
-                             postbackType:'answerDietType',
-                             dietType:'lunch'
-                         })
-                     },{
-                         "type":"postback",
-                         "label":"夕食",
-                         "data": JSON.stringify({
-                             postbackType:'answerDietType',
-                             dietType:'dinner'
-                         })
-                     }]
-                 }
-             };
-             LineBot.pushMessage(lineId, message)
-             .then(
-                 function(response){
-                     let conversation = {
-                         timestamp: (new Date()).getTime(),
-                         source: 'dietitian',
-                         type: 'askDietType'
-                     }
-                     dietitian.pushToThread(lineId, conversation);
-                     resolve();
-                 },
-                 function(error){
-                     reject(error);
-                 }
-             )
-         });
+         let messageText = 'どの食事でいただいたの？';
+         let message = {
+             type: 'template',
+             altText: messageText,
+             template: {
+                 type: 'buttons',
+                 text: messageText,
+                 actions: [{
+                     "type":"postback",
+                     "label":"朝食",
+                     "data": JSON.stringify({
+                         postbackType:'answerDietType',
+                         dietType:'breakfast'
+                     })
+                 },{
+                     "type":"postback",
+                     "label":"昼食",
+                     "data": JSON.stringify({
+                         postbackType:'answerDietType',
+                         dietType:'lunch'
+                     })
+                 },{
+                     "type":"postback",
+                     "label":"夕食",
+                     "data": JSON.stringify({
+                         postbackType:'answerDietType',
+                         dietType:'dinner'
+                     })
+                 }]
+             }
+         };
+
+         // 質問をスレッドに記録。
+         let conversation = {
+             timestamp: (new Date()).getTime(),
+             source: 'dietitian',
+             type: 'askDietType'
+         }
+         dietitian.pushToThread(lineId, conversation);
+
+         return LineBot.pushMessage(lineId, message);
      }
 
      static saveFoodList(lineId, foodList){
@@ -89,34 +91,25 @@ require('date-utils');
      }
 
      static whatDidYouEat(lineId, dietType){
-         return new Promise(function(resolve, reject){
+         let dietTypeLabel = dietitian.getDietTypeLabel(dietType);
+         if (!dietTypeLabel) reject({message: 'Unknown Diet Type'});
 
-             let dietTypeLabel = dietitian.getDietTypeLabel(dietType);
-             if (!dietTypeLabel) reject({message: 'Unknown Diet Type'});
+         let message = {
+             type: 'text',
+             text: '今日の' + dietTypeLabel + 'は何を食べたの？'
+         }
 
-             let message = {
-                 type: 'text',
-                 text: '今日の' + dietTypeLabel + 'は何を食べたの？'
-             }
+         // 質問をスレッドに記録。
+         let conversation = {
+             timestamp: (new Date()).getTime(),
+             source: 'dietitian',
+             type: 'whatDidYouEat',
+             dietType: dietType,
+             dietDate: (new Date()).toFormat("YYYY-MM-DD")
+         }
+         dietitian.pushToThread(lineId, conversation);
 
-             LineBot.pushMessage(lineId, message)
-             .then(
-                 function(){
-                     let conversation = {
-                         timestamp: (new Date()).getTime(),
-                         source: 'dietitian',
-                         type: 'whatDidYouEat',
-                         dietType: dietType,
-                         dietDate: (new Date()).toFormat("YYYY-MM-DD")
-                     }
-                     dietitian.pushToThread(lineId, conversation);
-                     resolve();
-                 },
-                 function(error){
-                     reject(error);
-                 }
-             )
-         });
+         return LineBot.pushMessage(lineId, message);
      }
 
      static pushToThread(lineId, conversation){
