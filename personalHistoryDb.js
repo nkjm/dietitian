@@ -106,7 +106,8 @@ module.exports = class personalHistoryDb {
                 url: dbPrefix + '/diet_history',
                 method: 'POST',
                 headers: headers,
-                body: dietHistory
+                body: dietHistory,
+                json: true
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
