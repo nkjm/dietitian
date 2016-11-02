@@ -32,7 +32,18 @@ router.post('/', (req, res, next) => {
     let lineId = req.body.events[0].source.userId;
 
     if (eventType == 'message'){
+        // ---------------------------------------------------------------------
         // イベントがメッセージだった場合の処理。
+        // ユーザーがいきなり話しかけてきた場合、およびBotが「朝食は何食べたの？」という質問への返信時にこちらの処理が走る。
+        // ---------------------------------------------------------------------
+        /*
+        1. ユーザー情報を取得する。
+        2. メッセージから食品っぽい単語を抽出する。
+        3. 食品っぽい単語それぞれについて栄養価を取得する。
+        4. どの食事か特定し食事履歴に保存する。
+        5. スレッドを削除、WebSocketで更新を通知、残りカロリーを取得する。
+        6. 残りカロリーに応じたメッセージを送信する。
+        */
 
         let message = req.body.events[0].message.text;
         // ユーザー情報を取得する。
@@ -42,7 +53,7 @@ router.post('/', (req, res, next) => {
             function(person){
                 personDb.person = person;
 
-                // メッセージから食品を抽出する。
+                // メッセージから食品っぽい単語を抽出する。
                 return TextMiner.getFoodListFromMessage(message);
             },
             function(error){
@@ -161,23 +172,8 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(calorieToGo){
-                // メッセージをユーザーに送信。
-                let messageText;
-                if (calorieToGo > 0){
-                    messageText = 'はーい、了解。満タンまであと' + calorieToGo + 'kcalですよー。';
-                } else if (calorieToGo < 0){
-                    messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
-                } else if (calorieToGo == 0){
-                    messageText = 'カロリー、ちょうど満タンですよ！';
-                } else {
-                    messageText = 'あれ、満タンまであとどれくらいだろう・・';
-                }
-                let message = {
-                    type: 'text',
-                    text: messageText
-                }
-                console.log('Replying to the user.');
-                return LineBot.replyMessage(replyToken, message);
+                // 残りカロリーに応じたメッセージを送信する。
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo)
             },
             function(error){
                 return Promise.reject(error);
@@ -193,8 +189,17 @@ router.post('/', (req, res, next) => {
             }
         );
     } else if (eventType == 'postback'){
+        // ---------------------------------------------------------------------
         // イベントがPostbackだった場合の処理。
-
+        // ユーザーがいきなり話しかけてきた後、Botがどの食事か質問し、その答えをタップしたときにこちらの処理が走る。
+        // ---------------------------------------------------------------------
+        /*
+        1. スレッドから食事履歴を取得する。
+        2. ユーザー情報を取得する。
+        3. 食事履歴に保存する。
+        4. スレッドを削除、WebSocketで更新を通知、残りカロリーを取得する。
+        5. 残りカロリーに応じたメッセージを送信する。
+        */
         let postbackData = JSON.parse(req.body.events[0].postback.data);
         let dietType = postbackData.dietType;
         let dietDate = (new Date()).toFormat("YYYY-MM-DD");

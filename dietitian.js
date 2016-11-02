@@ -8,6 +8,25 @@ require('date-utils');
 
  module.exports = class dietitian {
 
+     static replyBasedOnCalorieToGo(replyToken, calorieToGo){
+         let messageText;
+         if (calorieToGo > 0){
+             messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
+         } else if (calorieToGo < 0){
+             messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
+         } else if (calorieToGo == 0){
+             messageText = 'カロリー、ちょうど満タンです！';
+         } else {
+             messageText = 'あれ、満タンまであとどれくらいだろう・・';
+         }
+         let message = {
+             type: 'text',
+             text: messageText
+         }
+         console.log('Sending message based on Calorie to go.');
+         return LineBot.replyMessage(replyToken, message);
+     }
+
      static askDietType(lineId){
          return new Promise(function(resolve, reject){
              let messageText = 'どの食事でいただいたの？';
