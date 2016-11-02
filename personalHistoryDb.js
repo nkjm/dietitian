@@ -112,6 +112,7 @@ module.exports = class personalHistoryDb {
                 if (error) {
                     reject(error);
                 } else {
+                    console.log(response.statusCode);
                     resolve(dietHistory);
                 }
             });
