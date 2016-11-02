@@ -4,12 +4,9 @@ const LineBot = require('./lineBot.js');
 const cache = require('memory-cache');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
+require('date-utils');
 
  module.exports = class dietitian {
-
-     static commentOnCalorie(lineId, calorieToGo){
-
-     }
 
      static askDietType(lineId){
          return new Promise(function(resolve, reject){
@@ -91,7 +88,7 @@ const CalorieCalc = require('./calorieCalc');
                          source: 'dietitian',
                          type: 'whatDidYouEat',
                          dietType: dietType,
-                         dietDate: (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate()
+                         dietDate: (new Date()).toFormat("YYYY-MM-DD")
                      }
                      dietitian.pushToThread(lineId, conversation);
                      resolve();

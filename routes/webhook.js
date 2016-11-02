@@ -11,6 +11,7 @@ const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
+require('date-utils');
 
 Promise.config({
     // Enable cancellation
@@ -196,7 +197,7 @@ router.post('/', (req, res, next) => {
 
         let postbackData = JSON.parse(req.body.events[0].postback.data);
         let dietType = postbackData.dietType;
-        let dietDate = (new Date()).getFullYear() + '-' + ((new Date()).getMonth() + 1) + '-' + (new Date()).getDate();
+        let dietDate = (new Date()).toFormat("YYYY-MM-DD");
         let threadList = cache.get('thread-' + lineId);
         let foodListWithNutrition;
 
