@@ -28,7 +28,7 @@ module.exports = class personalHistoryDb {
                         let calorieToGo = CalorieCalc.getRequiredCalorie(birthday, height, sex) - today_total_calorie;
                         resolve(calorieToGo);
                     } else {
-                        reject({message:'Failed to get total calorie of today. It seems PersonalHistoryDb is out of order.'});
+                        reject({message:'Failed to get total calorie of today. It seems no record has been saved yet.'});
                     }
                 }
             });
@@ -100,11 +100,13 @@ module.exports = class personalHistoryDb {
             let headers = {
                 'Content-Type': 'application/json'
             };
+            console.log("Saving following diet.");
+            console.log(dietHistory);
             request({
                 url: dbPrefix + '/diet_history',
                 method: 'POST',
                 headers: headers,
-                form: dietHistory
+                body: dietHistory
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
