@@ -47,9 +47,11 @@ router.post('/', (req, res, next) => {
 
         let message = req.body.events[0].message.text;
         // ユーザー情報を取得する。
+        let person;
         let p = PersonDb.getPerson(lineId)
         .then(
-            function(person){
+            function(response){
+                person = response;
                 // メッセージから食品っぽい単語を抽出する。
                 return TextMiner.getFoodListFromMessage(message);
             },
