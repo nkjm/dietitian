@@ -34,8 +34,7 @@ router.get('/api/whatDidYouEat', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
-    const personDb = new PersonDb();
-    personDb.getPersonList()
+    PersonDb.getPersonList()
     .then(
         function(personList){
             // UIを出力。

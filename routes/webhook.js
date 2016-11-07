@@ -47,12 +47,9 @@ router.post('/', (req, res, next) => {
 
         let message = req.body.events[0].message.text;
         // ユーザー情報を取得する。
-        const personDb = new PersonDb();
-        let p = personDb.getPerson(lineId)
+        let p = PersonDb.getPerson(lineId)
         .then(
             function(person){
-                personDb.person = person;
-
                 // メッセージから食品っぽい単語を抽出する。
                 return TextMiner.getFoodListFromMessage(message);
             },
@@ -99,7 +96,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
-                let thread = cache.get('thread-' + personDb.person.line_id);
+                let thread = cache.get('thread-' + person.line_id);
                 let dietDate;
                 let dietType;
                 if (thread){
@@ -113,15 +110,15 @@ router.post('/', (req, res, next) => {
 
                         // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
                         console.log('Saving Diet History.');
-                        return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
+                        return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
                     }
                 }
 
                 // 事前の会話がなかった場合。
                 //// 食品リスト（栄養情報含む）をスレッドに保存する。
-                Dietitian.saveFoodList(personDb.person.line_id, foodListWithNutrition);
+                Dietitian.saveFoodList(person.line_id, foodListWithNutrition);
                 //// どの食事か質問する。
-                Dietitian.askDietType(personDb.person.line_id)
+                Dietitian.askDietType(person.line_id)
                 .then(
                     function(){
                         res.status(200).end();
@@ -137,17 +134,17 @@ router.post('/', (req, res, next) => {
         ).then(
             function(savedDietHistoryList){
                 // スレッド（会話）を削除
-                cache.del('thread-' + personDb.person.line_id);
+                cache.del('thread-' + person.line_id);
 
                 // WebSocketを通じて更新を通知
-                let channel = cache.get('channel-' + personDb.person.line_id);
+                let channel = cache.get('channel-' + person.line_id);
                 if (channel){
                     channel.emit('personalHistoryUpdated', savedDietHistoryList);
                 }
 
                 // 残り必要カロリーを取得。
                 console.log('Getting Calorie To Go.');
-                return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
+                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height, person.sex);
             },
             function(error){
                 return Promise.reject(error);
@@ -202,15 +199,12 @@ router.post('/', (req, res, next) => {
             return res.status(200).end();
         }
 
-        const personDb = new PersonDb();
-        let p = personDb.getPerson(lineId)
+        let p = PersonDb.getPerson(lineId)
         .then(
             function(person){
-                personDb.person = person;
-
                 // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
                 console.log('Saveing Diet History.');
-                return PersonalHistoryDb.saveFoodListAsDietHistory(personDb.person.line_id, dietDate, dietType, foodListWithNutrition);
+                return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
             },
             function(error){
                 return Promise.reject(error);
@@ -220,17 +214,17 @@ router.post('/', (req, res, next) => {
             function(savedDietHistoryList){
                 // スレッド（会話）を削除
                 console.log('Deleting Thread');
-                cache.del('thread-' + personDb.person.line_id);
+                cache.del('thread-' + person.line_id);
 
                 // WebSocketを通じて更新を通知
-                let channel = cache.get('channel-' + personDb.person.line_id);
+                let channel = cache.get('channel-' + person.line_id);
                 if (channel){
                     channel.emit('personalHistoryUpdated', savedDietHistoryList);
                 }
 
                 // 残り必要カロリーを取得。
                 console.log('Getting Calorie To Go.');
-                return PersonalHistoryDb.getCalorieToGo(personDb.person.line_id, personDb.person.birthday, personDb.person.height, personDb.person.sex);
+                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height, person.sex);
             },
             function(error){
                 return Promise.reject(error);

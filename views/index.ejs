@@ -9,9 +9,11 @@
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="bower_components/chart.js/dist/Chart.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" src="javascripts/dietitian/module.js"></script>
 <script type="text/javascript" src="javascripts/dietitian/rootCtl.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/personCtl.js"></script>
 <script type="text/javascript" src="javascripts/dietitian/todayCtl.js"></script>
 <script type="text/javascript" src="javascripts/dietitian/thisWeekCtl.js"></script>
 <script>
@@ -39,32 +41,50 @@ body {
 <body>
     <div class="container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px; width: 80%;" ng-cloak="true">
         <!-- Person Profile -->
-        <div id="person_profile" class="row" style="margin-bottom: 40px;">
-            <div id="person_icon" class="col-sm-3">
-                <img ng-src="{{ui.person.icon_url}}" class="img-circle" height="175"></img>
-            </div>
+        <div ng-controller="personCtl" id="person_profile" style="margin-bottom: 40px;">
 
-            <div class="col-sm-9">
-                <div id="person_fullname" style="margin-bottom:10px;">
-                    <span style="font-size: 36pt">{{ui.person.lastname}} {{ui.person.firstname}}</span>
+            <div class="row">
+                <div id="person_icon" class="col-sm-3">
+                    <img ng-src="{{ui.person.icon_url}}" class="img-circle" height="175"></img>
                 </div>
 
-                <div class="row" style="text-align:center;">
-                    <div id="person_height" class="col-sm-3">
-                        <div class="profile_attr_label">身長</div>
-                        <div class="profile_attr_value">{{ui.person.height}} cm</div>
+                <div class="col-sm-9">
+                    <button class="btn btn-default pull-right" type="button" ng-click="openPersonForm(ui.person)" ng-disabled="ui.remoting.isRemoting"><span class="glyphicon glyphicon-pencil"></span>&nbsp;編集</button>
+
+                    <div id="person_fullname" style="margin-bottom:10px;">
+                        <span style="font-size: 36pt">{{ui.person.lastname}} {{ui.person.firstname}}</span>
                     </div>
-                    <div id="person_weight" class="col-sm-3">
-                        <div class="profile_attr_label">体重</div>
-                        <div class="profile_attr_value">{{ui.person.weight}} kg</div>
+
+                    <div class="row" style="text-align:center;">
+                        <div id="person_age" class="col-sm-3">
+                            <div class="profile_attr_label">年齢</div>
+                            <div class="profile_attr_value">{{ui.person.age}} 歳</div>
+                        </div>
+                        <div id="person_sex" class="col-sm-3">
+                            <div class="profile_attr_label">性別</div>
+                            <div class="profile_attr_value">{{(ui.person.sex == "male") ? "男" : "女"}}</div>
+                        </div>
+                        <div id="person_height" class="col-sm-3">
+                            <div class="profile_attr_label">身長</div>
+                            <div class="profile_attr_value">{{ui.person.height}} cm</div>
+                        </div>
+                        <div id="person_activity" class="col-sm-3">
+                            <div class="profile_attr_label">活動量</div>
+                            <div class="profile_attr_value">{{ui.person.activity}}</div>
+                        </div>
                     </div>
-                    <div id="person_weight" class="col-sm-3">
-                        <div class="profile_attr_label">血液型</div>
-                        <div class="profile_attr_value">{{ui.person.blood}} 型</div>
-                    </div>
-                    <div id="person_age" class="col-sm-3">
-                        <div class="profile_attr_label">年齢</div>
-                        <div class="profile_attr_value">{{ui.person.age}} 歳</div>
+
+                </div>
+
+            </div>
+
+            <div ng-show="ui.remoting.isRemoting" style="margin-top: 20px;">
+                <div style="text-align:center;color: #999;">
+                    {{ui.remoting.status}}
+                </div>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">{{ui.remoting.status}}</span>
                     </div>
                 </div>
             </div>
@@ -97,6 +117,11 @@ body {
         </div>
 
     </div>
+
+    <script type="text/ng-template" id="personForm">
+        <% include ./components/personForm %>
+    </script>
+
 </body>
 
 </html>

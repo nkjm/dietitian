@@ -18,18 +18,16 @@ router.get('/:line_id', (req, res, next) => {
         return res.error(400).send('Line id not set.');
     }
     let personDb = new PersonDb();
-    let p = personDb.getPerson(req.params.line_id)
+    let p = PersonDb.getPerson(req.params.line_id)
     .then(
         function(person){
             if (!person){
                 p.cancel();
             }
-            person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex);
-            personDb.person = person;
 
             // Socket.IOのチャネル(Name Space)をオープン。
-            if (!cache.get('channel-' + personDb.person.line_id)){
-                let channel = app.io.of('/' + personDb.person.line_id);
+            if (!cache.get('channel-' + person.line_id)){
+                let channel = app.io.of('/' + person.line_id);
 
                 // Socket.IOでListenするEventを登録。
                 channel.on('connection', function(socket){
@@ -40,11 +38,11 @@ router.get('/:line_id', (req, res, next) => {
                 });
 
                 // Channelを共有キャッシュに保存。
-                cache.put('channel-' + personDb.person.line_id, channel);
+                cache.put('channel-' + person.line_id, channel);
             }
 
             // UIを出力。
-            res.render('index', {person: personDb.person});
+            res.render('index', {person: person});
         },
         function(error){
             return res.error(400).send('Could not get person from Person Db. It seems Person Db is out of order.');
