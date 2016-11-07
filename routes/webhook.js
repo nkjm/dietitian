@@ -201,9 +201,12 @@ router.post('/', (req, res, next) => {
             return res.status(200).end();
         }
 
+        // ユーザー情報を取得する。
+        let person;
         let p = PersonDb.getPerson(lineId)
         .then(
-            function(person){
+            function(response){
+                person = response;
                 // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
                 console.log('Saveing Diet History.');
                 return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
