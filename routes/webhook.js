@@ -50,8 +50,7 @@ router.post('/', (req, res, next) => {
         let person;
         let p = PersonDb.getPerson(lineId)
         .then(
-            function(response){
-                person = response;
+            function(person){
                 // メッセージから食品っぽい単語を抽出する。
                 return TextMiner.getFoodListFromMessage(message);
             },
