@@ -33,6 +33,7 @@ module.exports = class Line {
             const headers = {
                 'Authorization': 'Bearer ' + Line.accessToken
             };
+            console.log('Line.accessToken is ' + Line.accessToken);
             request({
                 url: url,
                 method: 'GET',

@@ -48,6 +48,7 @@ router.get('/callback', (req, res, next) => {
      .then(
          // 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
          function(profile){
+             console.log(profile);
              return PersonDb.createPerson({
                  line_id: profile.mid,
                  display_name: profile.displayName,
@@ -64,7 +65,6 @@ router.get('/callback', (req, res, next) => {
              res.redirect('https://dietitian.herokuapp.com/' + line.mid);
          },
          function(error){
-             console.log(error);
              res.status(400).send();
          }
      );
