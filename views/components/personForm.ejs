@@ -16,6 +16,17 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-sm-3">生年月日</label>
+            <div class="col-sm-9">
+                <p class="input-group">
+                    <input type="text" class="form-control" uib-datepicker-popup ng-model="ui.person.birthday" is-open="ui.birthdayPickerOpen" datepicker-options="dateOptions" ng-required="true" show-button-bar="false" />
+                    <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="toggleBirthdayPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label col-sm-3">性別</label>
             <div class="col-sm-9">
                 <label class="radio-inline">
@@ -27,14 +38,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-3">生年月日</label>
+            <label class="control-label col-sm-3">身長</label>
             <div class="col-sm-9">
-                <p class="input-group">
-                    <input type="text" class="form-control" uib-datepicker-popup ng-model="ui.person.birthday" is-open="ui.birthdayPickerOpen" datepicker-options="dateOptions" ng-required="true" show-button-bar="false" />
-                    <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="toggleBirthdayPicker()"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </p>
+                <input class="form-control" type="number" ng-model="ui.person.height" placeholder="身長"></input>
             </div>
         </div>
         <div class="form-group">
@@ -49,6 +55,12 @@
                 <label class="radio-inline">
                     <input type="radio" value=3 ng-model="ui.person.activity"> 3 強
                 </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">アイコンURL</label>
+            <div class="col-sm-9">
+                <input class="form-control" type="text" ng-model="ui.person.icon_url" placeholder="アイコンURL"></input>
             </div>
         </div>
     </form>

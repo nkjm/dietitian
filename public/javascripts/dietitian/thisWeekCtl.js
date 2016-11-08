@@ -1,5 +1,5 @@
 angular.module("dietitian")
-.controller("thisWeekCtl", function($scope, $log, person){
+.controller("thisWeekCtl", function($scope, $log, state){
     $scope.ui = {};
 
     function drawThisWeekNutrition(){

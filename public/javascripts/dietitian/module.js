@@ -1,7 +1,7 @@
 angular.module("dietitian", ["ui.bootstrap"])
-.service("state", function(person){
+.service("state", function(){
     this.requestReloadPerson = false;
-    this.currentLineId = null;
+    this.person = null;
 
     this.reloadPerson = function(){
         this.requestReloadPerson = !this.requestReloadPerson;
@@ -36,6 +36,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     }
 
     this.updatePerson = function(person){
+        console.log(person);
         var url = this.dbPrefix + "/person/" + person.line_id;
         return $http({
             url: url,

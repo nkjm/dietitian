@@ -1,8 +1,8 @@
 angular.module("dietitian")
 .controller("rootCtl", function($scope, $log, person, personDb, socket, state){
     $scope.ui = {};
-    state.currentLineId = person.line_id;
-    
+    state.person = person;
+
     $scope.setCurrentTab = function(event, tab){
         event.preventDefault();
         $scope.ui.currentTab = tab;

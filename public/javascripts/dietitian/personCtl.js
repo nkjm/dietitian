@@ -1,7 +1,7 @@
 angular.module("dietitian")
-.controller("personCtl", function($scope, $log, $uibModal, person, personDb, state, remoting){
+.controller("personCtl", function($scope, $log, $uibModal, personDb, state, remoting){
     $scope.ui = {
-        person: person,
+        person: state.person,
         remoting: angular.copy(remoting)
     }
     $scope.state = state;
@@ -11,7 +11,7 @@ angular.module("dietitian")
             controller: "personFormCtl",
 			templateUrl: "personForm",
             resolve: {
-                person: angular.copy(person)
+                person: angular.copy(state.person)
             }
         });
 
@@ -24,13 +24,12 @@ angular.module("dietitian")
 
     function getPerson(lineId){
         $scope.ui.remoting.setIsRemoting(true);
-        $scope.ui.remoting.setStatus("プロフィールをロードしています");
-        personDb.getPerson(person.line_id)
+        $scope.ui.remoting.setStatus("プロフィールをリロードしています");
+        personDb.getPerson(state.person.line_id)
         .then(
             function(response){
                 $scope.ui.remoting.setIsRemoting(false);
-                $log.log(response.data);
-                $scope.ui.person = response.data;
+                state.person = response.data;
             },
             function(error){
                 $scope.ui.remoting.setIsRemoting(false);
@@ -43,7 +42,7 @@ angular.module("dietitian")
         if (newVal == oldVal){
             return;
         }
-        getPerson(state.currentLineId);
+        getPerson(state.person.line_id);
     })
 })
 .controller("personFormCtl", function($scope, $uibModalInstance, $log, person, personDb, remoting){
@@ -77,6 +76,8 @@ angular.module("dietitian")
             pushAlert("誕生日が正しく入力されていません。");
             return;
         }
+        delete personForUpdate.requiredCalorie;
+        delete personForUpdate.requiredNutrition;
 
         $scope.ui.remoting.setIsRemoting(true);
         $scope.ui.remoting.setStatus("プロフィールを更新しています")

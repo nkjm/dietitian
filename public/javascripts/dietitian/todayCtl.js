@@ -1,5 +1,6 @@
 angular.module("dietitian")
-.controller("todayCtl", function($scope, $log, socket, person, personalHistoryDb){
+.controller("todayCtl", function($scope, $log, socket, state, personalHistoryDb){
+    $scope.state = state;
     $scope.ui = {};
     $scope.ui.todayCalorie = 0;
     $scope.ui.todayCaloriePercentage = 0;
@@ -15,12 +16,6 @@ angular.module("dietitian")
         lunch: [],
         dinner: []
     };
-
-    $scope.config = {};
-    $scope.config.targetCarb = 345;
-    $scope.config.targetProtein = 120;
-    $scope.config.targetFat = 50;
-    $scope.config.targetFiber = 20;
 
     $scope.ui.refreshTodayCalorieChart = 1;
     $scope.ui.refreshTodayNutritionChart = 1;
@@ -48,10 +43,10 @@ angular.module("dietitian")
             labels: ["炭水化物", "たんぱく質", "脂肪", "食物繊維"],
             datasets: [{
                 data: [
-                    Math.round(nutrition.carb * 100 / $scope.config.targetCarb),
-                    Math.round(nutrition.protein * 100 / $scope.config.targetProtein),
-                    Math.round(nutrition.fat * 100 / $scope.config.targetFat),
-                    Math.round(nutrition.fiber * 100 / $scope.config.targetFiber)
+                    Math.round(nutrition.carb * 100 / state.person.requiredNutrition.carb),
+                    Math.round(nutrition.protein * 100 / state.person.requiredNutrition.protein),
+                    Math.round(nutrition.fat * 100 / state.person.requiredNutrition.fat),
+                    Math.round(nutrition.fiber * 100 / state.person.requiredNutrition.fiber)
                 ],
                 backgroundColor: [
                     "#FF6384",
@@ -128,16 +123,23 @@ angular.module("dietitian")
         if (newVal == oldVal){
             return;
         }
-        $scope.ui.todayCaloriePercentage = Math.round(100 * $scope.ui.todayCalorie / person.requiredCalorie);
-        $scope.ui.todayCalorieToGo = person.requiredCalorie - $scope.ui.todayCalorie;
-        drawTodayCalorie(person.requiredCalorie, $scope.ui.todayCalorie);
+        $scope.ui.todayCaloriePercentage = Math.round(100 * $scope.ui.todayCalorie / state.person.requiredCalorie);
+        $scope.ui.todayCalorieToGo = state.person.requiredCalorie - $scope.ui.todayCalorie;
+        drawTodayCalorie(state.person.requiredCalorie, $scope.ui.todayCalorie);
     });
 
-    $scope.$watch("ui.refreshTodayCalorieChart", function(newVal, oldVal){
+    $scope.$watch("ui.refreshTodayNutritionChart", function(newVal, oldVal){
         if (newVal == oldVal){
             return;
         }
         drawTodayNutrition($scope.ui.todayNutrition);
+    });
+
+    $scope.$watch("state.person.requiredCalorie", function(newVal, oldVal){
+        if (newVal == oldVal){
+            return;
+        }
+        $scope.refreshTodayCalorieChart();
     });
 
     personalHistoryDb.getTodayHistory()
