@@ -39,6 +39,8 @@ router.get('/callback', (req, res, next) => {
      .then(
          // ユーザープロファイルを取得。
          function(response){
+             line.mid = response.mid;
+             line.accessToken = response.access_token;
              return line.getProfile(response.access_token);
          },
          function(error){
@@ -48,7 +50,6 @@ router.get('/callback', (req, res, next) => {
      .then(
          // 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
          function(profile){
-             console.log(profile);
              return PersonDb.createPerson({
                  line_id: profile.mid,
                  display_name: profile.displayName,
