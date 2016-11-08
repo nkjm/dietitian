@@ -51,8 +51,8 @@ body {
                 <div class="col-sm-9">
                     <button class="btn btn-default pull-right" type="button" ng-click="openPersonForm(ui.person)" ng-disabled="ui.remoting.isRemoting"><span class="glyphicon glyphicon-pencil"></span>&nbsp;編集</button>
 
-                    <div id="person_fullname" style="margin-bottom:10px;">
-                        <span style="font-size: 36pt">{{ui.person.lastname}} {{ui.person.firstname}}</span>
+                    <div id="person_displayName" style="margin-bottom:10px;">
+                        <span style="font-size: 36pt">{{ui.person.display_name}}</span>
                     </div>
 
                     <div class="row" style="text-align:center;">
@@ -62,7 +62,7 @@ body {
                         </div>
                         <div id="person_sex" class="col-sm-3">
                             <div class="profile_attr_label">性別</div>
-                            <div class="profile_attr_value">{{(ui.person.sex == "male") ? "男" : "女"}}</div>
+                            <div class="profile_attr_value">{{(getSexLabel(ui.person.sex)}}</div>
                         </div>
                         <div id="person_height" class="col-sm-3">
                             <div class="profile_attr_label">身長</div>

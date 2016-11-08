@@ -6,6 +6,16 @@ angular.module("dietitian")
     }
     $scope.state = state;
 
+    $scope.getSexLabel = function(sex){
+        var sexLabel = "";
+        if (sex == "male"){
+            sexLabel = "男";
+        } else if (sex == "female"){
+            sexLabel = "女";
+        }
+        return sexLabel;
+    }
+
     $scope.openPersonForm = function(person){
         var m = $uibModal.open({
             controller: "personFormCtl",
