@@ -31,7 +31,7 @@ module.exports = class Line {
         return new Promise(function(resolve, reject){
             const url = 'https://api.line.me/v1/profile';
             const headers = {
-                'Authorization': 'Bearer ' + this.accessToken
+                'Authorization': 'Bearer ' + Line.accessToken
             };
             request({
                 url: url,
