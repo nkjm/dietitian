@@ -8,6 +8,31 @@ const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/d
 
 module.exports = class personDb {
 
+    static createPerson(person){
+        return new Promise(function(resolve, reject){
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+            let url = dbPrefix + '/person/';
+            request({
+                url: url,
+                method: 'POST',
+                headers: headers,
+                body: person,
+                json: true,
+            }, function (error, response, body) {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (response.statusCode != 200){
+                        reject(response);
+                    }
+                    resolve();
+                }
+            });
+        });
+    }
+
     static updatePerson(lineId, person){
         return new Promise(function(resolve, reject){
             let headers = {
