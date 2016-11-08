@@ -31,9 +31,9 @@ module.exports = class Line {
         return new Promise(function(resolve, reject){
             const url = 'https://api.line.me/v1/profile';
             const headers = {
-                'Authorization': 'Bearer ' + Line.accessToken
+                'Authorization': 'Bearer ' + this._accessToken
             };
-            console.log('Line.accessToken is ' + Line.accessToken);
+            console.log('Line.accessToken is ' + this._accessToken);
             request({
                 url: url,
                 method: 'GET',
