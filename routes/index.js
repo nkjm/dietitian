@@ -38,7 +38,8 @@ router.get('/callback', (req, res, next) => {
      line.requestToken(req.query.code)
      .then(
          // ユーザープロファイルを取得。
-         function(){
+         function(response){
+             line.accessToken = response.accessToken;
              return line.getProfile();
          },
          function(error){
