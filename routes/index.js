@@ -39,7 +39,7 @@ router.get('/callback', (req, res, next) => {
      .then(
          // ユーザープロファイルを取得。
          function(response){
-             line.accessToken = response.accessToken;
+             line.accessToken = response.access_token;
              return line.getProfile();
          },
          function(error){
