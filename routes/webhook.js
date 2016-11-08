@@ -31,6 +31,8 @@ router.post('/', (req, res, next) => {
     let replyToken = req.body.events[0].replyToken;
     let lineId = req.body.events[0].source.userId;
 
+    console.log(lineId);
+
     if (eventType == 'message'){
         // ---------------------------------------------------------------------
         // イベントがメッセージだった場合の処理。
