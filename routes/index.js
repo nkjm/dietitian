@@ -7,7 +7,7 @@ const app = require('../app');
 const PersonDb = require('../personDb');
 const Promise = require('bluebird');
 const CalorieCalc = require('../calorieCalc');
-const line = require('../line');
+const Line = require('../line');
 
 Promise.config({
     // Enable cancellation
@@ -29,7 +29,7 @@ router.get('/callback', (req, res, next) => {
      const line = new Line();
 
      // 取得した認証コードでアクセストークンをリクエスト（POST）。
-     line.requestToken(code)
+     line.requestToken(req.params.code)
      .then(
          // ユーザープロファイルを取得。
          function(){
