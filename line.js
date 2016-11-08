@@ -26,14 +26,14 @@ module.exports = class Line {
         return this._mid;
     }
 
-    getProfile(){
+    getProfile(accessToken){
         console.log("Getting profile...");
         return new Promise(function(resolve, reject){
             const url = 'https://api.line.me/v1/profile';
             const headers = {
-                'Authorization': 'Bearer ' + this.accessToken
+                'Authorization': 'Bearer ' + accessToken
             };
-            console.log('Line._accessToken is ' + this.accessToken);
+            console.log('accessToken is ' + accessToken);
             request({
                 url: url,
                 method: 'GET',
