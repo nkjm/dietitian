@@ -56,7 +56,8 @@ module.exports = class Line {
                 client_secret: LINE_LOGIN_CHANNEL_SECRET,
                 code: code,
                 redirect_uri: LINE_LOGIN_REDIRECT_URI
-            }
+            };
+            console.log(form);
             request({
                 url: url,
                 method: 'POST',
@@ -67,7 +68,8 @@ module.exports = class Line {
                 if (error) {
                     reject(error);
                 } else {
-                    console.log(response);
+                    console.log(response.access_token);
+                    console.log(body.access_token);
                     this.accessToken = response.access_token;
                     this.refreshToken = response.refresh_token;
                     resolve();
