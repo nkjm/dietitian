@@ -13,7 +13,7 @@ module.exports = class personDb {
             let headers = {
                 'Content-Type': 'application/json'
             };
-            let url = dbPrefix + '/person/';
+            let url = dbPrefix + '/person';
             request({
                 url: url,
                 method: 'POST',
