@@ -25,11 +25,17 @@ router.get('/callback', (req, res, next) => {
      3. 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
      4. 私の栄養士サービスのマイページにリダイレクト。
      */
-     console.log('Code is ' + req.params.code);
+     if (!req.query.code){
+         console.log('Auhorization code not found in callback request');
+         res.status(400).send();
+         return;
+     }
+     
+     console.log('Code is ' + req.query.code);
      const line = new Line();
 
      // 取得した認証コードでアクセストークンをリクエスト（POST）。
-     line.requestToken(req.params.code)
+     line.requestToken(req.query.code)
      .then(
          // ユーザープロファイルを取得。
          function(){
