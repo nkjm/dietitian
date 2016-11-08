@@ -40,7 +40,6 @@ router.get('/callback', (req, res, next) => {
          // ユーザープロファイルを取得。
          function(response){
              line.accessToken = response.access_token;
-             console.log('access token is ' + line.accessToken);
              return line.getProfile();
          },
          function(error){
