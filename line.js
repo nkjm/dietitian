@@ -19,6 +19,12 @@ module.exports = class Line {
     get refreshToken(){
         return this.refreshToken;
     }
+    set mid(value){
+        this.mid = value;
+    }
+    get mid(){
+        return this.mid;
+    }
 
     getProfile(mid){
         console.log("Getting profile...");
@@ -36,8 +42,8 @@ module.exports = class Line {
                 if (error) {
                     reject(error);
                 } else {
-                    console.log(response);
-                    resolve(response);
+                    console.log(body);
+                    resolve(body);
                 }
             });
         });
@@ -57,7 +63,6 @@ module.exports = class Line {
                 code: code,
                 redirect_uri: LINE_LOGIN_REDIRECT_URI
             };
-            console.log(form);
             request({
                 url: url,
                 method: 'POST',
@@ -68,10 +73,9 @@ module.exports = class Line {
                 if (error) {
                     reject(error);
                 } else {
-                    console.log(response.access_token);
-                    console.log(body.access_token);
-                    this.accessToken = response.access_token;
-                    this.refreshToken = response.refresh_token;
+                    this.accessToken = body.access_token;
+                    this.refreshToken = body.refresh_token;
+                    this.mid = body.mid;
                     resolve();
                 }
             });
