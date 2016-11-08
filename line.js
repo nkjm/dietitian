@@ -8,22 +8,22 @@ const Promise = require('bluebird');
 
 module.exports = class Line {
     set accessToken(value){
-        this.accessToken = value;
+        this._accessToken = value;
     }
     get accessToken(){
-        return this.accessToken;
+        return this._accessToken;
     }
     set refreshToken(value){
-        this.refreshToken = value;
+        this._refreshToken = value;
     }
     get refreshToken(){
-        return this.refreshToken;
+        return this._refreshToken;
     }
     set mid(value){
-        this.mid = value;
+        this._mid = value;
     }
     get mid(){
-        return this.mid;
+        return this._mid;
     }
 
     getProfile(){
