@@ -30,7 +30,7 @@ router.get('/callback', (req, res, next) => {
          res.status(400).send();
          return;
      }
-     
+
      console.log('Code is ' + req.query.code);
      const line = new Line();
 
@@ -39,7 +39,7 @@ router.get('/callback', (req, res, next) => {
      .then(
          // ユーザープロファイルを取得。
          function(){
-             return line.getProfile(line.mid);
+             return line.getProfile();
          },
          function(error){
              return Promise.reject(error);

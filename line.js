@@ -26,7 +26,7 @@ module.exports = class Line {
         return this.mid;
     }
 
-    getProfile(mid){
+    getProfile(){
         console.log("Getting profile...");
         return new Promise(function(resolve, reject){
             const url = 'https://api.line.me/v1/profile';
