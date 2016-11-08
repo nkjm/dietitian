@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>私の栄養士：茂子</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"></meta>
+<meta charset="UTF-8">
+<link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/module.js"></script>
+<script type="text/javascript" src="javascripts/dietitian/rootCtl.js"></script>
+</head>
+
+
+<body>
+
+<style>
+body {
+    color: #999;
+}
+.line-login-button a {
+    background: url("/images/line/btn_login_base.png") no-repeat;
+    width: 303px;
+    height: 88px;
+    display: block;
+    text-indent: -9999px;
+}
+.line-login-button a:hover {
+    background: url("/images/line/btn_login_hover.png") no-repeat;
+}
+.line-login-button a:active {
+    background: url("/images/line/btn_login_press.png") no-repeat;
+}
+</style>
+
+<div class="container" style="margin: 20px auto; text-align: center;">
+    <div style="font-size: 36pt; margin-bottom: 10px;">
+        私の栄養士Bot
+    </div>
+    <div style="font-size: 16pt; border-top: solid 1px #999;padding-top:20px; margin:0 auto 40px auto; width: 70%;">
+        ご自身のLINEアカウントでログインしてください。
+    </div>
+    <div class="line-login-button">
+        <a href="https://access.line.me/dialog/oauth/weblogin?response_type=code&client_id=1487390269&redirect_uri=https://dietitian.herokuapp.com/login/callback" style="margin:0 auto;">LINEでログイン</a>
+    </div>
+</div>
+
+
+</body>
+
+</html>

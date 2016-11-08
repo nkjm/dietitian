@@ -7,6 +7,7 @@ const app = require('../app');
 const PersonDb = require('../personDb');
 const Promise = require('bluebird');
 const CalorieCalc = require('../calorieCalc');
+const line = require('../line');
 
 Promise.config({
     // Enable cancellation
@@ -48,6 +49,56 @@ router.get('/:line_id', (req, res, next) => {
             return res.error(400).send('Could not get person from Person Db. It seems Person Db is out of order.');
         }
     )
+});
+
+router.get('/', (req, res, next) => {
+    res.render('login', {});
+});
+
+router.get('/callback', (req, res, next) => {
+     /*
+     1. 取得した認証コードでアクセストークンをリクエスト（POST）。
+     2. ユーザープロファイルを取得。
+     3. 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
+     4. 私の栄養士サービスのマイページにリダイレクト。
+     */
+     console.log('Code is ' + req.params.code);
+     const line = new Line();
+
+     // 取得した認証コードでアクセストークンをリクエスト（POST）。
+     line.requestToken(code)
+     .then(
+         // ユーザープロファイルを取得。
+         function(){
+             return line.getProfile(line.mid);
+         },
+         function(error){
+             return Promise.reject(error);
+         }
+     )
+     .then(
+         // 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
+         function(profile){
+             return PersonDb.createPerson({
+                 line_id: profile.mid,
+                 display_name: profile.displayName,
+                 icon_url: profile.pictureUrl
+             });
+         },
+         function(error){
+            return Promise.reject(error);
+         }
+     )
+     .then(
+         // 私の栄養士サービスのマイページにリダイレクト。
+         function(){
+             res.redirect('https://dietitian.herokuapp.com/' + line.mid);
+         },
+         function(error){
+             console.log(error);
+             res.status(400).send();
+         }
+     );
 });
 
 module.exports = router;
