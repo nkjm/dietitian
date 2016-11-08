@@ -42,8 +42,8 @@ module.exports = class Line {
                 if (error) {
                     reject(error);
                 } else {
-                    console.log(body);
-                    resolve(body);
+                    console.log(response);
+                    resolve(response);
                 }
             });
         });
