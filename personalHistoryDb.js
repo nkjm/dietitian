@@ -7,7 +7,7 @@ const CalorieCalc = require('./calorieCalc');
 const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
 
 module.exports = class personalHistoryDb {
-    static getCalorieToGo(lineId, birthday, height, sex){
+    static getCalorieToGo(lineId, requiredCalorie){
         return new Promise(function(resolve, reject){
             let headers = {
                 'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ module.exports = class personalHistoryDb {
                 } else {
                     if (response.body && (typeof response.body.today_total_calorie != "undefined")){
                         let today_total_calorie = response.body.today_total_calorie;
-                        let calorieToGo = CalorieCalc.getRequiredCalorie(birthday, height, sex) - today_total_calorie;
+                        let calorieToGo = requiredCalorie - today_total_calorie;
                         resolve(calorieToGo);
                     } else {
                         reject({message:'Failed to get total calorie of today. It seems no record has been saved yet.'});

@@ -146,7 +146,7 @@ router.post('/', (req, res, next) => {
 
                 // 残り必要カロリーを取得。
                 console.log('Getting Calorie To Go.');
-                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height, person.sex);
+                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.requiredCalorie);
             },
             function(error){
                 return Promise.reject(error);
@@ -229,7 +229,7 @@ router.post('/', (req, res, next) => {
 
                 // 残り必要カロリーを取得。
                 console.log('Getting Calorie To Go.');
-                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.birthday, person.height, person.sex);
+                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.requiredCalorie);
             },
             function(error){
                 return Promise.reject(error);
