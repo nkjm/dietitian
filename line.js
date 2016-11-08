@@ -72,9 +72,11 @@ module.exports = class Line {
                 if (error) {
                     reject(error);
                 } else {
+                    /*
                     this.accessToken = body.access_token;
                     this.refreshToken = body.refresh_token;
                     this.mid = body.mid;
+                    */
                     resolve();
                 }
             });
