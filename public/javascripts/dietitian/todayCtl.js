@@ -29,7 +29,7 @@ angular.module("dietitian")
     }
 
     function drawTodayNutrition(nutrition){
-        var ctx = document.getElementById("today_nutrition");
+        var ctx = document.getElementById("today-nutrition-chart");
         var options = {
             scale: {
                 ticks: {
@@ -69,7 +69,7 @@ angular.module("dietitian")
     }
 
     function drawTodayCalorie(requiredCalorie, todayCalorie){
-        var ctx = document.getElementById("today_calorie");
+        var ctx = document.getElementById("today-calorie-chart");
         var options = {
             responsive: false,
         };

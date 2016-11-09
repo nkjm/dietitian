@@ -46,7 +46,6 @@ router.post('/', (req, res, next) => {
         .then(
             // 私の栄養士サービスにアカウント登録する。
             function(profile){
-                console.log(profile);
                 return PersonDb.createPerson({
                     line_id: profile.userId,
                     display_name: profile.displayName,
