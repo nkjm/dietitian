@@ -29,9 +29,11 @@ module.exports = class foodDb {
                     }
 
                     resolve(identifiedFoodList);
+                    return;
                 },
                 function(error){
                     reject(error);
+                    return;
                 }
             )
         })
@@ -49,21 +51,20 @@ module.exports = class foodDb {
                 headers: headers,
                 json: true
             }, function (error, response, body) {
-                if (error) {
+                if (error){
                     reject(error);
-                } else {
-                    if (response.body && response.body.items){
-                        // 仮の実装で、複数得られる可能性のある食品リストから、最初のアイテムだけを返す。
-                        // 本来はもっともユーザーの入力に近いものを選定すべき。
-                        if (response.body.items.length > 0){
-                            resolve(response.body.items[0]);
-                        } else {
-                            resolve(null);
-                        }
-                    } else {
-                        reject({message:'Failed to get FoodWithNutrition. It seems FoodDb is out of order.'});
-                    }
+                    return;
                 }
+                if (typeof body.items == 'undefined'){
+                    reject({message:'Failed to get FoodWithNutrition. It seems FoodDb is out of order.'});
+                    return;
+                }
+                if (body.items.length == 0){
+                    resolve(null);
+                    return;
+                }
+                resolve(response.body.items[0]);
+                return;
             });
         });
     }

@@ -17,15 +17,15 @@ angular.module("dietitian")
         dinner: []
     };
 
-    $scope.ui.refreshTodayCalorieChart = 1;
-    $scope.ui.refreshTodayNutritionChart = 1;
+    $scope.ui.reloadTodayCalorieChart = 1;
+    $scope.ui.reloadTodayNutritionChart = 1;
 
-    $scope.refreshTodayCalorieChart = function(){
-        $scope.ui.refreshTodayCalorieChart = $scope.ui.refreshTodayCalorieChart * -1;
+    $scope.reloadTodayCalorieChart = function(){
+        $scope.ui.reloadTodayCalorieChart = $scope.ui.reloadTodayCalorieChart * -1;
     }
 
-    $scope.refreshTodayNutritionChart = function(){
-        $scope.ui.refreshTodayNutritionChart = $scope.ui.refreshTodayNutritionChart * -1;
+    $scope.reloadTodayNutritionChart = function(){
+        $scope.ui.reloadTodayNutritionChart = $scope.ui.reloadTodayNutritionChart * -1;
     }
 
     function drawTodayNutrition(nutrition){
@@ -115,11 +115,11 @@ angular.module("dietitian")
             $scope.ui.todayNutrition.fat += diet.fat || 0;
             $scope.ui.todayNutrition.fiber += diet.fiber || 0;
         });
-        $scope.refreshTodayCalorieChart();
-        $scope.refreshTodayNutritionChart();
+        $scope.reloadTodayCalorieChart();
+        $scope.reloadTodayNutritionChart();
     }
 
-    $scope.$watch("ui.refreshTodayCalorieChart", function(newVal, oldVal){
+    $scope.$watch("ui.reloadTodayCalorieChart", function(newVal, oldVal){
         if (newVal == oldVal){
             return;
         }
@@ -128,7 +128,7 @@ angular.module("dietitian")
         drawTodayCalorie(state.person.requiredCalorie, $scope.ui.todayCalorie);
     });
 
-    $scope.$watch("ui.refreshTodayNutritionChart", function(newVal, oldVal){
+    $scope.$watch("ui.reloadTodayNutritionChart", function(newVal, oldVal){
         if (newVal == oldVal){
             return;
         }
@@ -139,7 +139,14 @@ angular.module("dietitian")
         if (newVal == oldVal){
             return;
         }
-        $scope.refreshTodayCalorieChart();
+        $scope.reloadTodayCalorieChart();
+    });
+
+    $scope.$watch("state.person.requiredNutrition", function(newVal, oldVal){
+        if (newVal === oldVal){
+            return;
+        }
+        $scope.reloadTodayNutritionChart();
     });
 
     personalHistoryDb.getTodayHistory()

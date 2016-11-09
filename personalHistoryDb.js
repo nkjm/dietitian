@@ -22,13 +22,16 @@ module.exports = class personalHistoryDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
+                    return;
                 } else {
                     if (response.body && (typeof response.body.today_total_calorie != "undefined")){
                         let today_total_calorie = response.body.today_total_calorie;
                         let calorieToGo = requiredCalorie - today_total_calorie;
                         resolve(calorieToGo);
+                        return;
                     } else {
                         reject({message:'Failed to get total calorie of today. It seems no record has been saved yet.'});
+                        return;
                     }
                 }
             });
@@ -87,9 +90,11 @@ module.exports = class personalHistoryDb {
             .then(
                 function(dietHistoryList){
                     resolve(dietHistoryList);
+                    return;
                 },
                 function(error){
                     reject(error);
+                    return;
                 }
             );
         });
@@ -111,9 +116,10 @@ module.exports = class personalHistoryDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
+                    return;
                 } else {
-                    console.log(response.statusCode);
                     resolve(dietHistory);
+                    return;
                 }
             });
         });

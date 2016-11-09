@@ -4,6 +4,8 @@ angular.module("dietitian")
         person: state.person,
         remoting: angular.copy(remoting)
     }
+
+    // 主にreloadイベントをwatchするために必要。
     $scope.state = state;
 
     $scope.getSexLabel = function(sex){
@@ -47,6 +49,13 @@ angular.module("dietitian")
             }
         )
     }
+
+    $scope.$watch("state.person", function(newVal, oldVal){
+        if (newVal === oldVal){
+            return;
+        }
+        $scope.ui.person = newVal;
+    })
 
     $scope.$watch("state.requestReloadPerson", function(newVal, oldVal){
         if (newVal == oldVal){
@@ -95,7 +104,6 @@ angular.module("dietitian")
         .then(
             function(){
                 $scope.ui.remoting.setIsRemoting(false);
-                $log.log("Person updated.");
                 $uibModalInstance.close();
             },
             function(error){

@@ -36,7 +36,6 @@ angular.module("dietitian", ["ui.bootstrap"])
     }
 
     this.updatePerson = function(person){
-        console.log(person);
         var url = this.dbPrefix + "/person/" + person.line_id;
         return $http({
             url: url,

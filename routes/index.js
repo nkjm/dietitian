@@ -27,7 +27,7 @@ router.get('/callback', (req, res, next) => {
      */
      if (!req.query.code){
          console.log('Auhorization code not found in callback request');
-         res.status(400).send();
+         res.render('error', {severity: 'danger', message: '認証コードを取得できませんでした。'});
          return;
      }
 
@@ -64,9 +64,12 @@ router.get('/callback', (req, res, next) => {
          // 私の栄養士サービスのマイページにリダイレクト。
          function(){
              res.redirect('https://dietitian.herokuapp.com/' + line.mid);
+             return;
          },
          function(error){
-             res.status(400).send();
+             console.log(error);
+             res.render('error', {severity: 'danger', message: '予期せぬ不具合が発生しました。'});
+             return;
          }
      );
 });
@@ -79,8 +82,11 @@ router.get('/:line_id', (req, res, next) => {
     let p = PersonDb.getPerson(req.params.line_id)
     .then(
         function(person){
+            // アカウントが存在しない場合、処理を中断してエラーページを表示。
             if (!person){
                 p.cancel();
+                res.render('error', {severity: 'warning', message: 'アカウントが存在しません。'});
+                return;
             }
 
             // Socket.IOのチャネル(Name Space)をオープン。
@@ -101,9 +107,12 @@ router.get('/:line_id', (req, res, next) => {
 
             // UIを出力。
             res.render('index', {person: person});
+            return;
         },
         function(error){
-            return res.error(400).send('Could not get person from Person Db. It seems Person Db is out of order.');
+            console.log(error);
+            res.render('error', {severity: 'danger', message: '予期せぬ不具合が発生しました。'});
+            return;
         }
     )
 });

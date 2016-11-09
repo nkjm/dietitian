@@ -2,7 +2,7 @@
 <html ng-app="dietitian">
 
 <head>
-<title>私の栄養士：茂子</title>
+<title>私の栄養士</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"></meta>
 <meta charset="UTF-8">
 <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
@@ -95,7 +95,6 @@ body {
         <ul class="nav nav-tabs" ng-init="ui.currentTab = 'today'" style="margin-bottom: 10px;">
             <li ng-class="(ui.currentTab == 'today') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'today')">今日</a></li>
             <li ng-class="(ui.currentTab == 'this_week') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'this_week')">今週</a></li>
-            <li ng-class="(ui.currentTab == 'this_month') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'this_month')">今月</a></li>
         </ul>
 
         <!-- Tab Content -->
@@ -108,11 +107,6 @@ body {
             <!-- This Week Tab-->
             <div id="tab_this_week" ng-show="ui.currentTab == 'this_week'" style="padding:0 5px;">
                 <% include ./components/tab_this_week %>
-            </div>
-
-            <!-- This Month Tab-->
-            <div id="tab_this_month" ng-show="ui.currentTab == 'this_month'" style="padding:0 5px;">
-                <% include ./components/tab_this_month %>
             </div>
         </div>
 

@@ -23,12 +23,14 @@ module.exports = class personDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
-                } else {
-                    if (response.statusCode != 200){
-                        reject(response);
-                    }
-                    resolve();
+                    return;
                 }
+                if (response.statusCode != 200){
+                    reject(response);
+                    return;
+                }
+                resolve();
+                return;
             });
         });
     }
@@ -48,12 +50,14 @@ module.exports = class personDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
-                } else {
-                    if (response.statusCode != 200){
-                        reject(response);
-                    }
-                    resolve();
+                    return;
                 }
+                if (response.statusCode != 200){
+                    reject(response);
+                    return;
+                }
+                resolve();
+                return;
             });
         });
     }
@@ -72,13 +76,14 @@ module.exports = class personDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
-                } else {
-                    if (response.body && response.body.items){
-                        resolve(response.body.items);
-                    } else {
-                        reject({message:'Failed to get person. It seems Person Db is out of order.'});
-                    }
+                    return;
                 }
+                if (body.items == 'undefined'){
+                    reject({message:'Failed to get person list. It seems Person Db is out of order.'});
+                    return;
+                }
+                resolve(body.items);
+                return;
             });
         });
     }
@@ -97,17 +102,22 @@ module.exports = class personDb {
             }, function (error, response, body) {
                 if (error) {
                     reject(error);
-                } else {
-                    if (response.body && response.body.items){
-                        let person = response.body.items[0];
-                        person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex, person.activity);
-                        person.requiredNutrition = NutritionCalc.getRequiredNutrition(person.birthday, person.height, person.sex, person.activity);
-                        person.age = Math.floor(((new Date()).getTime() - person.birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
-                        resolve(person);
-                    } else {
-                        reject({message:'Failed to get person. It seems Person Db is out of order.'});
-                    }
+                    return;
                 }
+                if (typeof body.items == 'undefined'){
+                    reject({message:'Failed to get person. It seems Person Db is out of order.'});
+                    return;
+                }
+                if (body.items.length == 0){
+                    resolve(null);
+                    return;
+                }
+                let person = response.body.items[0];
+                person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex, person.activity);
+                person.requiredNutrition = NutritionCalc.getRequiredNutrition(person.birthday, person.height, person.sex, person.activity);
+                person.age = Math.floor(((new Date()).getTime() - person.birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
+                resolve(person);
+                return;
             });
         });
     }

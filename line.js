@@ -40,11 +40,7 @@ module.exports = class Line {
                 headers: headers,
                 json: true,
             }, function (error, response, body) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(body);
-                }
+                (error) ? reject(error) : resolve(body);
             });
         });
     }
@@ -70,11 +66,7 @@ module.exports = class Line {
                 form: form,
                 json: true,
             }, function (error, response, body) {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(body);
-                }
+                (error) ? reject(error) : resolve(body);
             });
         });
     }
