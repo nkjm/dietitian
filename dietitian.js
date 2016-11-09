@@ -8,6 +8,23 @@ require('date-utils');
 
  module.exports = class dietitian {
 
+     static greet(replyToken, lineId){
+         let message = {
+             type: 'template',
+             altText: 'これから私があなたの専属栄養士としてサポートしていきます。',
+             template: {
+                 type: 'buttons',
+                 text: 'はじめまして。これから私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。',
+                 actions: [{
+                     type: 'uri',
+                     label: 'マイページ',
+                     uri: 'https://dietitian.herokuapp.com/' + lineId
+                 }]
+             }
+         }
+         return LineBot.replyMessage(replyToken, message);
+     }
+
      static apologize(replyToken){
          let message = {
              type: 'text',

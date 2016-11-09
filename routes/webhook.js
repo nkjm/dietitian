@@ -28,10 +28,54 @@ router.post('/', (req, res, next) => {
 
     // Webhookへのリクエストから必要な情報を抜き出す。
     let eventType = req.body.events[0].type;
-    let replyToken = req.body.events[0].replyToken;
-    let lineId = req.body.events[0].source.userId;
 
-    if (eventType == 'message'){
+    if (eventType == 'follow'){
+        // ---------------------------------------------------------------------
+        // イベントが友達追加だった場合の処理。
+        // ---------------------------------------------------------------------
+        /*
+        1. ユーザーのプロファイルを取得する。
+        2. 私の栄養士サービスにアカウント登録する。
+        3. マイページのURLをメッセージで送る。
+        */
+        let replyToken = req.body.events[0].replyToken;
+        let lineId = req.body.events[0].source.userId;
+
+        // ユーザーのプロファイルを取得する。
+        LineBot.getProfile(lineId)
+        .then(
+            // 私の栄養士サービスにアカウント登録する。
+            function(profile){
+                return PersonDb.createPerson({
+                    line_id: profile.lineId,
+                    display_name: profile.displayName,
+                    icon_url: profile.pictureUrl
+                });
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            // マイページのURLをメッセージで送る。
+            function(){
+                return Dietitian.greet(replyToken, message);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(){
+                res.status(200).end();
+                return;
+            },
+            function(error){
+                console.log(error);
+                res.status(200).end();
+            }
+        );
+    } else if (eventType == 'message'){
         // ---------------------------------------------------------------------
         // イベントがメッセージだった場合の処理。
         // ユーザーがいきなり話しかけてきた場合、およびBotが「朝食は何食べたの？」という質問への返信時にこちらの処理が走る。
@@ -44,7 +88,8 @@ router.post('/', (req, res, next) => {
         5. スレッドを削除、WebSocketで更新を通知、残りカロリーを取得する。
         6. 残りカロリーに応じたメッセージを送信する。
         */
-
+        let replyToken = req.body.events[0].replyToken;
+        let lineId = req.body.events[0].source.userId;
         let message = req.body.events[0].message.text;
         // ユーザー情報を取得する。
         let person;
@@ -181,6 +226,8 @@ router.post('/', (req, res, next) => {
         4. スレッドを削除、WebSocketで更新を通知、残りカロリーを取得する。
         5. 残りカロリーに応じたメッセージを送信する。
         */
+        let replyToken = req.body.events[0].replyToken;
+        let lineId = req.body.events[0].source.userId;
         let postbackData = JSON.parse(req.body.events[0].postback.data);
         let dietType = postbackData.dietType;
         let dietDate = (new Date()).toFormat("YYYY-MM-DD");
