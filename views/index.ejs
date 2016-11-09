@@ -63,6 +63,12 @@ angular.module("dietitian")
     .today-calorie-chart {
         height: 180px;
     }
+    .form-person-birthday-for-desktop {
+        display: none;
+    }
+    .form-person-birthday-for-mobile {
+        display: inline;
+    }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .root-container {
@@ -87,6 +93,12 @@ angular.module("dietitian")
         margin: 0 auto 60px auto;
         width: 80%;
     }
+    .form-person-birthday-for-desktop {
+        display: inline;
+    }
+    .form-person-birthday-for-mobile {
+        display: none;
+    }
 }
 @media (min-width: 992px) {
     .root-container {
@@ -110,6 +122,12 @@ angular.module("dietitian")
     .calorie-container {
         margin: 0 auto 60px auto;
         width: 80%;
+    }
+    .form-person-birthday-for-desktop {
+        display: inline;
+    }
+    .form-person-birthday-for-mobile {
+        display: none;
     }
 }
 body {
