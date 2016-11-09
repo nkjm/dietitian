@@ -60,7 +60,7 @@ router.post('/', (req, res, next) => {
         .then(
             // マイページのURLをメッセージで送る。
             function(){
-                return Dietitian.greet(replyToken, message);
+                return Dietitian.greet(replyToken, lineId);
             },
             function(error){
                 return Promise.reject(error);
