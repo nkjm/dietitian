@@ -1,12 +1,15 @@
 <div class="modal-header">
-    <h4>プロファイルの編集</h4>
+    <h4 ng-show="ui.person.first_login == 0">プロファイルの編集</h4>
+    <div class="alert alert-info" role="alert" ng-show="ui.person.first_login">
+        必要な初期設定をおこなってください。
+    </div>
 </div>
 <div class="modal-body">
-    <form class="form-horizontal" role="form">
+    <form class="form-horizontal" role="form" name="personForm" novalidate>
         <div class="form-group">
             <label class="control-label col-sm-3">名前</label>
             <div class="col-sm-9">
-                <input class="form-control" type="text" ng-model="ui.person.display_name" placeholder="名前"></input>
+                <input class="form-control" type="text" ng-model="ui.person.display_name" placeholder="名前" ng-required="true"></input>
             </div>
         </div>
         <div class="form-group">
@@ -24,30 +27,30 @@
             <label class="control-label col-sm-3">性別</label>
             <div class="col-sm-9">
                 <label class="radio-inline">
-                    <input type="radio" value="male" ng-model="ui.person.sex"> 男
+                    <input type="radio" value="male" ng-model="ui.person.sex" ng-required="true"> 男
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" value="female" ng-model="ui.person.sex"> 女
+                    <input type="radio" value="female" ng-model="ui.person.sex" ng-required="true"> 女
                 </label>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-3">身長</label>
             <div class="col-sm-9">
-                <input class="form-control" type="number" ng-model="ui.person.height" placeholder="身長"></input>
+                <input class="form-control" type="number" ng-model="ui.person.height" placeholder="身長" ng-required="true"></input>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-3">活動量</label>
             <div class="col-sm-9">
                 <label class="radio-inline">
-                    <input type="radio" value=1 ng-model="ui.person.activity"> 1 弱
+                    <input type="radio" value=1 ng-model="ui.person.activity"  ng-required="true"> 1 弱
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" value=2 ng-model="ui.person.activity"> 2 中
+                    <input type="radio" value=2 ng-model="ui.person.activity"  ng-required="true"> 2 中
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" value=3 ng-model="ui.person.activity"> 3 強
+                    <input type="radio" value=3 ng-model="ui.person.activity"  ng-required="true"> 3 強
                 </label>
             </div>
         </div>
@@ -66,5 +69,5 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="$dismiss()" ng-disabled="ui.remoting.isRemoting">キャンセル</button>
-    <button class="btn btn-primary" type="button" ng-click="updatePerson(ui.person)" ng-disabled="ui.remoting.isRemoting"><span class="glyphicon glyphicon-ok"></span>&nbsp;更新</button>
+    <button class="btn btn-primary" type="button" ng-click="updatePerson(ui.person)" ng-disabled="ui.remoting.isRemoting || personForm.$invalid"><span class="glyphicon glyphicon-ok"></span>&nbsp;更新</button>
 </div>

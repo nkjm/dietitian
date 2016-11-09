@@ -63,6 +63,10 @@ angular.module("dietitian")
         }
         getPerson(state.person.line_id);
     })
+
+    if (state.person.first_login == 1){
+        $scope.openPersonForm(state.person);
+    }
 })
 .controller("personFormCtl", function($scope, $uibModalInstance, $log, person, personDb, remoting){
     person.birthday = new Date(person.birthday * 1000)
