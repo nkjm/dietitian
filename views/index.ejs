@@ -24,6 +24,9 @@ angular.module("dietitian")
 
 <style>
 @media (max-width: 767px) {
+    .root-container {
+         width: 95%;
+    }
     .person-icon-container {
         text-align: center;
     }
@@ -62,6 +65,9 @@ angular.module("dietitian")
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
+    .root-container {
+         width: 80%;
+    }
     .person-icon {
         height: 150px;
     }
@@ -83,6 +89,9 @@ angular.module("dietitian")
     }
 }
 @media (min-width: 992px) {
+    .root-container {
+         width: 80%;
+    }
     .person-icon {
         height: 180px;
     }
@@ -116,7 +125,7 @@ body {
 </style>
 
 <body>
-    <div class="container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px; width: 80%;" ng-cloak="true">
+    <div class="container root-container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px;" ng-cloak="true">
         <!-- Person Profile -->
         <div ng-controller="personCtl" id="person_profile" style="margin-bottom: 40px;">
             <div class="person-edit-button-container" style="text-align:right;">
