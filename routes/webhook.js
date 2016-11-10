@@ -13,7 +13,7 @@ const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
 const apiai = require('apiai');
 const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
-const googleTranslate = Promise.promisifyAll(require("google-translate")(process.env.GOOGLE_API_KEY));
+const GoogleTranslate = require('../googleTranslateP');
 
 
 require('date-utils');
@@ -106,7 +106,7 @@ router.post('/', (req, res, next) => {
                 // ユーザー情報を保存
                 person = response;
 
-                return googleTranslate.translate(messageText, 'en');
+                return GoogleTranslate.translate(messageText);
             },
             function(error){
                 return Promise.reject(error);
@@ -114,10 +114,6 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(response){
-                console.log("Response of translate() follows");
-                console.log(response);
-                console.log("Translation: " + response.translatedText);
-
                 p.cancel();
                 return;
 
