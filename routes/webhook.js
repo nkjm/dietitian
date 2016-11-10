@@ -11,6 +11,11 @@ const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
+const apiai = require('apiai');
+const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
+const googleTranslate = Promise.promisifyAll(require("google-translate")(process.env.GOOGLE_API_KEY));
+
+
 require('date-utils');
 
 Promise.config({
@@ -90,18 +95,59 @@ router.post('/', (req, res, next) => {
         */
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
-        let message = req.body.events[0].message.text;
+        let messageText = req.body.events[0].message.text;
+
         // ユーザー情報を取得する。
         let person;
         let p = PersonDb.getPerson(lineId)
         .then(
+            // メッセージを英訳
             function(response){
+                // ユーザー情報を保存
                 person = response;
-                // メッセージから食品っぽい単語を抽出する。
-                return TextMiner.getFoodListFromMessage(message);
+
+                return googleTranslate.translate(messageText, 'en');
             },
             function(error){
                 return Promise.reject(error);
+            }
+        )
+        .then(
+            function(response){
+                console.log("Response of translate() follows");
+                console.log(response);
+                console.log("Translation: " + response.translatedText);
+
+                p.cancel();
+                return;
+
+                const translatedMessageText = translation.translatedText;
+
+                // Intentを特定する。
+                const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
+                const aiRequest = aiInstance.textRequest(translatedMessageText);
+
+                //// TBD /////
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(response){
+                // マイページのリクエスト
+                if (response == 'get-mypage'){
+                    Dietitian.sendMyPage(replyToken, person.line_id, person.security_code);
+                    p.cancel();
+                    return;
+                }
+
+                // 食事の報告
+                //// メッセージから食品っぽい単語を抽出する。
+                return TextMiner.getFoodListFromMessage(messageText);
+            },
+            function(response){
+
             }
         )
         .then(

@@ -6,6 +6,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "apiai": "^3.0.2",
     "base64url": "^2.0.0",
     "bluebird": "^3.4.6",
     "body-parser": "~1.13.2",
@@ -15,6 +16,7 @@
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
     "express": "~4.13.1",
+    "google-translate": "^1.0.6",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-rename": "^1.2.2",
