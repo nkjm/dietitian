@@ -11,9 +11,8 @@ const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
-const apiai = require('apiai');
-const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
 const GoogleTranslate = require('../googleTranslateP');
+const Apiai = require('../apiaiP');
 
 
 require('date-utils');
@@ -113,30 +112,26 @@ router.post('/', (req, res, next) => {
             }
         )
         .then(
-            function(response){
-                p.cancel();
-                return;
-
-                const translatedMessageText = translation.translatedText;
-
+            function(translatedMessageText){
                 // Intentを特定する。
-                const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
-                const aiRequest = aiInstance.textRequest(translatedMessageText);
-
-                //// TBD /////
+                return Apiai.textRequest(translatedMessageText);
             },
             function(error){
                 return Promise.reject(error);
             }
         )
         .then(
-            function(response){
+            function(action){
+
                 // マイページのリクエスト
-                if (response == 'get-mypage'){
+                if (action == 'get-mypage'){
                     Dietitian.sendMyPage(replyToken, person.line_id, person.security_code);
                     p.cancel();
                     return;
                 }
+
+                p.cancel();
+                return;
 
                 // 食事の報告
                 //// メッセージから食品っぽい単語を抽出する。
