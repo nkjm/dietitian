@@ -2,7 +2,6 @@ angular.module("dietitian", ["ui.bootstrap"])
 .service("state", function(){
     this.requestReloadPerson = false;
     this.person = null;
-    this.modalOpen = false;
 
     this.reloadPerson = function(){
         this.requestReloadPerson = !this.requestReloadPerson;

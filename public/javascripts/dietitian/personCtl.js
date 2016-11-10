@@ -19,7 +19,6 @@ angular.module("dietitian")
     }
 
     $scope.openPersonForm = function(person){
-        state.modalOpen = true;
         var m = $uibModal.open({
             controller: "personFormCtl",
 			templateUrl: "personForm",
@@ -30,11 +29,7 @@ angular.module("dietitian")
 
         m.result.then(
             function(){
-                state.modalOpen = false;
                 state.reloadPerson();
-            },
-            function(){
-                state.modalOpen = false;
             }
         )
     }

@@ -128,6 +128,9 @@ body {
     font-size: 12pt;
     color: #666;
 }
+body.modal-open {
+    position: fixed;
+}
 .calorie-percentage-label {
     font-size: 1.3em;
 }
@@ -136,7 +139,7 @@ body {
 }
 </style>
 
-<body ng-controller="rootCtl" ng-class="(ui.state.modalOpen) ? 'ovh' : ''">
+<body ng-controller="rootCtl">
     <div class="container root-container" style="margin-top: 20px; margin-bottom: 40px;" ng-cloak="true">
         <!-- Person Profile -->
         <div ng-controller="personCtl" id="person_profile" style="margin-bottom: 40px;">
