@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const uuid = require('node-uuid');
 const apiai = require('apiai');
 const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
 const APIAI_LANGUAGE = process.env.APIAI_LANGUAGE;
@@ -11,18 +10,17 @@ module.exports = class apiaiP {
         console.log('Processing text "' + text + '" via API.AI...');
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
-            const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN, {
-                language: APIAI_LANGUAGE,
-                requestSource: "line"
-            });
-            const aiRequest = aiInstance.textRequest(text, {sessionId: uuid.v1()});
-            aiRequest.on('response', (response) => {
+            const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
+            console.log("aiInstance created.");
+            const aiRequest = aiInstance.textRequest(text);
+            console.log("aiRequest created.");
+            aiRequest.on('response', function(response){
                 console.log("APIAI response follows.");
                 console.log(response);
                 resolve(response.result.action);
                 return;
             });
-            apiaiRequest.on('error', (error) => {
+            apiaiRequest.on('error', function(error){
                 console.log("Failed to process text via API.AI.");
                 reject(error);
                 return;
