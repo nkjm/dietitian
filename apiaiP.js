@@ -8,7 +8,7 @@ const APIAI_LANGUAGE = process.env.APIAI_LANGUAGE;
 
 module.exports = class apiaiP {
     static textRequest(text){
-        console.log('Processing text via API.AI...');
+        console.log('Processing text "' + text + '" via API.AI...');
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
             const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN, {
