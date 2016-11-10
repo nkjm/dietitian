@@ -1,6 +1,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const uuid = require('node-uuid');
 const apiai = require('apiai');
 const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
 const APIAI_LANGUAGE = process.env.APIAI_LANGUAGE;
@@ -14,7 +15,7 @@ module.exports = class apiaiP {
                 language: APIAI_LANGUAGE,
                 requestSource: "line"
             });
-            const aiRequest = aiInstance.textRequest(text);
+            const aiRequest = aiInstance.textRequest(text, {sessionId: uuid.v1()});
             aiRequest.on('response', (response) => {
                 console.log("APIAI response follows.");
                 console.log(response);

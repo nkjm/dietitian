@@ -24,6 +24,7 @@
     "mecab-async": "^0.1.0",
     "memory-cache": "^0.1.6",
     "morgan": "~1.6.1",
+    "node-uuid": "^1.4.7",
     "request": "^2.75.0",
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.5.0"
