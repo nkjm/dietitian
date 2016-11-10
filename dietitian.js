@@ -34,10 +34,10 @@ require('date-utils');
          return LineBot.replyMessage(replyToken, message);
      }
 
-     static replyBasedOnCalorieToGo(replyToken, calorieToGo){
+     static replyBasedOnCalorieToGo(replyToken, calorieToGo, securityCode){
          let messageText;
          if (calorieToGo > 0){
-             messageText = '了解。満タンまであと' + calorieToGo + 'kcalですよー。';
+             messageText = '了解。カロリー満タンまであと' + calorieToGo + 'kcalですよー。';
          } else if (calorieToGo < 0){
              messageText = 'ぎゃー食べ過ぎです。' + calorieToGo * -1 + 'kcal超過してます。';
          } else if (calorieToGo == 0){
@@ -46,8 +46,17 @@ require('date-utils');
              messageText = 'あれ、満タンまであとどれくらいだろう・・';
          }
          let message = {
-             type: 'text',
-             text: messageText
+             type: 'template',
+             altText: messageText,
+             template: {
+                 type: 'buttons',
+                 text: messageText,
+                 actions: [{
+                     type: 'uri',
+                     label: 'マイページで確認',
+                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
+                 }]
+             }
          }
          console.log('Sending message based on Calorie to go.');
          return LineBot.replyMessage(replyToken, message);

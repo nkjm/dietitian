@@ -199,7 +199,7 @@ router.post('/', (req, res, next) => {
         ).then(
             function(calorieToGo){
                 // 残りカロリーに応じたメッセージを送信する。
-                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo);
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo, person.security_code);
             },
             function(error){
                 return Promise.reject(error);
@@ -284,7 +284,7 @@ router.post('/', (req, res, next) => {
         ).then(
             function(calorieToGo){
                 // 残りカロリーに応じたメッセージを送信する。
-                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo);
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo, person.security_code);
             },
             function(error){
                 return Promise.reject(error);
