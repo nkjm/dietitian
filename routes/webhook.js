@@ -288,7 +288,7 @@ router.post('/', (req, res, next) => {
 
         if (dietType == 'incorrect'){
             // まだどの食事か特定されていないので質問する。
-            Dietitian.askDietType(person.line_id)
+            Dietitian.askDietType(lineId)
             .then(
                 function(){
                     res.status(200).end();
