@@ -213,8 +213,7 @@ router.post('/', (req, res, next) => {
                 // 事前の会話がなかった場合。
                 //// 食品リスト（栄養情報含む）をスレッドに保存する。
                 Dietitian.saveFoodList(person.line_id, foodListWithNutrition);
-                //// どの食事か質問する。
-                //Dietitian.askDietType(person.line_id)
+                //// どの食事か確認する。
                 Dietitian.confirmDietType(replyToken, person.line_id, timestamp)
                 .then(
                     function(){
@@ -286,6 +285,17 @@ router.post('/', (req, res, next) => {
         let dietDate = (new Date()).toFormat("YYYY-MM-DD");
         let threadList = cache.get('thread-' + lineId);
         let foodListWithNutrition;
+
+        if (dietType == 'incorrect'){
+            // まだどの食事か特定されていないので質問する。
+            Dietitian.askDietType(person.line_id)
+            .then(
+                function(){
+                    res.status(200).end();
+                    return;
+                }
+            )
+        }
 
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
         for (let thread of threadList.thread){
