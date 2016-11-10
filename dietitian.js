@@ -34,7 +34,7 @@ require('date-utils');
          return LineBot.replyMessage(replyToken, message);
      }
 
-     static replyBasedOnCalorieToGo(replyToken, calorieToGo, securityCode){
+     static replyBasedOnCalorieToGo(replyToken, calorieToGo, lineId, securityCode){
          let messageText;
          if (calorieToGo > 0){
              messageText = '了解。カロリー満タンまであと' + calorieToGo + 'kcalですよー。';
