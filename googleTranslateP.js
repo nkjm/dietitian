@@ -11,8 +11,6 @@ module.exports = class googleTranslateP {
                     reject(err);
                     return;
                 }
-                console.log("Response follows.");
-                console.log(response);
                 resolve(response.translatedText);
                 return;
             });

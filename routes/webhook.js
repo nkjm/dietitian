@@ -122,23 +122,23 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(action){
-                // マイページのリクエスト
-                if (action == 'get-mypage'){
-                    Dietitian.sendMyPage(replyToken, person.line_id, person.security_code)
-                    .then(function(){
-                        res.status(200).end();
-                        return;
-                    })
-                    p.cancel();
-                    return;
+                switch (action){
+                    // マイページのリクエスト
+                    case 'get-mypage':
+                        Dietitian.sendMyPage(replyToken, person.line_id, person.security_code)
+                        .then(function(){
+                            res.status(200).end();
+                            return;
+                        })
+                        p.cancel();
+                        break;
+                    default:
+                        return TextMiner.getFoodListFromMessage(messageText);
+                        break;
                 }
-
-                // 食事の報告
-                //// メッセージから食品っぽい単語を抽出する。
-                return TextMiner.getFoodListFromMessage(messageText);
             },
             function(response){
-
+                return Promise.reject(response);
             }
         )
         .then(
