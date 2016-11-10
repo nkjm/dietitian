@@ -11,7 +11,7 @@ module.exports = class apiaiP {
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
             const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN {
-                language: APIAI_LANG,
+                language: APIAI_LANGUAGE,
                 requestSource: "line"
             });
             const aiRequest = aiInstance.textRequest(text);
