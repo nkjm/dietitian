@@ -6,8 +6,10 @@ const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
 
 module.exports = class apiaiP {
     static textRequest(text){
+        console.log('Processing text via API.AI...');
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
+            console.log(APIAI_CLIENT_ACCESS_TOKEN);
             const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
             const aiRequest = aiInstance.textRequest(text);
             aiRequest.on('response', (response) => {
@@ -17,6 +19,7 @@ module.exports = class apiaiP {
                 return;
             });
             apiaiRequest.on('error', (error) => {
+                console.log("Failed to process text via API.AI.");
                 reject(error);
                 return;
             });
