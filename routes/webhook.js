@@ -293,12 +293,17 @@ router.post('/', (req, res, next) => {
             function(response){
                 // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
                 res.status(200).end();
+                return;
             },
             function(error){
                 console.log(error);
                 res.status(200).end();
+                return;
             }
         );
+    } else {
+        res.status(200).end();
+        return;
     }
 });
 
