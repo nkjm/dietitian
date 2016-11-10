@@ -1,5 +1,6 @@
 'use strict';
 
+const RELEASE_MODE = process.env.RELEASE_MODE;
 const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
@@ -120,7 +121,7 @@ router.get('/:line_id', (req, res, next) => {
             }
 
             // UIを出力。
-            res.render('index', {person: person});
+            res.render('index', {person: person, releaseMode: RELEASE_MODE});
             return;
         },
         function(error){
