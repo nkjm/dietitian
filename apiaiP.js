@@ -21,7 +21,7 @@ module.exports = class apiaiP {
                 return;
             });
             console.log("response event set.");
-            apiaiRequest.on('error', function(error){
+            aiRequest.on('error', function(error){
                 console.log("Failed to process text via API.AI.");
                 reject(error);
                 return;
