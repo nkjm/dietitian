@@ -18,6 +18,8 @@ router.get('/', (req, res, next) => {
     res.render('login', {});
 });
 
+// LINE Loginを使ったアカウント作成処理。現在userIdが取得できないため、使用していない。
+// 現在のアカウント作成処理は友達追加された際に発火する。詳しくはroutes/webhook.jsのfollowイベントの処理を参照。
 router.get('/callback', (req, res, next) => {
      /*
      1. 取得した認証コードでアクセストークンをリクエスト（POST）。
@@ -76,7 +78,12 @@ router.get('/callback', (req, res, next) => {
 
 router.get('/:line_id', (req, res, next) => {
     if (!req.params.line_id){
-        return res.error(400).send('Line id not set.');
+        res.render('error', {severity: 'warning', message: 'ユーザーIDがセットされていません。'});
+        return;
+    }
+    if (!req.query.security_code){
+        res.render('error', {severity: 'warning', message: 'セキュリティコードがセットされていません。'});
+        return;
     }
     let personDb = new PersonDb();
     let p = PersonDb.getPerson(req.params.line_id)
@@ -86,6 +93,13 @@ router.get('/:line_id', (req, res, next) => {
             if (!person){
                 p.cancel();
                 res.render('error', {severity: 'warning', message: 'アカウントが存在しません。'});
+                return;
+            }
+
+            // 認証処理
+            if (person.security_code != req.query.security_code){
+                p.cancel();
+                res.render('error', {severity: 'warning', message: 'セキュリティコードが正しくありません。'});
                 return;
             }
 

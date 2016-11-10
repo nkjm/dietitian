@@ -5,8 +5,13 @@ const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
 const NutritionCalc = require('./nutritionCalc');
 const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
+const crypto = require('crypto');
+const base64url = require('base64url');
 
 module.exports = class personDb {
+    static randomStringAsBase64Url(size) {
+        return base64url(crypto.randomBytes(size));
+    }
 
     static createPerson(person){
         return new Promise(function(resolve, reject){
@@ -14,6 +19,10 @@ module.exports = class personDb {
                 'Content-Type': 'application/json'
             };
             let url = dbPrefix + '/person';
+
+            // 認証用のセキュリティコードを生成
+            person.security_code = randomStringAsBase64Url(40);
+
             request({
                 url: url,
                 method: 'POST',
@@ -29,7 +38,7 @@ module.exports = class personDb {
                     reject(response);
                     return;
                 }
-                resolve();
+                resolve(person);
                 return;
             });
         });

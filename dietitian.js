@@ -8,7 +8,7 @@ require('date-utils');
 
  module.exports = class dietitian {
 
-     static greet(replyToken, lineId){
+     static greet(replyToken, lineId, securityCode){
          let message = {
              type: 'template',
              altText: 'これから私があなたの専属栄養士としてサポートしていきます。',
@@ -18,7 +18,7 @@ require('date-utils');
                  actions: [{
                      type: 'uri',
                      label: 'マイページ',
-                     uri: 'https://dietitian.herokuapp.com/' + lineId
+                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
                  }]
              }
          }
