@@ -8,6 +8,14 @@ require('date-utils');
 
  module.exports = class dietitian {
 
+     static recommend(replyToken){
+         let message = {
+             type: 'text',
+             text: 'カレーライスでもどうですか？'
+         }
+         return LineBot.replyMessage(replyToken, message);
+     }
+
      static sendMyPage(replyToken, lineId, securityCode){
          let message = {
              type: 'template',

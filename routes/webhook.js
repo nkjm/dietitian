@@ -132,6 +132,15 @@ router.post('/', (req, res, next) => {
                         })
                         p.cancel();
                         break;
+                    case 'get-recommendation':
+                        Dietitian.recommend(replyToken)
+                        .then(function(){
+                            res.status(200).end();
+                            return;
+                        })
+                        p.cancel();
+                        break;
+                    // 食事のレポートだと仮定
                     default:
                         return TextMiner.getFoodListFromMessage(messageText);
                         break;
