@@ -21,7 +21,7 @@ module.exports = class personDb {
             let url = dbPrefix + '/person';
 
             // 認証用のセキュリティコードを生成
-            person.security_code = randomStringAsBase64Url(40);
+            person.security_code = personDb.randomStringAsBase64Url(40);
 
             request({
                 url: url,
