@@ -136,8 +136,8 @@ body {
 }
 </style>
 
-<body>
-    <div class="container root-container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px;" ng-cloak="true">
+<body ng-controller="rootCtl" ng-class="(ui.state.modalOpen) ? 'ovh' : ''">
+    <div class="container root-container" style="margin-top: 20px; margin-bottom: 40px;" ng-cloak="true">
         <!-- Person Profile -->
         <div ng-controller="personCtl" id="person_profile" style="margin-bottom: 40px;">
             <div class="person-edit-button-container" style="text-align:right;">
