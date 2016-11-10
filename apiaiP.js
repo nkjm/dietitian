@@ -20,12 +20,15 @@ module.exports = class apiaiP {
                 resolve(response.result.action);
                 return;
             });
+            console.log("response event set.");
             apiaiRequest.on('error', function(error){
                 console.log("Failed to process text via API.AI.");
                 reject(error);
                 return;
             });
+            console.log("error event set.");
             aiRequest.end();
+            console.log("end");
         });
     }
 }
