@@ -87,6 +87,55 @@ require('date-utils');
          return LineBot.replyMessage(replyToken, message);
      }
 
+     static confirmDietType(replyToken, lineId, timestamp){
+         let issueHour = new Date(timestamp).getHours();
+         console.log('Issue Hour is ' + issueHour);
+         let dietType;
+         if (issueHour <= 6){
+             dietType = 'dinner';
+         } else if (6 < issueHour && issueHour <= 11){
+             dietType = 'breakfast';
+         } else if (11 < issueHour && issueHour <= 16){
+             dietType = 'lunch';
+         } else {
+             dietType = 'dinner';
+         }
+         let dietTypeLabel = getDietTypeLabel(dietType);
+         let messageText = 'それは' + dietTypeLabel + '?';
+         let message = {
+             type: 'template',
+             altText: messageText,
+             template: {
+                 type: 'confirm',
+                 text: messageText,
+                 actions: [{
+                     "type":"postback",
+                     "label":"はい",
+                     "data": JSON.stringify({
+                         postbackType:'answerDietType',
+                         dietType: dietType
+                     })
+                 },{
+                     "type":"postback",
+                     "label":"いいえ",
+                     "data": JSON.stringify({
+                         postbackType:'answerDietType',
+                         dietType: 'incorrect'
+                     })
+                 }]
+             }
+         };
+         // 質問をスレッドに記録。
+         let conversation = {
+             timestamp: (new Date()).getTime(),
+             source: 'dietitian',
+             type: 'confirmDietType'
+         }
+         dietitian.pushToThread(lineId, conversation);
+
+         return LineBot.replyMessage(replyToken, message);
+     }
+
      static askDietType(lineId){
          let messageText = 'どの食事でいただいたの？';
          let message = {

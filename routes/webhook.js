@@ -95,6 +95,7 @@ router.post('/', (req, res, next) => {
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
         let messageText = req.body.events[0].message.text;
+        let timestamp = req.body.events[0].timestamp;
 
         // ユーザー情報を取得する。
         let person;
@@ -213,7 +214,8 @@ router.post('/', (req, res, next) => {
                 //// 食品リスト（栄養情報含む）をスレッドに保存する。
                 Dietitian.saveFoodList(person.line_id, foodListWithNutrition);
                 //// どの食事か質問する。
-                Dietitian.askDietType(person.line_id)
+                //Dietitian.askDietType(person.line_id)
+                Dietitian.confirmDietType(replyToken, person.line_id, timestamp)
                 .then(
                     function(){
                         res.status(200).end();
