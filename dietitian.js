@@ -100,7 +100,7 @@ require('date-utils');
          } else {
              dietType = 'dinner';
          }
-         let dietTypeLabel = getDietTypeLabel(dietType);
+         let dietTypeLabel = dietitian.getDietTypeLabel(dietType);
          let messageText = 'それは' + dietTypeLabel + '?';
          let message = {
              type: 'template',
