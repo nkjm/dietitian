@@ -10,9 +10,9 @@ module.exports = class apiaiP {
         console.log('Processing text "' + text + '" via API.AI...');
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
-            const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
+            let aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
             console.log("aiInstance created.");
-            const aiRequest = aiInstance.textRequest(text);
+            let aiRequest = aiInstance.textRequest(text);
             console.log("aiRequest created.");
             aiRequest.on('response', function(response){
                 console.log("APIAI response follows.");
