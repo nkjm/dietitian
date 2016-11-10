@@ -3,7 +3,6 @@
 const Promise = require('bluebird');
 const apiai = require('apiai');
 const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
-const APIAI_LANGUAGE = process.env.APIAI_LANGUAGE;
 
 module.exports = class apiaiP {
     static textRequest(text){
@@ -11,24 +10,16 @@ module.exports = class apiaiP {
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
             let aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
-            console.log("aiInstance created.");
             let aiRequest = aiInstance.textRequest(text);
-            console.log("aiRequest created.");
             aiRequest.on('response', function(response){
-                console.log("APIAI response follows.");
-                console.log(response);
                 resolve(response.result.action);
                 return;
             });
-            console.log("response event set.");
             aiRequest.on('error', function(error){
-                console.log("Failed to process text via API.AI.");
                 reject(error);
                 return;
             });
-            console.log("error event set.");
             aiRequest.end();
-            console.log("end");
         });
     }
 }
