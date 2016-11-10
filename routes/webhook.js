@@ -294,7 +294,8 @@ router.post('/', (req, res, next) => {
                     res.status(200).end();
                     return;
                 }
-            )
+            );
+            return;
         }
 
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
