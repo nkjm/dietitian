@@ -12,6 +12,105 @@ Promise.config({
 
 module.exports = class foodDb {
 
+    static saveFood(food){
+        return new Promise(function(resolve, reject){
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            const url = dbPrefix + '/food';
+            request({
+                url: url,
+                method: 'POST',
+                headers: headers,
+                body: food,
+                json: true
+            }, function (error, response, body) {
+                if (error){
+                    reject(error);
+                    return;
+                }
+                resolve();
+                return;
+            });
+        });
+    }
+
+    static deleteFood(foodName){
+        return new Promise(function(resolve, reject){
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            const url = dbPrefix + '/food/' + encodeURIComponent(foodName);
+            request({
+                url: url,
+                method: 'DELETE',
+                headers: headers,
+                json: true
+            }, function (error, response, body) {
+                if (error){
+                    reject(error);
+                    return;
+                }
+                resolve();
+                return;
+            });
+        });
+    }
+
+    static registerFood(food){
+        return new Promise(function(resolve, reject){
+            // 新しい食品を登録
+            food.unidentified = 0;
+            console.log(food);
+            foodDb.saveFood(food)
+            .then(
+                function(){
+                    // 同名のUnidentified Foodを削除
+                    return foodDb.deleteFood(food.food_name);
+                },
+                function(error){
+                    return Promise.reject(error);
+                }
+            )
+            .then(
+                function(){
+                    resolve();
+                    return;
+                },
+                function(error){
+                    reject(error);
+                    return;
+                }
+            );
+        });
+    }
+
+    static getUnidentifiedFoodList(){
+        return new Promise(function(resolve, reject){
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            const url = dbPrefix + '/food/list/unidentified';
+            request({
+                url: url,
+                method: 'GET',
+                headers: headers,
+                json: true
+            }, function (error, response, body) {
+                if (error){
+                    reject(error);
+                    return;
+                }
+                if (typeof body.items == 'undefined'){
+                    reject({message:'Failed to get unidentified foods. It seems FoodDb is out of order.'});
+                    return;
+                }
+                resolve(body.items);
+                return;
+            });
+        });
+    }
+
     static saveUnidentifiedFood(food){
         return new Promise(function(resolve, reject){
             const headers = {
