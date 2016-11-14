@@ -98,7 +98,7 @@ module.exports = class foodDb {
 
                     if (autoSaveUnidentifiedFoodList && unidentifiedFoodList.length > 0){
                         console.log("We got some unidentified foods so saving them to db...");
-                        FoodDb.saveUnidentifiedFoodList(unidentifiedFoodList)
+                        foodDb.saveUnidentifiedFoodList(unidentifiedFoodList)
                         .then(
                             function(){
                                 resolve(identifiedFoodList);
