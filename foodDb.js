@@ -31,7 +31,7 @@ module.exports = class foodDb {
                 }
                 if (response.statusCode != 200){
                     reject('Failed to save food.');
-                    console.log(body);
+                    console.log(response);
                     return;
                 }
                 resolve();
