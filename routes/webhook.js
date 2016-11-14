@@ -188,7 +188,7 @@ router.post('/', (req, res, next) => {
 
                 // 食品リストの食品それぞれについて、栄養情報を取得する。
                 console.log('Getting Food List with Nutrition.');
-                return FoodDb.getFoodListWithNutrition(foodList);
+                return FoodDb.getFoodListWithNutrition(foodList, true);
             },
             function(error){
                 console.log(error.message);
