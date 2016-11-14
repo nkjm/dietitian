@@ -29,6 +29,10 @@ module.exports = class foodDb {
                     reject(error);
                     return;
                 }
+                if (response.statusCode != 200){
+                    reject('Faild to save food.');
+                    return;
+                }
                 resolve();
                 return;
             });
@@ -49,6 +53,10 @@ module.exports = class foodDb {
             }, function (error, response, body) {
                 if (error){
                     reject(error);
+                    return;
+                }
+                if (response.statusCode != 200){
+                    reject('Faild to save food.');
                     return;
                 }
                 resolve();
