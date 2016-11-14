@@ -45,7 +45,7 @@ module.exports = class foodDb {
             savedFoodList.push(foodDb.saveUnidentifiedFood(food));
         }
         return new Promise(function(resolve, reject){
-            Promise.all(saveFoodList)
+            Promise.all(savedFoodList)
             .then(
                 function(){
                     resolve();
