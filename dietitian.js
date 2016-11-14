@@ -10,6 +10,23 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
 
  module.exports = class dietitian {
 
+     static tellMeLater(replyToken){
+         let message = {
+             type: 'text',
+             text: 'それは失礼。また後で教えてね。'
+         }
+         return LineBot.replyMessage(replyToken, message);
+     }
+
+     static sorryForSkippingMeal(replyToken){
+         let message = {
+             type: 'text',
+             text: 'なんと。お腹空いたでしょうに。カロリーメイトとかウィダー・イン・ゼリーとか食べておいてね。'
+         }
+         return LineBot.replyMessage(replyToken, message);
+     }
+
+     // 仮の実装。本来は残りカロリー、栄養から特定すべき。
      static recommend(replyToken){
          let message = {
              type: 'text',

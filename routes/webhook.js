@@ -133,8 +133,27 @@ router.post('/', (req, res, next) => {
                         })
                         p.cancel();
                         break;
+                    // オススメの食事のリクエスト
                     case 'get-recommendation':
                         Dietitian.recommend(replyToken)
+                        .then(function(){
+                            res.status(200).end();
+                            return;
+                        })
+                        p.cancel();
+                        break;
+                    // 食べなかった旨のレポート
+                    case 'skipped-meal':
+                        Dietitian.sorryForSkippingMeal(replyToken)
+                        .then(function(){
+                            res.status(200).end();
+                            return;
+                        })
+                        p.cancel();
+                        break;
+                    // まだ食べてない旨のレポート
+                    case 'not-yet':
+                        Dietitian.tellMeLater(replyToken)
                         .then(function(){
                             res.status(200).end();
                             return;
