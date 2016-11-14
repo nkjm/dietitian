@@ -198,11 +198,11 @@ router.post('/', (req, res, next) => {
                 if (thread){
                     console.log("Found thread.");
                     // 事前の会話が存在している場合。
-                    let latestMessage = thread.thread[thread.thread.length - 1];
-                    if (latestMessage.source == 'dietitian' && latestMessage.type == 'whatDidYouEat'){
+                    let latestConversation = thread[thread.length - 1];
+                    if (latestConversation.source == 'dietitian' && latestConversation.type == 'whatDidYouEat'){
                         // Botが何を食べたか聞いていた場合。Diet TypeとDiet Dateは特定されているため、食事履歴の保存に進む。
-                        dietDate = latestMessage.dietDate;
-                        dietType = latestMessage.dietType;
+                        dietDate = latestConversation.dietDate;
+                        dietType = latestConversation.dietType;
 
                         // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
                         console.log('Saving Diet History.');
@@ -283,7 +283,7 @@ router.post('/', (req, res, next) => {
         let postbackData = JSON.parse(req.body.events[0].postback.data);
         let dietType = postbackData.dietType;
         let dietDate = (new Date()).toFormat("YYYY-MM-DD");
-        let threadList = cache.get('thread-' + lineId);
+        let thread = cache.get('thread-' + lineId);
         let foodListWithNutrition;
 
         if (dietType == 'incorrect'){
@@ -299,10 +299,10 @@ router.post('/', (req, res, next) => {
         }
 
         // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
-        for (let thread of threadList.thread){
-            if (thread.type == 'foodList' && thread.foodList.length > 0){
+        for (let conversation of thread){
+            if (conversation.type == 'foodList' && conversation.foodList.length > 0){
                 console.log('Found foodList');
-                foodListWithNutrition = thread.foodList;
+                foodListWithNutrition = conversation.foodList;
             }
         }
 

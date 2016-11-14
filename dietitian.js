@@ -6,6 +6,8 @@ const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
 require('date-utils');
 
+const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
+
  module.exports = class dietitian {
 
      static recommend(replyToken){
@@ -214,13 +216,12 @@ require('date-utils');
 
      static pushToThread(lineId, conversation){
          let thread = cache.get('thread-' + lineId);
-         if (thread && thread.thread && thread.thread.length > 0){
-             thread.thread.push(conversation);
+         if (thread && thread.length > 0){
+             thread.push(conversation);
          } else {
-             thread = {thread: [conversation]}
+             thread = [conversation];
          }
-         const timeToExpire = 1000 * 60 * 60 * 2 // 2時間
-         cache.put('thread-' + lineId, thread, timeToExpire);
+         cache.put('thread-' + lineId, thread, thread_timeToExpire);
      }
 
      static getDietTypeLabel(dietType){
