@@ -42,7 +42,7 @@ module.exports = class foodDb {
     static saveUnidentifiedFoodList(foodList){
         let savedFoodList = [];
         for (let food in foodList){
-            savedFoodList.push(saveUnidentifiedFood(food));
+            savedFoodList.push(foodDb.saveUnidentifiedFood(food));
         }
         return new Promise(function(resolve, reject){
             Promise.all(saveFoodList)
