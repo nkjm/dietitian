@@ -61,7 +61,7 @@ module.exports = class foodDb {
 
     static getFoodListWithNutrition(foodList, autoSaveUnidentifiedFoodList){
         return new Promise(function(resolve, reject){
-            if (typeof foodList != 'object' || typeof foodList != 'number'){
+            if (typeof foodList != 'object' || typeof foodList.length != 'number'){
                 reject({message:'foodList is invalid.'});
                 return;
             }
