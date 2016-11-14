@@ -13,7 +13,6 @@ Promise.config({
 module.exports = class foodDb {
 
     static saveUnidentifiedFood(food){
-        console.log(food);
         return new Promise(function(resolve, reject){
             const headers = {
                 'Content-Type': 'application/json'
@@ -41,9 +40,8 @@ module.exports = class foodDb {
     }
 
     static saveUnidentifiedFoodList(foodList){
-        console.log(foodList);
         let savedFoodList = [];
-        for (let food in foodList){
+        for (let food of foodList){
             savedFoodList.push(foodDb.saveUnidentifiedFood(food));
         }
         return new Promise(function(resolve, reject){
