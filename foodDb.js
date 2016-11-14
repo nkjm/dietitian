@@ -30,8 +30,7 @@ module.exports = class foodDb {
                     return;
                 }
                 if (response.statusCode != 200){
-                    reject('Failed to save food.');
-                    console.log(response);
+                    reject({message:'Failed to save food.'});
                     return;
                 }
                 resolve();
@@ -45,11 +44,12 @@ module.exports = class foodDb {
             const headers = {
                 'Content-Type': 'application/json'
             };
-            const url = dbPrefix + '/food/' + encodeURIComponent(foodName);
+            const url = dbPrefix + '/food';
             request({
                 url: url,
                 method: 'DELETE',
                 headers: headers,
+                body: {food_name: foodName},
                 json: true
             }, function (error, response, body) {
                 if (error){
@@ -57,7 +57,7 @@ module.exports = class foodDb {
                     return;
                 }
                 if (response.statusCode != 200){
-                    reject('Faild to save food.');
+                    reject({message:'Failed to delete food.'});
                     return;
                 }
                 resolve();
@@ -70,7 +70,6 @@ module.exports = class foodDb {
         return new Promise(function(resolve, reject){
             // 新しい食品を登録
             food.unidentified = 0;
-            console.log(food);
             foodDb.saveFood(food)
             .then(
                 function(){
