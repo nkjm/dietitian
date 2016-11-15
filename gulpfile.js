@@ -33,8 +33,9 @@ gulp.task('concat', function(){
 		'public/javascripts/dietitian/module.min.js',
 		'public/javascripts/dietitian/rootCtl.min.js',
 		'public/javascripts/dietitian/personCtl.min.js',
-		'public/javascripts/dietitian/todayCtl.min.js',
-		'public/javascripts/dietitian/thisWeekCtl.min.js'
+		'public/javascripts/dietitian/todayCalorieCtl.min.js',
+		'public/javascripts/dietitian/todayNutritionCtl.min.js',
+		'public/javascripts/dietitian/todayHistoryCtl.min.js'
 	];
 	gulp.src(srcHost)
 		.pipe(concat('dietitian.min.js'))

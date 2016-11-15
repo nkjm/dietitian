@@ -2,9 +2,18 @@ angular.module("dietitian", ["ui.bootstrap"])
 .service("state", function(){
     this.requestReloadPerson = false;
     this.person = null;
+    this.todayDietList = [];
 
     this.reloadPerson = function(){
         this.requestReloadPerson = !this.requestReloadPerson;
+    }
+
+    this.reloadTodayCalorieChart = function(){
+        this.requestReloadTodayCalorieChart = !this.requestReloadTodayCalorieChart;
+    }
+
+    this.reloadTodayNutritionChart = function(){
+        this.requestReloadTodayNutritionChart = !this.requestReloadTodayNutritionChart;
     }
 })
 .service("remoting", function(){

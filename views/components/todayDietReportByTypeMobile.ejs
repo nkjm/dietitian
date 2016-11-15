@@ -1,25 +1,25 @@
 <div class="panel panel-default" ng-repeat="diet in dietList">
     <div class="panel-heading">{{diet.food}}</div>
-    <div class="panel-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>カロリー</th>
-                    <th>炭水化物</th>
-                    <th>たんぱく質</th>
-                    <th>脂肪</th>
-                    <th>食物繊維</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{diet.calorie || 0}} kcal</td>
-                    <td>{{diet.carb || 0}}g</td>
-                    <td>{{diet.protein || 0}}g</td>
-                    <td>{{diet.fat || 0}}g</td>
-                    <td>{{diet.fiber || 0}}g</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>カロリー</th>
+                <th>炭水化物</th>
+                <th>たんぱく質</th>
+                <th>脂肪</th>
+                <th>食物繊維</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{diet.calorie || 0}} kcal</td>
+                <td>{{diet.carb || 0}}g</td>
+                <td>{{diet.protein || 0}}g</td>
+                <td>{{diet.fat || 0}}g</td>
+                <td>{{diet.fiber || 0}}g</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
