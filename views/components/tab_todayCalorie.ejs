@@ -18,5 +18,17 @@
         <div class="col-sm-6 today-calorie-chart-container">
             <canvas id="today-calorie-chart" class="today-calorie-chart" style="margin: 0 auto;" height="200px" width="200px"></canvas>
         </div>
+        <div class="col-sm-6" id="today-calorie-matrix">
+            <table class="table" style="margin-top: 20px;">
+                <tr>
+                    <th>目標量</th>
+                    <td>{{state.person.requiredCalorie}} kcal</td>
+                </tr>
+                <tr>
+                    <th>摂取量</th>
+                    <td>{{ui.todayCalorie}} kcal</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>

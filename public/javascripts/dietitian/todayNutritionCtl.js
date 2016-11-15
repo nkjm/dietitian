@@ -58,13 +58,17 @@ angular.module("dietitian")
     }
 
     function processDietList(dietList){
-        // Diet Type別（breakfast | lunch | dinner）にDietを整理。同時に今日の摂取カロリーを積算。
         angular.forEach(dietList, function(diet, dietKey){
             $scope.ui.todayNutrition.carb += diet.carb || 0;
             $scope.ui.todayNutrition.protein += diet.protein || 0;
             $scope.ui.todayNutrition.fat += diet.fat || 0;
             $scope.ui.todayNutrition.fiber += diet.fiber || 0;
         });
+
+        angular.forEach($scope.ui.todayNutrition, function(nutrition, nutritionKey){
+            $scope.ui.todayNutrition[nutritionKey] = Math.round(nutrition);
+        });
+
         state.reloadTodayNutritionChart();
     }
 

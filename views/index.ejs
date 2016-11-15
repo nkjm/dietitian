@@ -84,6 +84,10 @@ angular.module("dietitian")
         display: none;
     }
 
+    #today-calorie-matrix {
+        display: none;
+    }
+
     .root-container {
          width: 80%;
     }
@@ -112,6 +116,10 @@ angular.module("dietitian")
 }
 @media (min-width: 992px) {
     #today-diet-report-mobile {
+        display: none;
+    }
+
+    #today-calorie-matrix {
         display: none;
     }
 
@@ -214,6 +222,8 @@ body.modal-open {
 
         <!-- Summary Area -->
         <div>
+            <div style="font-size: 2.0em; border-bottom: solid 1px #ddd; padding: 10px 0; margin-bottom: 20px;">今日のサマリー</div>
+
             <!-- Tab Bar -->
             <ul class="nav nav-tabs" ng-init="ui.summaryTab.currentTab = 'calorie'" style="margin-bottom: 10px;">
                 <li ng-class="(ui.summaryTab.currentTab == 'calorie') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event,'summaryTab','calorie')"><span class="glyphicon glyphicon-fire"></span>&nbsp;カロリー</a></li>

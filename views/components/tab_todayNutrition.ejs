@@ -4,5 +4,34 @@
         <div class="col-sm-6">
             <canvas id="today-nutrition-chart" height="200px" width="200px"></canvas>
         </div>
+        <div class="col-sm-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>炭水化物</th>
+                        <th>たんぱく質</th>
+                        <th>脂肪</th>
+                        <th>食物繊維</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>目標量</th>
+                        <td>{{state.person.requiredNutrition.carb}}g</td>
+                        <td>{{state.person.requiredNutrition.protein}}g</td>
+                        <td>{{state.person.requiredNutrition.fat}}g</td>
+                        <td>{{state.person.requiredNutrition.fiber}}g</td>
+                    </tr>
+                    <tr>
+                        <th>摂取量</th>
+                        <td>{{ui.todayNutrition.carb}}g</td>
+                        <td>{{ui.todayNutrition.protein}}g</td>
+                        <td>{{ui.todayNutrition.fat}}g</td>
+                        <td>{{ui.todayNutrition.fiber}}g</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
