@@ -26,16 +26,13 @@ body {
 <body>
     <div class="container" ng-controller="rootCtl" style="margin-top: 20px; margin-bottom: 40px; width: 95%;" ng-cloak="true">
         <div class="row">
-            <!-- Navigation -->
-            <div class="col-sm-3">
-                <ul class="nav nav-pills nav-stacked">
+            <!-- Tab -->
+            <div>
+                <ul class="nav nav-tabs">
                     <li role="presentation" ng-class="(ui.currentTab == 'person') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'person')">クライアント</a></li>
-                    <li role="presentation" ng-class="(ui.currentTab == 'food') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'food')">食品リスト<span class="badge">{{ui.unidentifiedFoodList.length}}</span></a></li>
+                    <li role="presentation" ng-class="(ui.currentTab == 'food') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'food')">要登録の食品&nbsp;<span class="badge">{{ui.unidentifiedFoodList.length}}</span></a></li>
                 </ul>
             </div>
-
-            <!-- List group -->
-            <div class="col-sm-9">
 
                 <!-- List of Users -->
                 <div ng-show="ui.currentTab == 'person'" class="media" ng-repeat="person in ui.personList">
@@ -45,11 +42,11 @@ body {
                         </a>
                     </div>
                     <div class="media-body">
-                        <h3 class="media-heading">{{person.lastname}} {{person.firstname}}</h3>
-                        <button type="button" class="btn btn-primary" ng-click="whatDidYouEat(person.line_id, 'breakfast')">朝食を確認</button>
-                        <button type="button" class="btn btn-primary" ng-click="whatDidYouEat(person.line_id, 'lunch')">昼食を確認</button>
-                        <button type="button" class="btn btn-primary" ng-click="whatDidYouEat(person.line_id, 'dinner')">夕食を確認</button>
-                        <button type="button" class="btn btn-primary" ng-click="askDietType(person.line_id)">どの食事か確認</button>
+                        <h3 class="media-heading" style="margin-top:10px;margin-bottom:20px;">{{person.display_name}}</h3>
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="whatDidYouEat(person.line_id, 'breakfast')">朝食を確認</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="whatDidYouEat(person.line_id, 'lunch')">昼食を確認</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="whatDidYouEat(person.line_id, 'dinner')">夕食を確認</button>
+                        <!--<button type="button" class="btn btn-sm btn-primary" ng-click="askDietType(person.line_id)">どの食事か確認</button>-->
                     </div>
                 </div>
 
@@ -82,8 +79,6 @@ body {
                         </tbody>
                     </table>
                 </div>
-
-            </div>
 
     </div>
 </body>
