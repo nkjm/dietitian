@@ -1,10 +1,9 @@
-<div class="panel panel-default">
-    <div class="panel-heading">{{dietTypeLabel}}</div>
+<div class="panel panel-default" ng-repeat="diet in dietList">
+    <div class="panel-heading">{{diet.food}}</div>
     <div class="panel-body">
         <table class="table">
             <thead>
                 <tr>
-                    <th>食品</th>
                     <th>カロリー</th>
                     <th>炭水化物</th>
                     <th>たんぱく質</th>
@@ -13,8 +12,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="diet in dietList">
-                    <td>{{diet.food}}</td>
+                <tr>
                     <td>{{diet.calorie || 0}} kcal</td>
                     <td>{{diet.carb || 0}}g</td>
                     <td>{{diet.protein || 0}}g</td>

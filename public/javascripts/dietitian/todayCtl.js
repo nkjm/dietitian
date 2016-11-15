@@ -28,6 +28,11 @@ angular.module("dietitian")
         $scope.ui.reloadTodayNutritionChart = $scope.ui.reloadTodayNutritionChart * -1;
     }
 
+    $scope.setCurrentTab = function(event, tab){
+        event.preventDefault();
+        $scope.ui.currentTab = tab;
+    }
+
     function drawTodayNutrition(nutrition){
         var ctx = document.getElementById("today-nutrition-chart");
         var options = {
@@ -168,6 +173,16 @@ angular.module("dietitian")
     return {
         restrict: 'E',
         templateUrl: "todayDietReportByType",
+        scope: {
+            dietTypeLabel: '@',
+            dietList: '='
+        }
+    }
+})
+.directive("todayDietReportByTypeMobile", function($compile){
+    return {
+        restrict: 'E',
+        templateUrl: "todayDietReportByTypeMobile",
         scope: {
             dietTypeLabel: '@',
             dietList: '='

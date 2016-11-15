@@ -44,14 +44,38 @@
 
             <!-- Diet List -->
             <div class="col-sm-8">
-                <!-- 朝食 -->
-                <today-diet-report-by-type diet-type-label="朝食" diet-list="ui.dietListByType.breakfast"></today-diet-report-by-type>
 
-                <!-- 昼食 -->
-                <today-diet-report-by-type diet-type-label="昼食" diet-list="ui.dietListByType.lunch"></today-diet-report-by-type>
+                <!-- モバイル専用の朝食/昼食/夕食の切り替えタブ -->
+                <div id="today-diet-report-mobile">
+                    <ul class="nav nav-tabs" ng-init="ui.currentTab = 'breakfast'" style="margin-bottom: 10px;">
+                        <li ng-class="(ui.currentTab == 'breakfast') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'breakfast')">朝食</a></li>
+                        <li ng-class="(ui.currentTab == 'lunch') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'lunch')">昼食</a></li>
+                        <li ng-class="(ui.currentTab == 'dinner') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'dinner')">夕食</a></li>
+                    </ul>
 
-                <!-- 夕食 -->
-                <today-diet-report-by-type diet-type-label="夕食" diet-list="ui.dietListByType.dinner"></today-diet-report-by-type>
+                    <div ng-show="ui.currentTab == 'breakfast'">
+                        <today-diet-report-by-type-mobile diet-type-label="朝食" diet-list="ui.dietListByType.breakfast"></today-diet-report-by-type>
+                    </div>
+
+                    <div ng-show="ui.currentTab == 'lunch'">
+                        <today-diet-report-by-type-mobile diet-type-label="昼食" diet-list="ui.dietListByType.lunch"></today-diet-report-by-type>
+                    </div>
+
+                    <div ng-show="ui.currentTab == 'dinner'">
+                        <today-diet-report-by-type-mobile diet-type-label="夕食" diet-list="ui.dietListByType.dinner"></today-diet-report-by-type>
+                    </div>
+                </div>
+
+                <div id="today-diet-report">
+                    <!-- 朝食 -->
+                    <today-diet-report-by-type diet-type-label="朝食" diet-list="ui.dietListByType.breakfast"></today-diet-report-by-type>
+
+                    <!-- 昼食 -->
+                    <today-diet-report-by-type diet-type-label="昼食" diet-list="ui.dietListByType.lunch"></today-diet-report-by-type>
+
+                    <!-- 夕食 -->
+                    <today-diet-report-by-type diet-type-label="夕食" diet-list="ui.dietListByType.dinner"></today-diet-report-by-type>
+                </div>
 
             </div>
 
@@ -61,4 +85,7 @@
 
 <script type="text/ng-template" id="todayDietReportByType">
     <% include todayDietReportByType %>
+</script>
+<script type="text/ng-template" id="todayDietReportByTypeMobile">
+    <% include todayDietReportByTypeMobile %>
 </script>

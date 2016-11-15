@@ -28,6 +28,10 @@ angular.module("dietitian")
 
 <style>
 @media (max-width: 767px) {
+    #today-diet-report {
+        display: none;
+    }
+
     .root-container {
          width: 95%;
     }
@@ -75,6 +79,10 @@ angular.module("dietitian")
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
+    #today-diet-report-mobile {
+        display: none;
+    }
+
     .root-container {
          width: 80%;
     }
@@ -102,6 +110,10 @@ angular.module("dietitian")
     }
 }
 @media (min-width: 992px) {
+    #today-diet-report-mobile {
+        display: none;
+    }
+
     .root-container {
          width: 80%;
     }
@@ -200,8 +212,7 @@ body.modal-open {
 
         <!-- Tab Bar -->
         <ul class="nav nav-tabs" ng-init="ui.currentTab = 'today'" style="margin-bottom: 10px;">
-            <li ng-class="(ui.currentTab == 'today') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'today')">今日</a></li>
-            <li ng-class="(ui.currentTab == 'this_week') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event, 'this_week')">今週</a></li>
+            <li ng-class="(ui.currentTab == 'today') ? 'active' : ''"><a href="#" class="tab_label" ng-click="setCurrentTab($event,'today')">今日</a></li>
         </ul>
 
         <!-- Tab Content -->
@@ -209,11 +220,6 @@ body.modal-open {
             <!-- Today Tab-->
             <div id="tab_today" ng-show="ui.currentTab == 'today'" style="padding:10px 5px;">
                 <% include ./components/tab_today %>
-            </div>
-
-            <!-- This Week Tab-->
-            <div id="tab_this_week" ng-show="ui.currentTab == 'this_week'" style="padding:0 5px;">
-                <% include ./components/tab_this_week %>
             </div>
         </div>
 

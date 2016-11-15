@@ -5,6 +5,7 @@ const router = express.Router();
 const PersonDb = require('../personDb');
 const Dietitian = require('../dietitian');
 const FoodDb = require('../foodDb');
+const DIETITIAN_CONSOLE_SECURITY_CODE = process.env.DIETITIAN_CONSOLE_SECURITY_CODE;
 
 router.get('/api/askDietType', (req, res, next) => {
     console.log('hoge');
@@ -59,6 +60,11 @@ router.post('/api/food', (req, res, next) => {
 });
 
 router.get('/', (req, res, next) => {
+    if (!req.query.security_code || req.query.security_code != DIETITIAN_CONSOLE_SECURITY_CODE){
+        res.render('error', {severity: 'warning', message: 'セキュリティコードがセットされていないか、値が不正です。'});
+        return;
+    }
+
     PersonDb.getPersonList()
     .then(
         function(personList){

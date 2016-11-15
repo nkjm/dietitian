@@ -30,7 +30,7 @@ body {
             <div class="col-sm-3">
                 <ul class="nav nav-pills nav-stacked">
                     <li role="presentation" ng-class="(ui.currentTab == 'person') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'person')">クライアント</a></li>
-                    <li role="presentation" ng-class="(ui.currentTab == 'food') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'food')">食品リスト</a></li>
+                    <li role="presentation" ng-class="(ui.currentTab == 'food') ? 'active' : ''"><a href="#" ng-click="setCurrentTab($event, 'food')">食品リスト<span class="badge">{{ui.unidentifiedFoodList.length}}</span></a></li>
                 </ul>
             </div>
 
