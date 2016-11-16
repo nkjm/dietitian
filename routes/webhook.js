@@ -6,6 +6,7 @@ const cache = require('memory-cache');
 const crypto = require('crypto');
 const Promise = require('bluebird');
 const TextMiner = require('../textMiner');
+const Mecabaas = require('../mecabaas');
 const FoodDb = require('../foodDb');
 const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
@@ -162,7 +163,7 @@ router.post('/', (req, res, next) => {
                         break;
                     // 食事のレポートだと仮定
                     default:
-                        return TextMiner.getFoodListFromMessage(messageText);
+                        return mecabaas.parse(messageText);
                         break;
                 }
             },
@@ -171,7 +172,9 @@ router.post('/', (req, res, next) => {
             }
         )
         .then(
-            function(foodList){
+            function(parsedText){
+                let foodList = TextMiner.extractFoodList(parsedText);
+                
                 // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                 if (foodList.length == 0){
                     console.log('No food word found.');
