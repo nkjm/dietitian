@@ -161,6 +161,9 @@ router.post('/', (req, res, next) => {
                         })
                         p.cancel();
                         break;
+                    case 'diet-report':
+                        return Mecabaas.parse(messageText);
+                        break;
                     // 食事のレポートだと仮定
                     default:
                         return Mecabaas.parse(messageText);
