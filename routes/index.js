@@ -121,7 +121,7 @@ router.get('/:line_id', (req, res, next) => {
             }
 
             // UIを出力。
-            res.render('index', {person: person, releaseMode: RELEASE_MODE});
+            res.render('mypage', {person: person, releaseMode: RELEASE_MODE});
             return;
         },
         function(error){

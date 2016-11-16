@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"></meta>
 <meta charset="UTF-8">
 <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
+<link rel='stylesheet' href='/stylesheets/mypage.css' />
 <script src="/socket.io/socket.io.js"></script>
 <% if (releaseMode == 'production'){ %>
     <script type="text/javascript" src="javascripts/dist/dietitian.min.js"></script>
@@ -27,158 +28,32 @@ angular.module("dietitian")
 </script>
 </head>
 
-<style>
-@media (max-width: 767px) {
-    #today-diet-report {
-        display: none;
-    }
-
-    .root-container {
-         width: 98%;
-    }
-    .person-icon-container {
-        text-align: center;
-    }
-    .person-icon {
-        height: 90px;
-    }
-    .person-name-container {
-        text-align: center;
-        margin: 20px 0 20px 0;
-    }
-    .person-name {
-        font-size:24pt;
-    }
-    .profile-attr-label {
-        font-weight:bold;
-        border-bottom: solid 1px #ddd;
-        padding:10px 0;
-        font-size: 0.9em;
-    }
-    .profile-attr-value {
-        padding: 10px 0;
-        font-size: 1.0em;
-    }
-    .calorie-container {
-        margin: 0 auto 60px auto;
-        width: 100%;
-    }
-    .today-calorie-info-container {
-        display: none;
-    }
-    .today-calorie-chart-container {
-        text-align: center;
-    }
-    .today-calorie-chart {
-        height: 180px;
-    }
-    .form-person-birthday-for-desktop {
-        display: none;
-    }
-    .form-person-birthday-for-mobile {
-        display: block;
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    #today-diet-report-mobile {
-        display: none;
-    }
-
-    #today-calorie-matrix {
-        display: none;
-    }
-
-    .root-container {
-         width: 80%;
-    }
-    .person-icon {
-        height: 150px;
-    }
-    .person-name {
-        font-size:30pt;
-    }
-    .profile-attr-label {
-        font-weight:bold;
-        border-bottom: solid 1px #ddd;
-        padding:10px 0;
-    }
-    .profile-attr-value {
-        padding: 10px 0;
-        font-size: 1.5em;
-    }
-    .calorie-container {
-        margin: 0 auto 60px auto;
-        width: 80%;
-    }
-    .form-person-birthday-for-mobile {
-        display: none;
-    }
-}
-@media (min-width: 992px) {
-    #today-diet-report-mobile {
-        display: none;
-    }
-
-    #today-calorie-matrix {
-        display: none;
-    }
-
-    .root-container {
-         width: 80%;
-    }
-    .person-icon {
-        height: 180px;
-    }
-    .person-name {
-        font-size:30pt;
-    }
-    .profile-attr-label {
-        font-weight:bold;
-        border-bottom: solid 1px #ddd;
-        padding:10px 0;
-    }
-    .profile-attr-value {
-        padding: 10px 0;
-        font-size: 1.5em;
-    }
-    .calorie-container {
-        margin: 0 auto 60px auto;
-        width: 80%;
-    }
-    .form-person-birthday-for-mobile {
-        display: none;
-    }
-}
-body {
-    font-size: 12pt;
-    color: #666;
-}
-body.modal-open {
-    position: fixed;
-}
-.calorie-percentage-label {
-    font-size: 1.3em;
-}
-.calorie-percentage-value {
-    font-size: 5.0em;
-}
-</style>
-
 <body ng-controller="rootCtl">
     <div class="container root-container" style="margin-top: 20px; margin-bottom: 40px;" ng-cloak="true">
         <!-- Person Profile Area -->
         <div ng-controller="personCtl" id="person_profile" style="margin-bottom: 40px;">
+
+            <!-- Progress Bar -->
+            <div ng-show="ui.remoting.isRemoting">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">{{ui.remoting.status}}</span>
+                    </div>
+                </div>
+            </div><!-- Progress Bar -->
+
+            <!-- Edit Button -->
             <div class="person-edit-button-container" style="text-align:right;">
                 <button class="btn btn-default" type="button" ng-click="openPersonForm(ui.person)" ng-disabled="ui.remoting.isRemoting"><span class="glyphicon glyphicon-pencil"></span>&nbsp;編集</button>
-            </div>
+            </div><!-- Edit Button -->
 
+            <!-- Personal Profile -->
             <div class="row">
                 <div class="col-sm-3 person-icon-container">
                     <img ng-src="{{ui.person.icon_url}}" class="img-circle person-icon"></img>
                 </div>
 
                 <div class="col-sm-9">
-
                     <div style="margin-bottom:10px;" class="person-name-container">
                         <span class="person-name">{{ui.person.display_name}}</span>
                     </div>
@@ -201,21 +76,8 @@ body.modal-open {
                             <div class="profile-attr-value">{{ui.person.activity}}</div>
                         </div>
                     </div>
-
                 </div>
-
-            </div>
-
-            <div ng-show="ui.remoting.isRemoting" style="margin-top: 20px;">
-                <div style="text-align:center;color: #999;">
-                    {{ui.remoting.status}}
-                </div>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%">
-                        <span class="sr-only">{{ui.remoting.status}}</span>
-                    </div>
-                </div>
-            </div>
+            </div><!-- Personal Profile -->
 
         </div><!-- Person Profile Area -->
 

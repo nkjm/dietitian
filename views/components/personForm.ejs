@@ -70,5 +70,7 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="$dismiss()" ng-disabled="ui.remoting.isRemoting">キャンセル</button>
-    <button class="btn btn-primary" type="button" ng-click="updatePerson(ui.person)" ng-disabled="ui.remoting.isRemoting || personForm.$invalid"><span class="glyphicon glyphicon-ok"></span>&nbsp;更新</button>
+    <button class="btn btn-primary" type="button" ng-click="updatePerson(ui.person)" ng-disabled="ui.remoting.isRemoting || personForm.$invalid">
+        <span class="glyphicon glyphicon-ok" ng-show="!ui.remoting.isRemoting"></span>&nbsp;{{(ui.remoting.isRemoting) ? '更新中...' : '更新'}}
+    </button>
 </div>
