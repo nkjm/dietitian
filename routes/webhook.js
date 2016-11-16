@@ -163,7 +163,7 @@ router.post('/', (req, res, next) => {
                         break;
                     // 食事のレポートだと仮定
                     default:
-                        return mecabaas.parse(messageText);
+                        return Mecabaas.parse(messageText);
                         break;
                 }
             },
@@ -174,7 +174,7 @@ router.post('/', (req, res, next) => {
         .then(
             function(parsedText){
                 let foodList = TextMiner.extractFoodList(parsedText);
-                
+
                 // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                 if (foodList.length == 0){
                     console.log('No food word found.');
