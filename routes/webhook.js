@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
-const crypto = require('crypto');
 const Promise = require('bluebird');
 const TextMiner = require('../textMiner');
 const mecab = require('mecabaas-client');
