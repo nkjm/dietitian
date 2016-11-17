@@ -6,7 +6,7 @@ const cache = require('memory-cache');
 const crypto = require('crypto');
 const Promise = require('bluebird');
 const TextMiner = require('../textMiner');
-const Mecabaas = require('../mecabaas');
+const mecab = require('mecabaas-client');
 const FoodDb = require('../foodDb');
 const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
@@ -162,11 +162,11 @@ router.post('/', (req, res, next) => {
                         p.cancel();
                         break;
                     case 'diet-report':
-                        return Mecabaas.parse(messageText);
+                        return mecab.parse(messageText);
                         break;
                     // 食事のレポートだと仮定
                     default:
-                        return Mecabaas.parse(messageText);
+                        return mecab.parse(messageText);
                         break;
                 }
             },

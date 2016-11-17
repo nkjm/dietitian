@@ -2,7 +2,6 @@
 
 const request = require('request');
 const Promise = require('bluebird');
-const mecab = require('mecab-async');
 const CalorieCalc = require('./calorieCalc');
 const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
 
