@@ -172,8 +172,8 @@ module.exports = class foodDb {
                 reject({message:'foodList is invalid.'});
                 return;
             }
-            if (foodList.length > 5){
-                reject({message:'foodList can contain less than or equal to 5 foods. Provided ' + foodList.length + '.'});
+            if (foodList.length > 10){
+                reject({message:'foodList can contain less than or equal to 10 foods. Provided ' + foodList.length + '.'});
                 return;
             }
             let gotFoodList = [];
