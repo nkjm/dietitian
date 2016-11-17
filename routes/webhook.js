@@ -14,7 +14,6 @@ const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
 const GoogleTranslate = require('../googleTranslateP');
 const Apiai = require('../apiaiP');
-const uuid = require('node-uuid');
 
 
 require('date-utils');
@@ -117,8 +116,7 @@ router.post('/', (req, res, next) => {
         .then(
             function(translatedMessageText){
                 // Intentを特定する。
-                const sessionId = uuid.v1();
-                return Apiai.textRequest(translatedMessageText, {sessionId: sessionId});
+                return Apiai.textRequest(translatedMessageText);
             },
             function(error){
                 return Promise.reject(error);
