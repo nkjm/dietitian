@@ -140,6 +140,8 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(action){
+                if (aciton) ? console.log("Intent of this message is " + action) : console.log("Intent not identified.");
+
                 if (latestConversation && latestConversation.source == 'dietitian' && latestConversation.type == 'whatDidYouEat'){
                     console.log("It seems dietitian asked what the client ate for " + latestConversation.dietType + ".");
                     switch (action){
