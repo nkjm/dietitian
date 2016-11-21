@@ -23,11 +23,14 @@ Promise.config({
 });
 
 router.post('/', (req, res, next) => {
+    res.status(200).end();
 
     // Signature Validation
     if (!LineBot.validateSignature(req.get('X-Line-Signature'), req.rawBody)){
-        return res.status(401).send('Signature validation failed.');
+        console.log('Signature validation failed.');
+        return;
     }
+
     console.log('Signature validation succeeded.');
 
     // Webhookへのリクエストから必要な情報を抜き出す。
@@ -73,12 +76,10 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(){
-                res.status(200).end();
-                return;
+                console.log("End of follow event handler.");
             },
             function(error){
                 console.log(error);
-                res.status(200).end();
             }
         );
     } else if (eventType == 'message' && req.body.events[0].message.type == 'text'){
@@ -102,7 +103,6 @@ router.post('/', (req, res, next) => {
         4. 食事をスレッドに保存し、ユーザーにどの食事だったか確認する。
         */
         console.log("Got message event.");
-        res.status(200).end();
 
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
@@ -155,9 +155,8 @@ router.post('/', (req, res, next) => {
                             cache.del('thread-' + person.line_id);
                             Dietitian.sorryForSkippingMeal(replyToken)
                             .then(function(){
-                                res.status(200).end();
                                 return;
-                            })
+                            });
                             p.cancel();
                             break;
                         // まだ食べてない旨のレポート
@@ -165,7 +164,6 @@ router.post('/', (req, res, next) => {
                             cache.del('thread-' + person.line_id);
                             Dietitian.tellMeLater(replyToken)
                             .then(function(){
-                                res.status(200).end();
                                 return;
                             })
                             p.cancel();
@@ -182,7 +180,6 @@ router.post('/', (req, res, next) => {
                             cache.del('thread-' + person.line_id);
                             Dietitian.sendMyPage(replyToken, person.line_id, person.security_code)
                             .then(function(){
-                                res.status(200).end();
                                 return;
                             })
                             p.cancel();
@@ -192,7 +189,6 @@ router.post('/', (req, res, next) => {
                             cache.del('thread-' + person.line_id);
                             Dietitian.recommend(replyToken)
                             .then(function(){
-                                res.status(200).end();
                                 return;
                             })
                             p.cancel();
@@ -202,7 +198,6 @@ router.post('/', (req, res, next) => {
                             cache.del('thread-' + person.line_id);
                             Dietitian.sorryForSkippingMeal(replyToken)
                             .then(function(){
-                                res.status(200).end();
                                 return;
                             })
                             p.cancel();
@@ -228,7 +223,6 @@ router.post('/', (req, res, next) => {
                     Dietitian.apologize(replyToken)
                     .then(
                         function(){
-                            res.status(200).end();
                             return;
                         }
                     );
@@ -252,7 +246,7 @@ router.post('/', (req, res, next) => {
                     Dietitian.apologize(replyToken)
                     .then(
                         function(){
-                            res.status(200).end();
+                            return;
                         }
                     );
                     p.cancel();
@@ -267,7 +261,7 @@ router.post('/', (req, res, next) => {
                     Dietitian.confirmDietType(replyToken, person.line_id, timestamp)
                     .then(
                         function(){
-                            res.status(200).end();
+                            return;
                         }
                     )
                     p.cancel();
@@ -310,13 +304,10 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(response){
-                // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-                //res.status(200).end();
-                console.log("End");
+                console.log("End of message event handler.");
             },
             function(error){
                 console.log(error);
-                //res.status(200).end();
             }
         );
     } else if (eventType == 'postback'){
@@ -346,7 +337,6 @@ router.post('/', (req, res, next) => {
             Dietitian.askDietType(lineId)
             .then(
                 function(){
-                    res.status(200).end();
                     return;
                 }
             );
@@ -364,7 +354,7 @@ router.post('/', (req, res, next) => {
         if (!foodListWithNutrition){
             // あるはずの食事履歴が見当たらないので終了。
             console.log('FoodList not found');
-            return res.status(200).end();
+            return;
         }
 
         // ユーザー情報を取得する。
@@ -410,17 +400,14 @@ router.post('/', (req, res, next) => {
             }
         ).then(
             function(response){
-                // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-                res.status(200).end();
+                console.log("End of postback event handler.");
             },
             function(error){
                 console.log(error);
-                res.status(200).end();
             }
         );
     } else {
         console.log("Unsupported event so skipped.")
-        res.status(200).end();
     }
 });
 
