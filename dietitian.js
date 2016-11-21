@@ -10,6 +10,14 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
 
  module.exports = class dietitian {
 
+     static getLatestConversation(lineId){
+         let thread = cache.get('thread-' + lineId);
+         if (!thread){
+             return null;
+         }
+         return thread[thread.length - 1];
+     }
+
      static tellMeLater(replyToken){
          let message = {
              type: 'text',
@@ -21,7 +29,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      static sorryForSkippingMeal(replyToken){
          let message = {
              type: 'text',
-             text: 'なんと。お腹空いたでしょうに。カロリーメイトとかウィダー・イン・ゼリーとか食べておいてね。'
+             text: 'なんと。お腹空いたでしょうに。カロリーメイトとか食べておいてね。'
          }
          return LineBot.replyMessage(replyToken, message);
      }
