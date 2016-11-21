@@ -140,7 +140,7 @@ router.post('/', (req, res, next) => {
         )
         .then(
             function(action){
-                if (aciton){
+                if (action){
                     console.log("Intent of this message is " + action);
                 } else {
                     console.log("Intent not identified.");
