@@ -42,6 +42,8 @@ router.post('/', (req, res, next) => {
         2. 私の栄養士サービスにアカウント登録する。
         3. マイページのURLをメッセージで送る。
         */
+        console.log("Got follow event.");
+
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
 
@@ -99,6 +101,8 @@ router.post('/', (req, res, next) => {
         3. 食品っぽい単語それぞれについて栄養価を取得する。
         4. 食事をスレッドに保存し、ユーザーにどの食事だったか確認する。
         */
+        console.log("Got message event.");
+
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
         let messageText = req.body.events[0].message.text;
@@ -107,139 +111,62 @@ router.post('/', (req, res, next) => {
         // スレッドを確認し、直近に栄養士が質問していたらその答えだと想定する。
         // 何日のどの食事なのか特定する。事前に栄養士Botが尋ねた内容をスレッドから検索する。
         let latestConversation = Dietitian.getLatestConversation(lineId);
-        if (latestConversation && latestConversation.source == 'dietitian' && latestConversation.type == 'whatDidYouEat'){
-            // 事前に栄養士が何を食べたか質問していたので、このメッセージはその回答と想定。
-            console.log("Found thread. It seems dietian asked what the client ate for " + latestConversation.dietType + ".");
+        if (latestConversation){
+            console.log("Found thread.");
+        }
 
-            let person;
-            let p = PersonDb.getPerson(lineId)
-            .then(
-                function(response){
-                    // ユーザー情報を保存
-                    person = response;
+        let person;
+        let p = PersonDb.getPerson(lineId)
+        .then(
+            function(response){
+                // ユーザー情報を保存
+                person = response;
 
-                    // メッセージから食品キーワードを抽出する。
-                    return mecab.parse(messageText)
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            )
-            .then(
-                function(parsedText){
-                    let foodList = TextMiner.extractFoodList(parsedText);
-
-                    // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                    if (foodList.length == 0){
-                        console.log('No food word found.');
-                        Dietitian.apologize(replyToken)
-                        .then(
-                            function(){
+                // 一旦メッセージを英訳。
+                return GoogleTranslate.translate(messageText);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(translatedMessageText){
+                // Intentを特定する。
+                return Apiai.textRequest(translatedMessageText);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(action){
+                if (latestConversation && latestConversation.source == 'dietitian' && latestConversation.type == 'whatDidYouEat'){
+                    console.log("It seems dietitian asked what the client ate for " + latestConversation.dietType + ".");
+                    switch (action){
+                        // 食べなかった旨のレポート
+                        case 'skipped-meal':
+                            Dietitian.sorryForSkippingMeal(replyToken)
+                            .then(function(){
                                 res.status(200).end();
                                 return;
-                            }
-                        );
-                        p.cancel();
-                        return;
-                    }
-
-                    // 食品リストの食品それぞれについて、栄養情報を取得する。
-                    console.log('Getting Food List with Nutrition.');
-                    return FoodDb.getFoodListWithNutrition(foodList, true);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            )
-            .then(
-                function(foodListWithNutrition){
-                    // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                    if (foodListWithNutrition.length == 0){
-                        console.log('No food identified in foodDb.');
-                        Dietitian.apologize(replyToken)
-                        .then(
-                            function(){
+                            })
+                            p.cancel();
+                            break;
+                        // まだ食べてない旨のレポート
+                        case 'not-yet':
+                            Dietitian.tellMeLater(replyToken)
+                            .then(function(){
                                 res.status(200).end();
                                 return;
-                            }
-                        );
-                        p.cancel();
-                        return;
+                            })
+                            p.cancel();
+                            break;
+                        // 食事のレポート
+                        default:
+                            return mecab.parse(messageText);
+                            break;
                     }
-
-                    // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
-                    console.log('Saving Diet History.');
-                    return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, latestConversation.dietDate, latestConversation.dietType, foodListWithNutrition);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            )
-            .then(
-                function(savedDietHistoryList){
-                    // スレッド（会話）を削除
-                    cache.del('thread-' + person.line_id);
-
-                    // WebSocketを通じて更新を通知
-                    let channel = cache.get('channel-' + person.line_id);
-                    if (channel){
-                        channel.emit('personalHistoryUpdated', savedDietHistoryList);
-                    }
-
-                    // 残り必要カロリーを取得。
-                    console.log('Getting Calorie To Go.');
-                    return PersonalHistoryDb.getCalorieToGo(person.line_id, person.requiredCalorie);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            ).then(
-                function(calorieToGo){
-                    // 残りカロリーに応じたメッセージを送信する。
-                    return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo, person.line_id, person.security_code);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            ).then(
-                function(response){
-                    // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-                    res.status(200).end();
-                },
-                function(error){
-                    console.log(error);
-                    res.status(200).end();
-                }
-            );
-        } else {
-            // ユーザーがいきなり話しかけてきたと想定。
-
-            // ユーザー情報を取得する。
-            let person;
-            let p = PersonDb.getPerson(lineId)
-            .then(
-                // メッセージを英訳
-                function(response){
-                    // ユーザー情報を保存
-                    person = response;
-
-                    return GoogleTranslate.translate(messageText);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            )
-            .then(
-                function(translatedMessageText){
-                    // Intentを特定する。
-                    return Apiai.textRequest(translatedMessageText);
-                },
-                function(error){
-                    return Promise.reject(error);
-                }
-            )
-            .then(
-                function(action){
+                } else {
                     switch (action){
                         // マイページのリクエスト
                         case 'get-mypage':
@@ -268,90 +195,117 @@ router.post('/', (req, res, next) => {
                             })
                             p.cancel();
                             break;
-                        // まだ食べてない旨のレポート
-                        case 'not-yet':
-                            Dietitian.tellMeLater(replyToken)
-                            .then(function(){
-                                res.status(200).end();
-                                return;
-                            })
-                            p.cancel();
-                            break;
-                        case 'diet-report':
-                            return mecab.parse(messageText);
-                            break;
                         // 食事のレポートだと仮定
                         default:
                             return mecab.parse(messageText);
                             break;
                     }
-                },
-                function(response){
-                    return Promise.reject(response);
                 }
-            )
-            .then(
-                function(parsedText){
-                    let foodList = TextMiner.extractFoodList(parsedText);
+            },
+            function(response){
+                return Promise.reject(response);
+            }
+        )
+        .then(
+            function(parsedText){
+                let foodList = TextMiner.extractFoodList(parsedText);
 
-                    // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                    if (foodList.length == 0){
-                        console.log('No food word found.');
-                        Dietitian.apologize(replyToken)
-                        .then(
-                            function(){
-                                res.status(200).end();
-                                return;
-                            }
-                        );
-                        p.cancel();
-                        return;
-                    }
-
-                    // 食品リストの食品それぞれについて、栄養情報を取得する。
-                    console.log('Getting Food List with Nutrition.');
-                    return FoodDb.getFoodListWithNutrition(foodList, true);
-                },
-                function(error){
-                    console.log(error.message);
-                    return Promise.reject(error);
+                // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
+                if (foodList.length == 0){
+                    console.log('No food word found.');
+                    Dietitian.apologize(replyToken)
+                    .then(
+                        function(){
+                            res.status(200).end();
+                            return;
+                        }
+                    );
+                    p.cancel();
+                    return;
                 }
-            ).then(
-                function(foodListWithNutrition){
-                    // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                    if (foodListWithNutrition.length == 0){
-                        console.log('No food identified.');
-                        Dietitian.apologize(replyToken)
-                        .then(
-                            function(){
-                                res.status(200).end();
-                                return;
-                            }
-                        );
-                        p.cancel();
-                        return;
-                    }
 
-                    // 事前の会話がなかった場合。
+                // 食品リストの食品それぞれについて、栄養情報を取得する。
+                console.log('Getting Food List with Nutrition.');
+                return FoodDb.getFoodListWithNutrition(foodList, true);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(foodListWithNutrition){
+                // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
+                if (foodListWithNutrition.length == 0){
+                    console.log('No food identified in foodDb.');
+                    Dietitian.apologize(replyToken)
+                    .then(
+                        function(){
+                            res.status(200).end();
+                        }
+                    );
+                    p.cancel();
+                    return;
+                }
+
+                // もしどの食事か特定されていなければ確認のメッセージを送る。
+                if (!latestConversation || latestConversation.source != 'dietitian' || latestConversation.type != 'whatDidYouEat'){
                     //// 食品リスト（栄養情報含む）をスレッドに保存する。
                     Dietitian.saveFoodList(person.line_id, foodListWithNutrition);
-                    //// どの食事か確認する。
-                    return Dietitian.confirmDietType(replyToken, person.line_id, timestamp);
-                },
-                function(error){
-                    return Promise.reject(error);
+                    //// どの食事か確認するメッセージを送信。
+                    Dietitian.confirmDietType(replyToken, person.line_id, timestamp)
+                    .then(
+                        function(){
+                            res.status(200).end();
+                        }
+                    )
+                    p.cancel();
+                    return;
                 }
-            )
-            .then(
-                function(){
-                    res.status(200).end();
-                },
-                function(){
-                    console.log(error);
-                    res.status(200).end();
+
+                // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                console.log('Saving Diet History.');
+                return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, latestConversation.dietDate, latestConversation.dietType, foodListWithNutrition);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(savedDietHistoryList){
+                // スレッド（会話）を削除
+                cache.del('thread-' + person.line_id);
+
+                // WebSocketを通じて更新を通知
+                let channel = cache.get('channel-' + person.line_id);
+                if (channel){
+                    channel.emit('personalHistoryUpdated', savedDietHistoryList);
                 }
-            );
-        }
+
+                // 残り必要カロリーを取得。
+                console.log('Getting Calorie To Go.');
+                return PersonalHistoryDb.getCalorieToGo(person.line_id, person.requiredCalorie);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        ).then(
+            function(calorieToGo){
+                // 残りカロリーに応じたメッセージを送信する。
+                return Dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo, person.line_id, person.security_code);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        ).then(
+            function(response){
+                // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
+                res.status(200).end();
+            },
+            function(error){
+                console.log(error);
+                res.status(200).end();
+            }
+        );
     } else if (eventType == 'postback'){
         // ---------------------------------------------------------------------
         // イベントがPostbackだった場合の処理。
@@ -364,6 +318,8 @@ router.post('/', (req, res, next) => {
         4. スレッドを削除、WebSocketで更新を通知、残りカロリーを取得する。
         5. 残りカロリーに応じたメッセージを送信する。
         */
+        console.log("Got postback event.");
+
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
         let postbackData = JSON.parse(req.body.events[0].postback.data);

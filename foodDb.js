@@ -198,7 +198,7 @@ module.exports = class foodDb {
                     if (identifiedFoodList.length == 0){
                         console.log('We could not identify any of the food you provided.');
                     } else {
-                        console.log('Here are the foods we could identify.');
+                        console.log('Here are the foods we identified.');
                         console.log(identifiedFoodList);
                     }
 
