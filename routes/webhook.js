@@ -102,6 +102,7 @@ router.post('/', (req, res, next) => {
         4. 食事をスレッドに保存し、ユーザーにどの食事だったか確認する。
         */
         console.log("Got message event.");
+        res.status(200).end();
 
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
@@ -151,6 +152,7 @@ router.post('/', (req, res, next) => {
                     switch (action){
                         // 食べなかった旨のレポート
                         case 'skipped-meal':
+                            cache.del('thread-' + person.line_id);
                             Dietitian.sorryForSkippingMeal(replyToken)
                             .then(function(){
                                 res.status(200).end();
@@ -160,6 +162,7 @@ router.post('/', (req, res, next) => {
                             break;
                         // まだ食べてない旨のレポート
                         case 'not-yet':
+                            cache.del('thread-' + person.line_id);
                             Dietitian.tellMeLater(replyToken)
                             .then(function(){
                                 res.status(200).end();
@@ -176,6 +179,7 @@ router.post('/', (req, res, next) => {
                     switch (action){
                         // マイページのリクエスト
                         case 'get-mypage':
+                            cache.del('thread-' + person.line_id);
                             Dietitian.sendMyPage(replyToken, person.line_id, person.security_code)
                             .then(function(){
                                 res.status(200).end();
@@ -185,6 +189,7 @@ router.post('/', (req, res, next) => {
                             break;
                         // オススメの食事のリクエスト
                         case 'get-recommendation':
+                            cache.del('thread-' + person.line_id);
                             Dietitian.recommend(replyToken)
                             .then(function(){
                                 res.status(200).end();
@@ -194,6 +199,7 @@ router.post('/', (req, res, next) => {
                             break;
                         // 食べなかった旨のレポート
                         case 'skipped-meal':
+                            cache.del('thread-' + person.line_id);
                             Dietitian.sorryForSkippingMeal(replyToken)
                             .then(function(){
                                 res.status(200).end();
@@ -305,11 +311,12 @@ router.post('/', (req, res, next) => {
         ).then(
             function(response){
                 // コール元のLineにステータスコード200を返す。常に200を返さなければならない。
-                res.status(200).end();
+                //res.status(200).end();
+                console.log("End");
             },
             function(error){
                 console.log(error);
-                res.status(200).end();
+                //res.status(200).end();
             }
         );
     } else if (eventType == 'postback'){
