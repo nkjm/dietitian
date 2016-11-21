@@ -36,7 +36,21 @@ router.post('/', (req, res, next) => {
     // Webhookへのリクエストから必要な情報を抜き出す。
     let eventType = req.body.events[0].type;
 
-    if (eventType == 'follow'){
+    if (eventType == "unfollow"){
+        /*
+        let lineId = req.body.events[0].source.userId;
+        PersonDb.deletePerson(lineId)
+        .then(
+            function(){
+                console.log("End of unfollow event.");
+            },
+            function(error){
+                console.log(error);
+            }
+        );
+        */
+        console.log("Got unfollow event. Do nothing for now.");
+    } else if (eventType == 'follow'){
         // ---------------------------------------------------------------------
         // イベントが友達追加だった場合の処理。
         // ---------------------------------------------------------------------
@@ -50,8 +64,32 @@ router.post('/', (req, res, next) => {
         let replyToken = req.body.events[0].replyToken;
         let lineId = req.body.events[0].source.userId;
 
-        // ユーザーのプロファイルを取得する。
-        LineBot.getProfile(lineId)
+        // ユーザーがすでに登録されているかどうか確認する。
+        let p = PersonDb.getPerson(lineId)
+        .then(
+            function(person){
+                if (person){
+                    // ユーザーは登録済み。
+                    Dietitian.greetAgain(replyToken, person.line_id, person.security_code)
+                    .then(
+                        function(){
+                            return;
+                        },
+                        function(error){
+                            console.log(error);
+                        }
+                    )
+                    p.cancel();
+                    return;
+                }
+
+                // ユーザーは新規。
+                return LineBot.getProfile(lineId);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
         .then(
             // 私の栄養士サービスにアカウント登録する。
             function(profile){
@@ -67,8 +105,8 @@ router.post('/', (req, res, next) => {
         )
         .then(
             // マイページのURLをメッセージで送る。
-            function(createdProfile){
-                return Dietitian.greet(replyToken, createdProfile.line_id, createdProfile.security_code);
+            function(createdPerson){
+                return Dietitian.greet(replyToken, createdPerson.line_id, createdPerson.security_code);
             },
             function(error){
                 return Promise.reject(error);
@@ -407,7 +445,9 @@ router.post('/', (req, res, next) => {
             }
         );
     } else {
-        console.log("Unsupported event so skipped.")
+        if (eventType){
+            console.log(eventType + " is unsupported so skipped.");
+        }
     }
 });
 

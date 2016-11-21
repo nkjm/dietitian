@@ -13,6 +13,34 @@ module.exports = class personDb {
         return base64url(crypto.randomBytes(size));
     }
 
+    static deletePerson(lineId){
+        return new Promise(function(resolve, reject){
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+            let url = dbPrefix + '/person';
+
+            request({
+                url: url,
+                method: 'DELETE',
+                headers: headers,
+                body: {line_id: lineId},
+                json: true,
+            }, function (error, response, body) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                if (response.statusCode != 200){
+                    reject(response);
+                    return;
+                }
+                resolve(person);
+                return;
+            });
+        });
+    }
+
     static createPerson(person){
         return new Promise(function(resolve, reject){
             let headers = {
