@@ -80,7 +80,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      static greet(replyToken, lineId, securityCode){
          let message = {
              type: 'template',
-             altText: 'これから私があなたの専属栄養士としてサポートしていきます。',
+             altText: 'はじめまして。',
              template: {
                  type: 'buttons',
                  text: 'はじめまして。これから私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。',
