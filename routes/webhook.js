@@ -342,18 +342,12 @@ router.post('/', (req, res, next) => {
                         switch(action){
                             case 'skipped-meal':
                                 cache.del('thread-' + lineId);
-                                Dietitian.sorryForSkippingMeal(replyToken)
-                                .then(function(){
-                                    return;
-                                });
+                                Dietitian.sorryForSkippingMeal(replyToken);
                                 p.cancel();
                                 break;
                             case 'not-yet':
                                 cache.del('thread-' + lineId);
-                                Dietitian.tellMeLater(replyToken)
-                                .then(function(){
-                                    return;
-                                });
+                                Dietitian.tellMeLater(replyToken);
                                 p.cancel();
                                 break;
                             default:
@@ -363,30 +357,16 @@ router.post('/', (req, res, next) => {
                                         // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                                         if (foodListWithNutrition.length == 0){
                                             console.log('No food identified in foodDb.');
-                                            Dietitian.apologize(replyToken, '何を食べたのかわからなかったわ。')
-                                            .then(
-                                                function(){
-                                                    return;
-                                                }
-                                            );
+                                            Dietitian.apologize(replyToken, '何を食べたのかわからなかったわ。');
                                             p.cancel();
                                             return;
                                         }
                                         let dietDate = latestConversation.dietDate;
                                         let dietType = latestConversation.dietType;
-                                        return Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
+                                        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
                                     }
-                                )
-                                .then(
-                                    function(){
-                                        console.log('End of message handler.');
-                                    },
-                                    function(error){
-                                        console.log(error);
-                                    }
-                                )
+                                );
                                 p.cancel();
-                                return;
                                 break;
                         } // End of switch(action)
                     }
