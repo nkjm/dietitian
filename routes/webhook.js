@@ -170,26 +170,17 @@ router.post('/', (req, res, next) => {
                         switch(action){
                             case 'skipped-meal':
                                 cache.del('thread-' + lineId);
-                                Dietitian.sorryForSkippingMeal(replyToken)
-                                .then(function(){
-                                    return;
-                                });
+                                Dietitian.sorryForSkippingMeal(replyToken);
                                 p.cancel();
                                 break;
                             case 'get-mypage':
                                 cache.del('thread-' + lineId);
-                                Dietitian.sendMyPage(replyToken, lineId)
-                                .then(function(){
-                                    return;
-                                })
+                                Dietitian.sendMyPage(replyToken, lineId);
                                 p.cancel();
                                 break;
                             case 'get-recommendation':
                                 cache.del('thread-' + lineId);
-                                Dietitian.recommend(replyToken)
-                                .then(function(){
-                                    return;
-                                })
+                                Dietitian.recommend(replyToken);
                                 p.cancel();
                                 break;
                             default:
@@ -201,14 +192,7 @@ router.post('/', (req, res, next) => {
                                         Dietitian.saveFoodList(lineId, foodListWithNutrition);
 
                                         //// どの食事か確認するメッセージを送信。
-                                        return Dietitian.confirmDietType(replyToken, lineId, timestamp)
-                                    }
-                                ).then(
-                                    function(){
-                                        console.log('confirmDietType sent.');
-                                    },
-                                    function(error){
-                                        console.log(error);
+                                        Dietitian.confirmDietType(replyToken, lineId, timestamp);
                                     }
                                 );
                                 p.cancel();
@@ -239,36 +223,18 @@ router.post('/', (req, res, next) => {
 
                                 let dietDate = (new Date()).toFormat("YYYY-MM-DD");
                                 let dietType = latestConversation.dietType;
-                                Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition)
-                                .then(
-                                    function(){
-                                        console.log("End of message handler.");
-                                    },
-                                    function(error){
-                                        console.log(error);
-                                    }
-                                );
+                                Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
                                 p.cancel();
                                 return;
                                 break;
                             case 'answer-no':
                                 // 確認した食事タイプではなかったのでユーザーに食事タイプを訊く。
-                                Dietitian.askDietType(lineId)
-                                .then(
-                                    function(){
-                                        return;
-                                    }
-                                );
+                                Dietitian.askDietType(lineId);
                                 p.cancel();
                                 return;
                                 break;
                             default:
-                                Dietitian.apologies(replyToken, '答えが理解できませんでした。')
-                                .then(
-                                    function(){
-                                        return;
-                                    }
-                                );
+                                Dietitian.apologize(replyToken, '答えが理解できませんでした。');
                                 p.cancel();
                                 return;
                                 break;
@@ -297,7 +263,7 @@ router.post('/', (req, res, next) => {
                                 dietType = 'dinner';
                                 break;
                             default:
-                                Dietitian.apologies(replyToken, 'そういうことは訊いてないの。');
+                                Dietitian.apologize(replyToken, 'そういうことは訊いてないの。');
                                 p.cancel();
                                 return;
                                 break;
