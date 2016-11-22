@@ -111,16 +111,17 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static greetAgain(replyToken, lineId, securityCode){
+         let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
-             altText: 'おかえりなさい。',
+             altText: 'おかえりなさい。また私があなたの専属栄養士としてサポートしていきます、よろしくね。マイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。 ' + uri,
              template: {
                  type: 'buttons',
                  text: 'おかえりなさい。また私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。',
                  actions: [{
                      type: 'uri',
                      label: 'マイページ',
-                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
+                     uri: uri
                  }]
              }
          }
@@ -128,16 +129,17 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static greet(replyToken, lineId, securityCode){
+         let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
-             altText: 'はじめまして。',
+             altText: 'はじめまして。これから私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。 ' + uri,
              template: {
                  type: 'buttons',
                  text: 'はじめまして。これから私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。',
                  actions: [{
                      type: 'uri',
                      label: 'マイページ',
-                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
+                     uri: uri
                  }]
              }
          }
