@@ -297,12 +297,7 @@ router.post('/', (req, res, next) => {
                                 dietType = 'dinner';
                                 break;
                             default:
-                                Dietitian.apologies(replyToken, 'そういうことは訊いてないの。')
-                                .then(
-                                    function(){
-                                        return;
-                                    }
-                                );
+                                Dietitian.apologies(replyToken, 'そういうことは訊いてないの。');
                                 p.cancel();
                                 return;
                                 break;
@@ -319,15 +314,7 @@ router.post('/', (req, res, next) => {
                         }
 
                         let dietDate = (new Date()).toFormat("YYYY-MM-DD");
-                        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition)
-                        .then(
-                            function(){
-                                console.log("End of message handler.");
-                            },
-                            function(error){
-                                console.log(error);
-                            }
-                        );
+                        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
                     }
                 );
                 break; // End of case 'askDietType'
