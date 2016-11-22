@@ -426,12 +426,7 @@ router.post('/', (req, res, next) => {
                 console.log('This is a postback request to confirmDietType.');
                 if (dietType == 'incorrect'){
                     // まだどの食事か特定されていないので質問する。
-                    Dietitian.askDietType(lineId)
-                    .then(
-                        function(){
-                            return;
-                        }
-                    );
+                    Dietitian.askDietType(lineId);
                     return;
                 }
                 break;
