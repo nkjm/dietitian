@@ -181,8 +181,8 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static confirmDietType(replyToken, lineId, timestamp){
+         console.log('sending confirmDietType.');
          let issueHour = new Date(timestamp).getHours();
-         console.log('Issue Hour is ' + issueHour);
          let dietType;
          if (issueHour <= 6){
              dietType = 'dinner';
@@ -231,6 +231,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static askDietType(lineId){
+         console.log('sending askDietType.');
          let messageText = 'どの食事でいただいたの？';
          let message = {
              type: 'template',

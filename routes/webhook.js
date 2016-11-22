@@ -448,13 +448,7 @@ router.post('/', (req, res, next) => {
             return;
         }
 
-        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition)
-        .then(
-            function(){
-                console.log("End of postback event.");
-            }
-        );
-
+        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
     } else {
         if (eventType){
             console.log(eventType + " is unsupported. Do nothing.");
