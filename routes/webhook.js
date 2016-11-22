@@ -372,7 +372,7 @@ router.post('/', (req, res, next) => {
                                             p.cancel();
                                             return;
                                         }
-                                        let dietDay = latestConversation.dietDate;
+                                        let dietDate = latestConversation.dietDate;
                                         let dietType = latestConversation.dietType;
                                         return Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
                                     }
