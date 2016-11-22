@@ -167,16 +167,17 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          } else {
              messageText = 'あれ、満タンまであとどれくらいだろう・・';
          }
+         let uri = MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
-             altText: messageText,
+             altText: messageText + ' ' + uri,
              template: {
                  type: 'buttons',
                  text: messageText,
                  actions: [{
                      type: 'uri',
                      label: 'マイページで確認',
-                     uri: MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode
+                     uri: uri
                  }]
              }
          }
