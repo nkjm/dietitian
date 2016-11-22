@@ -70,15 +70,7 @@ router.post('/', (req, res, next) => {
             function(person){
                 if (person){
                     // ユーザーは登録済み。
-                    Dietitian.greetAgain(replyToken, person.line_id, person.security_code)
-                    .then(
-                        function(){
-                            return;
-                        },
-                        function(error){
-                            console.log(error);
-                        }
-                    )
+                    Dietitian.greetAgain(replyToken, person.line_id, person.security_code);
                     p.cancel();
                     return;
                 }
@@ -106,15 +98,7 @@ router.post('/', (req, res, next) => {
         .then(
             // マイページのURLをメッセージで送る。
             function(createdPerson){
-                return Dietitian.greet(replyToken, createdPerson.line_id, createdPerson.security_code);
-            },
-            function(error){
-                return Promise.reject(error);
-            }
-        )
-        .then(
-            function(){
-                console.log("End of follow event handler.");
+                Dietitian.greet(replyToken, createdPerson.line_id, createdPerson.security_code);
             },
             function(error){
                 console.log(error);
@@ -225,18 +209,15 @@ router.post('/', (req, res, next) => {
                                 let dietType = latestConversation.dietType;
                                 Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
                                 p.cancel();
-                                return;
                                 break;
                             case 'answer-no':
                                 // 確認した食事タイプではなかったのでユーザーに食事タイプを訊く。
                                 Dietitian.askDietType(lineId);
                                 p.cancel();
-                                return;
                                 break;
                             default:
                                 Dietitian.apologize(replyToken, '答えが理解できませんでした。');
                                 p.cancel();
-                                return;
                                 break;
                         }
                     }
