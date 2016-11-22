@@ -194,7 +194,7 @@ router.post('/', (req, res, next) => {
                                 break;
                             default:
                                 // 食事レポートだと想定 //
-                                foodDb.extractFoodListWithNutritionByMessageText(messageText)
+                                FoodDb.extractFoodListWithNutritionByMessageText(messageText)
                                 .then(
                                     function(foodListWithNutrition){
                                         //// 食品リスト（栄養情報含む）をスレッドに保存する。
@@ -357,7 +357,7 @@ router.post('/', (req, res, next) => {
                                 p.cancel();
                                 break;
                             default:
-                                foodDb.extractFoodListWithNutritionByMessageText(messageText)
+                                FoodDb.extractFoodListWithNutritionByMessageText(messageText)
                                 .then(
                                     function(foodListWithNutrition){
                                         // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
