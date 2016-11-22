@@ -170,7 +170,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          let uri = MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
-             altText: messageText + ' ' + uri,
+             altText: messageText,
              template: {
                  type: 'buttons',
                  text: messageText,
