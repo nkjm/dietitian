@@ -1,6 +1,8 @@
 'use strict'
 
-const LineBot = require('./lineBot.js');
+const LineBot = require('./lineBot');
+const PersonDb = require('./personDb');
+const PersonalHistoryDb = require('./personalHistoryDb');
 const cache = require('memory-cache');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
@@ -9,6 +11,48 @@ require('date-utils');
 const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
 
  module.exports = class dietitian {
+
+     static saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition){
+         let person;
+         let p = PersonDb.getPerson(lineId)
+         .then(
+             function(response){
+                 person = response;
+                 // 食品リスト(栄養情報含む）をユーザーの食事履歴に保存する。
+                 console.log('Saveing Diet History.');
+                 return PersonalHistoryDb.saveFoodListAsDietHistory(person.line_id, dietDate, dietType, foodListWithNutrition);
+             }
+         ).then(
+             function(savedDietHistoryList){
+                 // スレッド（会話）を削除
+                 console.log('Deleting Thread');
+                 cache.del('thread-' + person.line_id);
+
+                 // WebSocketを通じて更新を通知
+                 let channel = cache.get('channel-' + person.line_id);
+                 if (channel){
+                     channel.emit('personalHistoryUpdated', savedDietHistoryList);
+                 }
+
+                 // 残り必要カロリーを取得。
+                 console.log('Getting Calorie To Go.');
+                 return PersonalHistoryDb.getCalorieToGo(person.line_id, person.requiredCalorie);
+             }
+         ).then(
+             function(calorieToGo){
+                 // 残りカロリーに応じたメッセージを送信する。
+                 return dietitian.replyBasedOnCalorieToGo(replyToken, calorieToGo, person.line_id, person.security_code);
+             }
+         ).then(
+             function(response){
+                 console.log("Diet history saved and summary sent.");
+             },
+             function(error){
+                 console.log(error);
+             }
+         );
+         return p;
+     }
 
      static getLatestConversation(lineId){
          let thread = cache.get('thread-' + lineId);
@@ -43,21 +87,26 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          return LineBot.replyMessage(replyToken, message);
      }
 
-     static sendMyPage(replyToken, lineId, securityCode){
-         let message = {
-             type: 'template',
-             altText: 'はーい、どうぞ！',
-             template: {
-                 type: 'buttons',
-                 text: 'はーい、どうぞ！',
-                 actions: [{
-                     type: 'uri',
-                     label: 'マイページ',
-                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
-                 }]
+     static sendMyPage(replyToken, lineId){
+         return PersonDb.getPerson(lineId)
+         .then(
+             function(person){
+                 let message = {
+                     type: 'template',
+                     altText: 'はーい、どうぞ！',
+                     template: {
+                         type: 'buttons',
+                         text: 'はーい、どうぞ！',
+                         actions: [{
+                             type: 'uri',
+                             label: 'マイページ',
+                             uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + person.security_code
+                         }]
+                     }
+                 }
+                 return LineBot.replyMessage(replyToken, message);
              }
-         }
-         return LineBot.replyMessage(replyToken, message);
+         );
      }
 
      static greetAgain(replyToken, lineId, securityCode){
@@ -94,10 +143,10 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          return LineBot.replyMessage(replyToken, message);
      }
 
-     static apologize(replyToken){
+     static apologize(replyToken, messageText){
          let message = {
              type: 'text',
-             text: 'ごめんなさい、何食べたのかわからなかったわ。'
+             text: 'ごめんなさい、' + messageText
          }
          console.log('Replying apologies.');
          return LineBot.replyMessage(replyToken, message);
@@ -173,7 +222,8 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          let conversation = {
              timestamp: (new Date()).getTime(),
              source: 'dietitian',
-             type: 'confirmDietType'
+             type: 'confirmDietType',
+             dietType: dietType
          }
          dietitian.pushToThread(lineId, conversation);
 
@@ -222,6 +272,21 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          dietitian.pushToThread(lineId, conversation);
 
          return LineBot.pushMessage(lineId, message);
+     }
+
+     static rememberFoodList(lineId){
+         let foodListWithNutrition = [];
+         let thread = cache.get('thread-' + lineId);
+         if (!thread){
+             return foodListWithNutrition;
+         }
+         for (let conversation of thread){
+             if (conversation.type == 'foodList' && conversation.foodList.length > 0){
+                 console.log('Found foodList in thread.');
+                 foodListWithNutrition = conversation.foodList;
+             }
+         }
+         return foodListWithNutrition;
      }
 
      static saveFoodList(lineId, foodList){

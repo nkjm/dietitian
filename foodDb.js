@@ -2,7 +2,9 @@
 
 const request = require('request');
 const Promise = require('bluebird');
+const mecab = require('mecabaas-client');
 const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
+const TextMiner = require('./textMiner');
 
 Promise.config({
     // Enable cancellation
@@ -10,6 +12,37 @@ Promise.config({
 });
 
 module.exports = class foodDb {
+
+    static extractFoodListWithNutritionByMessageText(messageText){
+        let p = mecab.parse(messageText)
+        .then(
+            function(parsedText){
+                let foodList = TextMiner.extractFoodList(parsedText);
+
+                if (foodList.length == 0){
+                    console.log('No food word found.');
+                    p.cancel();
+                    return [];
+                }
+
+                // 食品リストの食品それぞれについて、栄養情報を取得する。
+                console.log('Getting Food List with Nutrition.');
+                return foodDb.getFoodListWithNutrition(foodList, true);
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        )
+        .then(
+            function(foodListWithNutrition){
+                return foodListWithNutrition;
+            },
+            function(error){
+                return Promise.reject(error);
+            }
+        );
+        return p;
+    }
 
     static saveFood(food){
         return new Promise(function(resolve, reject){
