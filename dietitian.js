@@ -235,7 +235,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          let messageText = 'どの食事でいただいたの？';
          let message = {
              type: 'template',
-             altText: messageText,
+             altText: 'どの食事でいただいたの？朝食？昼食？夕食?',
              template: {
                  type: 'buttons',
                  text: messageText,
