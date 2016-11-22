@@ -6,6 +6,7 @@ const PersonalHistoryDb = require('./personalHistoryDb');
 const cache = require('memory-cache');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
+const MYPAGE_URL_BASE = process.env.MYPAGE_URL_BASE;
 require('date-utils');
 
 const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
@@ -91,7 +92,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          return PersonDb.getPerson(lineId)
          .then(
              function(person){
-                 let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + person.security_code;
+                 let uri = MYPAGE_URL_BASE + lineId + '?security_code=' + person.security_code;
                  let message = {
                      type: 'template',
                      altText: 'はーい、どうぞ！ ' + uri,
@@ -111,7 +112,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static greetAgain(replyToken, lineId, securityCode){
-         let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode;
+         let uri = MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
              altText: 'おかえりなさい。また私があなたの専属栄養士としてサポートしていきます、よろしくね。マイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。 ' + uri,
@@ -129,7 +130,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
      }
 
      static greet(replyToken, lineId, securityCode){
-         let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode;
+         let uri = MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode;
          let message = {
              type: 'template',
              altText: 'はじめまして。これから私があなたの専属栄養士としてサポートしていきます、よろしくね。下記のマイページで自分の栄養状態をいつでもチェックできるのでブックマークしておいてね。 ' + uri,
@@ -175,7 +176,7 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
                  actions: [{
                      type: 'uri',
                      label: 'マイページで確認',
-                     uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + securityCode
+                     uri: MYPAGE_URL_BASE + lineId + '?security_code=' + securityCode
                  }]
              }
          }

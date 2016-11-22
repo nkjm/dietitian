@@ -4,7 +4,7 @@ const request = require('request');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
 const NutritionCalc = require('./nutritionCalc');
-const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
+const dbPrefix = process.env.PERSON_DB_API_BASE;
 const crypto = require('crypto');
 const base64url = require('base64url');
 

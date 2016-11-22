@@ -1,3 +1,6 @@
+/*
+ * 現在このファイルは使われていません。LINE Login用のコードです。
+ */
 'use strict';
 
 const LINE_LOGIN_CHANNEL_ID = process.env.LINE_LOGIN_CHANNEL_ID;

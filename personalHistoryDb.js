@@ -3,7 +3,7 @@
 const request = require('request');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
-const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
+const dbPrefix = process.env.PERSONAL_HISTORY_DB_API_BASE;
 
 module.exports = class personalHistoryDb {
     static getCalorieToGo(lineId, requiredCalorie){

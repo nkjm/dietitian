@@ -3,7 +3,7 @@
 const request = require('request');
 const Promise = require('bluebird');
 const mecab = require('mecabaas-client');
-const dbPrefix = 'https://140.86.13.12/apex/demo_gallery_for_nkjm/demo_gallery/dietitian';
+const dbPrefix = process.env.FOOD_DB_API_BASE;
 const TextMiner = require('./textMiner');
 
 Promise.config({
