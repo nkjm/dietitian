@@ -91,16 +91,17 @@ const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
          return PersonDb.getPerson(lineId)
          .then(
              function(person){
+                 let uri = 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + person.security_code;
                  let message = {
                      type: 'template',
-                     altText: 'はーい、どうぞ！',
+                     altText: 'はーい、どうぞ！ ' + uri,
                      template: {
                          type: 'buttons',
                          text: 'はーい、どうぞ！',
                          actions: [{
                              type: 'uri',
                              label: 'マイページ',
-                             uri: 'https://dietitian.herokuapp.com/' + lineId + '?security_code=' + person.security_code
+                             uri: uri
                          }]
                      }
                  }
