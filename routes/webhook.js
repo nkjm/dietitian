@@ -172,6 +172,14 @@ router.post('/', (req, res, next) => {
                                 FoodDb.extractFoodListWithNutritionByMessageText(messageText)
                                 .then(
                                     function(foodListWithNutrition){
+                                        // もし認識できた食品がなければ処理を中断してごめんねメッセージを送信。
+                                        if (foodListWithNutrition.length == 0){
+                                            console.log('No food identified in foodDb.');
+                                            Dietitian.apologize(replyToken, '何を食べたのかわからなかったわ。');
+                                            p.cancel();
+                                            return;
+                                        }
+
                                         //// 食品リスト（栄養情報含む）をスレッドに保存する。
                                         Dietitian.saveFoodList(lineId, foodListWithNutrition);
 
