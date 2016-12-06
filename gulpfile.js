@@ -2,9 +2,16 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
+var zip = require('gulp-zip');
 
 gulp.task('default', function(){
 
+});
+
+gulp.task('zip', function(){
+    return gulp.src('./**')
+        .pipe(zip('dietitian.zip'))
+        .pipe(gulp.dest('archive'));
 });
 
 gulp.task('compress', function(){
