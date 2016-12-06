@@ -11,7 +11,7 @@ gulp.task('default', function(){
 gulp.task('zip', function(){
     return gulp.src('./**')
         .pipe(zip('dietitian.zip'))
-        .pipe(gulp.dest('archive'));
+        .pipe(gulp.dest('./'));
 });
 
 gulp.task('compress', function(){
