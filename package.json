@@ -17,11 +17,6 @@
     "ejs": "~2.3.3",
     "express": "~4.13.1",
     "google-translate": "^1.0.6",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
-    "gulp-zip": "^3.2.0",
     "mecabaas-client": "^1.0.0",
     "memory-cache": "^0.1.6",
     "morgan": "~1.6.1",
@@ -29,5 +24,13 @@
     "request": "^2.75.0",
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.5.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^2.0.0",
+    "gulp-zip": "^3.2.0"
   }
 }

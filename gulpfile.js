@@ -3,12 +3,21 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var zip = require('gulp-zip');
+var replace = require('gulp-replace');
+const LINE_CHANNEL_ACCESS_TOKEN = 'JkIbAn3nLwihG9jyNqzxCEqjntHo7kMzkGpGac4JzSIVq47xM3uss3lxOZxgFJlZscEvfuQjVEHgWEpkmMyrcba/yRjBGavmI6ASkLqnTKCJHQuD8lNm9GK+AXT5yInMv3qf2kRfjF9TUX4n92WHpwdB04t89/1O/w1cDnyilFU=';
+const LINE_CHANNEL_ID = '1485503788';
+const LINE_CHANNEL_SECRET = '8414e25bcb6bed8d928a77f0d23b116f';
 
 gulp.task('default', function(){
 
 });
 
-gulp.task('zip', function(){
+gulp.task('oracle', function(){
+    gulp.src(['lineBot.js'])
+        .pipe(replace('process.env.LINE_CHANNEL_ID', "'" + LINE_CHANNEL_ID + "'"))
+        .pipe(replace('process.env.LINE_CHANNEL_SECRET', "'" + LINE_CHANNEL_SECRET + "'"))
+        .pipe(replace('process.env.LINE_CHANNEL_ACCESS_TOKEN', "'" + LINE_CHANNEL_ACCESS_TOKEN + "'"))
+        .pipe(gulp.dest('./oracle'));
     return gulp.src('./**')
         .pipe(zip('dietitian.zip'))
         .pipe(gulp.dest('./'));
