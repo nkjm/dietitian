@@ -17,7 +17,7 @@ gulp.task('oracle', function(){
         .pipe(replace('process.env.LINE_CHANNEL_ID', "'" + LINE_CHANNEL_ID + "'"))
         .pipe(replace('process.env.LINE_CHANNEL_SECRET', "'" + LINE_CHANNEL_SECRET + "'"))
         .pipe(replace('process.env.LINE_CHANNEL_ACCESS_TOKEN', "'" + LINE_CHANNEL_ACCESS_TOKEN + "'"))
-        .pipe(gulp.dest('./oracle'));
+        .pipe(gulp.dest('./'));
     return gulp.src('./**')
         .pipe(zip('dietitian.zip'))
         .pipe(gulp.dest('./'));
