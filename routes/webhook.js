@@ -11,7 +11,7 @@ const PersonalHistoryDb = require('../personalHistoryDb');
 const PersonDb = require('../personDb');
 const LineBot = require('../lineBot');
 const Dietitian = require('../dietitian');
-const GoogleTranslate = require('../googleTranslateP');
+// const GoogleTranslate = require('../googleTranslateP');
 const Apiai = require('../apiaiP');
 
 
@@ -144,12 +144,8 @@ router.post('/', (req, res, next) => {
         let p;
         switch (latestConversationType){
             case 'outOfBlue':
-                p = GoogleTranslate.translate(messageText)
+                p = Apiai.textRequest(messageText)
                 .then(
-                    function(translatedMessageText){
-                        return Apiai.textRequest(translatedMessageText);
-                    }
-                ).then(
                     function(action){
                         console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
@@ -196,12 +192,8 @@ router.post('/', (req, res, next) => {
                 break; // End of case 'outOfBlue'
             case 'confirmDietType':
                 // 通常はpostbackで回答があるはずだが、PC版では現在postbackがサポートされていないのでテキストで回答される可能性がある。
-                p = GoogleTranslate.translate(messageText)
+                p = Apiai.textRequest(messageText)
                 .then(
-                    function(translatedMessageText){
-                        return Apiai.textRequest(translatedMessageText);
-                    }
-                ).then(
                     function(action){
                         console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
@@ -235,12 +227,8 @@ router.post('/', (req, res, next) => {
                 break; // End of case 'confirmDietType'
             case 'askDietType':
                 // 通常はpostbackで回答があるはずだが、PC版では現在postbackがサポートされていないのでテキストで回答される可能性がある。
-                p = GoogleTranslate.translate(messageText)
+                p = Apiai.textRequest(messageText)
                 .then(
-                    function(translatedMessageText){
-                        return Apiai.textRequest(translatedMessageText);
-                    }
-                ).then(
                     function(action){
                         console.log('According to api.ai, the intent is ' + action + '.');
                         let dietType;
@@ -277,12 +265,8 @@ router.post('/', (req, res, next) => {
                 );
                 break; // End of case 'askDietType'
             case 'whatDidYouEat':
-                p = GoogleTranslate.translate(messageText)
+                p = Apiai.textRequest(messageText)
                 .then(
-                    function(translatedMessageText){
-                        return Apiai.textRequest(translatedMessageText);
-                    }
-                ).then(
                     function(action){
                         console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
