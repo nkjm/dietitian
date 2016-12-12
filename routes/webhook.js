@@ -196,32 +196,46 @@ router.post('/', (req, res, next) => {
                 .then(
                     function(action){
                         console.log('According to api.ai, the intent is ' + action + '.');
+
+                        let dietType;
+
                         switch(action){
                             case 'answer-yes':
-                                // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
-                                let foodListWithNutrition = Dietitian.rememberFoodList(lineId);
-
-                                if (foodListWithNutrition.length == 0){
-                                    // あるはずの食事履歴が見当たらないので終了。
-                                    console.log('FoodList should exist but not found. exit.');
-                                    return;
-                                }
-
-                                let dietDate = (new Date()).toFormat("YYYY-MM-DD");
-                                let dietType = latestConversation.dietType;
-                                Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
-                                p.cancel();
+                                dietType = latestConversation.dietType;
                                 break;
                             case 'answer-no':
                                 // 確認した食事タイプではなかったのでユーザーに食事タイプを訊く。
                                 Dietitian.askDietType(lineId);
                                 p.cancel();
+                                return;
+                                break;
+                            case 'for-breakfast':
+                                dietType = 'breakfast';
+                                break;
+                            case 'for-lunch':
+                                dietType = 'lunch';
+                                break;
+                            case 'for-dinner':
+                                dietType = 'dinner';
                                 break;
                             default:
                                 Dietitian.apologize(replyToken, '答えが理解できませんでした。');
                                 p.cancel();
+                                return;
                                 break;
                         }
+                        // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
+                        let foodListWithNutrition = Dietitian.rememberFoodList(lineId);
+
+                        if (foodListWithNutrition.length == 0){
+                            // あるはずの食事履歴が見当たらないので終了。
+                            console.log('FoodList should exist but not found. exit.');
+                            return;
+                        }
+
+                        let dietDate = (new Date()).toFormat("YYYY-MM-DD");
+                        Dietitian.saveDietHistoryAndSendSummary(replyToken, lineId, dietDate, dietType, foodListWithNutrition);
+                        p.cancel();
                     }
                 );
                 break; // End of case 'confirmDietType'
