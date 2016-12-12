@@ -151,6 +151,7 @@ router.post('/', (req, res, next) => {
                     }
                 ).then(
                     function(action){
+                        console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
                             case 'skipped-meal':
                                 cache.del('thread-' + lineId);
@@ -202,6 +203,7 @@ router.post('/', (req, res, next) => {
                     }
                 ).then(
                     function(action){
+                        console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
                             case 'answer-yes':
                                 // 直近の会話に食事履歴があるはず、という仮定で食事履歴を取得。
@@ -240,6 +242,7 @@ router.post('/', (req, res, next) => {
                     }
                 ).then(
                     function(action){
+                        console.log('According to api.ai, the intent is ' + action + '.');
                         let dietType;
                         switch(action){
                             case 'for-breakfast':
@@ -281,6 +284,7 @@ router.post('/', (req, res, next) => {
                     }
                 ).then(
                     function(action){
+                        console.log('According to api.ai, the intent is ' + action + '.');
                         switch(action){
                             case 'skipped-meal':
                                 cache.del('thread-' + lineId);
