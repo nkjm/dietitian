@@ -1,8 +1,8 @@
 'use strict';
 
-const LINE_CHANNEL_ID = process.env.LINE_CHANNEL_ID;
-const LINE_CHANNEL_SECRET = process.env.LINE_CHANNEL_SECRET;
-const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+const LINE_CHANNEL_ID = '1485503788';
+const LINE_CHANNEL_SECRET = '8414e25bcb6bed8d928a77f0d23b116f';
+const LINE_CHANNEL_ACCESS_TOKEN = 'JkIbAn3nLwihG9jyNqzxCEqjntHo7kMzkGpGac4JzSIVq47xM3uss3lxOZxgFJlZscEvfuQjVEHgWEpkmMyrcba/yRjBGavmI6ASkLqnTKCJHQuD8lNm9GK+AXT5yInMv3qf2kRfjF9TUX4n92WHpwdB04t89/1O/w1cDnyilFU=';
 const crypto = require('crypto');
 const request = require('request');
 const Promise = require('bluebird');
