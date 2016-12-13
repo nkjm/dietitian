@@ -12,6 +12,7 @@ module.exports = class personalHistoryDb {
                 'Content-Type': 'application/json'
             };
             let url = dbPrefix + '/person/' + lineId + '/diet_history/today_total_calorie';
+            console.log(url);
             request({
                 url: url,
                 method: 'GET',
