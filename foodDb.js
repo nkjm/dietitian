@@ -34,7 +34,6 @@ module.exports = class foodDb {
         )
         .then(
             function(foodListWithNutrition){
-                console.log(foodListWithNutrition);
                 return foodListWithNutrition;
             },
             function(error){
