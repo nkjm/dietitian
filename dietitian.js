@@ -9,7 +9,7 @@ const CalorieCalc = require('./calorieCalc');
 const MYPAGE_URL_BASE = process.env.MYPAGE_URL_BASE;
 require('date-utils');
 
-const thread_timeToExpire = 1000 * 60 * 60 * 2 // 2時間
+const thread_timeToExpire = 1000 * 60 * 60 * 4 // 4時間
 
  module.exports = class dietitian {
 
