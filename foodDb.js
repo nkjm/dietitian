@@ -20,9 +20,8 @@ module.exports = class foodDb {
                 let foodList = TextMiner.extractFoodList(parsedText);
 
                 if (foodList.length == 0){
-                    console.log('No food word found.');
-                    p.cancel();
-                    return [];
+                    console.log('Mecab did not recognize noun.');
+                    p.resolve([]);
                 }
 
                 // 食品リストの食品それぞれについて、栄養情報を取得する。
