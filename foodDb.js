@@ -21,7 +21,8 @@ module.exports = class foodDb {
 
                 if (foodList.length == 0){
                     console.log('Mecab did not recognize noun.');
-                    p.resolve([]);
+                    p.cancel();
+                    return;
                 }
 
                 // 食品リストの食品それぞれについて、栄養情報を取得する。

@@ -299,7 +299,7 @@ router.post('/', (req, res, next) => {
                                 .then(
                                     function(foodListWithNutrition){
                                         // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                                        if (foodListWithNutrition.length == 0){
+                                        if (!foodListWithNutrition || foodListWithNutrition.length == 0){
                                             console.log('No food identified in foodDb.');
                                             Dietitian.apologize(replyToken, '何を食べたのかわからなかったわ。');
                                             p.cancel();
