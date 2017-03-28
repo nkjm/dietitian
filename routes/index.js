@@ -1,14 +1,15 @@
 'use strict';
 
-const RELEASE_MODE = process.env.RELEASE_MODE;
+const app_env = require('../environment_variables');
+const RELEASE_MODE = app_env.RELEASE_MODE;
 const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
 const app = require('../app');
-const PersonDb = require('../personDb');
+const PersonDb = require('../service/personDb');
 const Promise = require('bluebird');
-const CalorieCalc = require('../calorieCalc');
-const Line = require('../line');
+const CalorieCalc = require('../service/calorieCalc');
+//const Line = require('../line');
 
 Promise.config({
     // Enable cancellation
@@ -21,13 +22,8 @@ router.get('/', (req, res, next) => {
 
 // LINE Loginを使ったアカウント作成処理。現在userIdが取得できないため、使用していない。
 // 現在のアカウント作成処理は友達追加された際に発火する。詳しくはroutes/webhook.jsのfollowイベントの処理を参照。
+/*
 router.get('/callback', (req, res, next) => {
-     /*
-     1. 取得した認証コードでアクセストークンをリクエスト（POST）。
-     2. ユーザープロファイルを取得。
-     3. 取得したユーザープロファイルで私の栄養士サービスのアカウントを作成。
-     4. 私の栄養士サービスのマイページにリダイレクト。
-     */
      if (!req.query.code){
          console.log('Auhorization code not found in callback request');
          res.render('error', {severity: 'danger', message: '認証コードを取得できませんでした。'});
@@ -76,6 +72,7 @@ router.get('/callback', (req, res, next) => {
          }
      );
 });
+*/
 
 router.get('/:line_id', (req, res, next) => {
     if (!req.params.line_id){

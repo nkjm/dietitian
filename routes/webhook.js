@@ -4,15 +4,14 @@ const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
 const Promise = require('bluebird');
-const TextMiner = require('../textMiner');
+const TextMiner = require('../service/textMiner');
 const mecab = require('mecabaas-client');
-const FoodDb = require('../foodDb');
-const PersonalHistoryDb = require('../personalHistoryDb');
-const PersonDb = require('../personDb');
-const LineBot = require('../lineBot');
-const Dietitian = require('../dietitian');
-// const GoogleTranslate = require('../googleTranslateP');
-const Apiai = require('../apiaiP');
+const FoodDb = require('../service/foodDb');
+const PersonalHistoryDb = require('../service/personalHistoryDb');
+const PersonDb = require('../service/personDb');
+const LineBot = require('../service/lineBot');
+const Dietitian = require('../service/dietitian');
+const Apiai = require('../service/apiaiP');
 
 
 require('date-utils');

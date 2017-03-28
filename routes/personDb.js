@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const PersonDb = require('../personDb');
+const PersonDb = require('../service/personDb');
 
 router.put('/person/:lineId', (req, res, next) => {
     PersonDb.updatePerson(req.params.lineId, req.body.person)

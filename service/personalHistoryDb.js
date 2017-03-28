@@ -3,7 +3,8 @@
 const request = require('request');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
-const dbPrefix = process.env.PERSONAL_HISTORY_DB_API_BASE;
+const app_env = require('../environment_variables');
+const dbPrefix = app_env.PERSONAL_HISTORY_DB_API_BASE;
 
 module.exports = class personalHistoryDb {
     static getCalorieToGo(lineId, requiredCalorie){

@@ -6,7 +6,8 @@ const PersonalHistoryDb = require('./personalHistoryDb');
 const cache = require('memory-cache');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
-const MYPAGE_URL_BASE = process.env.MYPAGE_URL_BASE;
+const app_env = require('../environment_variables');
+const MYPAGE_URL_BASE = app_env.MYPAGE_URL_BASE;
 require('date-utils');
 
 const thread_timeToExpire = 1000 * 60 * 60 * 4 // 4時間

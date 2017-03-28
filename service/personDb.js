@@ -4,7 +4,8 @@ const request = require('request');
 const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
 const NutritionCalc = require('./nutritionCalc');
-const dbPrefix = process.env.PERSON_DB_API_BASE;
+const app_env = require('../environment_variables');
+const dbPrefix = app_env.PERSON_DB_API_BASE;
 const crypto = require('crypto');
 const base64url = require('base64url');
 

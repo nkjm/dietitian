@@ -3,7 +3,8 @@
 const Promise = require('bluebird');
 const apiai = require('apiai');
 const uuid = require('node-uuid');
-const APIAI_CLIENT_ACCESS_TOKEN = process.env.APIAI_CLIENT_ACCESS_TOKEN;
+const app_env = require('../environment_variables');
+const APIAI_CLIENT_ACCESS_TOKEN = app_env.APIAI_CLIENT_ACCESS_TOKEN;
 
 module.exports = class apiaiP {
     static textRequest(text){

@@ -2,7 +2,7 @@
     "runtime":{
         "majorVersion":"6"
     },
-    "command": "node app.js",
+    "command": "npm start",
     "release": {},
     "notes": ""
 }

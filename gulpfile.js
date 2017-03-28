@@ -1,25 +1,29 @@
+'use strict';
+
 var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var concat = require('gulp-concat');
 var zip = require('gulp-zip');
 var replace = require('gulp-replace');
-const LINE_CHANNEL_ACCESS_TOKEN = 'JkIbAn3nLwihG9jyNqzxCEqjntHo7kMzkGpGac4JzSIVq47xM3uss3lxOZxgFJlZscEvfuQjVEHgWEpkmMyrcba/yRjBGavmI6ASkLqnTKCJHQuD8lNm9GK+AXT5yInMv3qf2kRfjF9TUX4n92WHpwdB04t89/1O/w1cDnyilFU=';
-const LINE_CHANNEL_ID = '1485503788';
-const LINE_CHANNEL_SECRET = '8414e25bcb6bed8d928a77f0d23b116f';
+var debug = require('debug')('compile');
 
 gulp.task('default', function(){
+    // Replace process.env.VARIABLE_NAME to actual value.
+    // This replacement is necessary since ACCS does not accept special charactors like +^ for environment variables.
+    debug('Compiling environment_variables.js...');
+    var stream = gulp.src(['environment_variables.js']);
+    for (var environment_variable_key of Object.keys(process.env)){
+        debug('Replacing process.env.' + environment_variable_key + ' to ' + process.env[environment_variable_key] + '...');
+        stream = stream.pipe(replace('process.env.' + environment_variable_key, "'" + process.env[environment_variable_key] + "'"));
+    }
+    stream.pipe(gulp.dest('./'));
+    debug('Done.');
 
-});
-
-gulp.task('oracle', function(){
-    gulp.src(['lineBot.js'])
-        .pipe(replace('process.env.LINE_CHANNEL_ID', "'" + LINE_CHANNEL_ID + "'"))
-        .pipe(replace('process.env.LINE_CHANNEL_SECRET', "'" + LINE_CHANNEL_SECRET + "'"))
-        .pipe(replace('process.env.LINE_CHANNEL_ACCESS_TOKEN', "'" + LINE_CHANNEL_ACCESS_TOKEN + "'"))
-        .pipe(gulp.dest('./'));
+    // Compress all files into artifact.zip. This zip file will be used to deploy application.
+    debug('Creating artifact.zip...');
     return gulp.src('./**')
-        .pipe(zip('dietitian.zip'))
+        .pipe(zip('artifact.zip'))
         .pipe(gulp.dest('./'));
 });
 

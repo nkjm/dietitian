@@ -1,11 +1,12 @@
 'use strict';
 
+const app_env = require('../environment_variables');
 const express = require('express');
 const router = express.Router();
-const PersonDb = require('../personDb');
-const Dietitian = require('../dietitian');
-const FoodDb = require('../foodDb');
-const DIETITIAN_CONSOLE_SECURITY_CODE = process.env.DIETITIAN_CONSOLE_SECURITY_CODE;
+const PersonDb = require('../service/personDb');
+const Dietitian = require('../service/dietitian');
+const FoodDb = require('../service/foodDb');
+const DIETITIAN_CONSOLE_SECURITY_CODE = app_env.DIETITIAN_CONSOLE_SECURITY_CODE;
 
 router.get('/api/askDietType', (req, res, next) => {
     console.log('hoge');
