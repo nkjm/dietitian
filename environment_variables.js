@@ -7,5 +7,5 @@ exports.MYPAGE_URL_BASE = process.env.MYPAGE_URL_BASE;
 exports.PERSON_DB_API_BASE = process.env.PERSON_DB_API_BASE;
 exports.PERSONAL_HISTORY_DB_API_BASE = process.env.PERSONAL_HISTORY_DB_API_BASE;
 exports.FOOD_DB_API_BASE =  process.env.FOOD_DB_API_BASE;
-exports.RELEASE_MODE = process.env.RELEADE_MODE;
+exports.RELEASE_MODE = process.env.RELEASE_MODE;
 exports.TZ = process.env.TZ;
