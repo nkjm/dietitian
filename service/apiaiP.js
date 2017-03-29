@@ -11,7 +11,7 @@ module.exports = class apiaiP {
         console.log('Processing text "' + text + '" via API.AI...');
         return new Promise(function(resolve, reject){
             // apiai sdkのインスタンスを初期化。
-            const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN);
+            const aiInstance = apiai(APIAI_CLIENT_ACCESS_TOKEN, {language: "ja"});
             const sessionId = uuid.v1();
             const aiRequest = aiInstance.textRequest(text, {sessionId: sessionId});
             aiRequest.on('response', function(response){
