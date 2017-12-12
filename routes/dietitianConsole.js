@@ -92,7 +92,7 @@ router.post('/api/push', (req, res, next) => {
             res.sendStatus(200).end();
         } else {
             debug(response.body);
-            res.sendStatus(500);
+            res.sendStatus(500).end();
         }
     })
 });
