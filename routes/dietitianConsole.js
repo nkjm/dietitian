@@ -58,6 +58,7 @@ router.post('/api/push', (req, res, next) => {
     if (!req.body.to[`${req.body.to.type}Id`]) res.status(400).send(`Required parameter: to.${req.body.to.type}Id not set`);
     if (!req.body.intent) res.status(400).json('Required parameter: intent not set.');
 
+    const url = `http://localhost:${process.env.PORT || 5000}/webhook`;
     const body = {
         replyToken: "dummy",
         type: "postback",
@@ -78,8 +79,9 @@ router.post('/api/push', (req, res, next) => {
     const headers = {
         "X-Line-Signature": signature
     }
+    debug(url);
     request.postAsync({
-        url: "http://localhost:" + process.env.PORT || 5000 + "/webhook",
+        url: url,
         headers: headers,
         body: body,
         json: true
