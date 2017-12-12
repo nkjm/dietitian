@@ -73,7 +73,7 @@ router.post('/api/push', (req, res, next) => {
             }
         }
     }
-    const signature = crypto.createHmac('sha256', process.env.LINE_CHANNEL_SECRET).update(body).digest('base64');
+    const signature = crypto.createHmac('sha256', process.env.LINE_CHANNEL_SECRET).update(JSON.stringify(body)).digest('base64');
     const headers = {
         "X-Line-Signature": signature
     }
