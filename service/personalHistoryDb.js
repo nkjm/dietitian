@@ -1,10 +1,9 @@
 'use strict';
 
 const request = require('request');
-const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
-const app_env = require('../environment_variables');
-const dbPrefix = app_env.PERSONAL_HISTORY_DB_API_BASE;
+const dbPrefix = process.env.PERSONAL_HISTORY_DB_API_BASE;
+Promise = require('bluebird');
 
 module.exports = class personalHistoryDb {
     static getCalorieToGo(lineId, requiredCalorie){

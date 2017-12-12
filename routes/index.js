@@ -1,15 +1,13 @@
 'use strict';
 
-const app_env = require('../environment_variables');
-const RELEASE_MODE = app_env.RELEASE_MODE;
+const RELEASE_MODE = process.env.RELEASE_MODE;
 const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
 const app = require('../app');
 const PersonDb = require('../service/personDb');
-const Promise = require('bluebird');
 const CalorieCalc = require('../service/calorieCalc');
-//const Line = require('../line');
+Promise = require('bluebird');
 
 Promise.config({
     // Enable cancellation

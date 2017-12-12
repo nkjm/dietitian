@@ -4,11 +4,10 @@ const LineBot = require('./lineBot');
 const PersonDb = require('./personDb');
 const PersonalHistoryDb = require('./personalHistoryDb');
 const cache = require('memory-cache');
-const Promise = require('bluebird');
 const CalorieCalc = require('./calorieCalc');
-const app_env = require('../environment_variables');
-const MYPAGE_URL_BASE = app_env.MYPAGE_URL_BASE;
+const MYPAGE_URL_BASE = process.env.MYPAGE_URL_BASE;
 require('date-utils');
+Promise = require('bluebird');
 
 const thread_timeToExpire = 1000 * 60 * 60 * 4 // 4時間
 

@@ -1,11 +1,10 @@
 'use strict';
 
 const request = require('request');
-const Promise = require('bluebird');
 const mecab = require('mecabaas-client');
-const app_env = require('../environment_variables');
-const dbPrefix = app_env.FOOD_DB_API_BASE;
+const dbPrefix = process.env.FOOD_DB_API_BASE;
 const TextMiner = require('./textMiner');
+Promise = require('bluebird');
 
 Promise.config({
     // Enable cancellation
