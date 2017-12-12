@@ -9,6 +9,7 @@ const PersonDb = require('../service/personDb');
 const Dietitian = require('../service/dietitian');
 const FoodDb = require('../service/foodDb');
 const DIETITIAN_CONSOLE_SECURITY_CODE = process.env.DIETITIAN_CONSOLE_SECURITY_CODE;
+const debug = require("debug")("bot-express:route");
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
