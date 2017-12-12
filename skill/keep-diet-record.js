@@ -29,7 +29,7 @@ module.exports = class SkillKeepDietRecord {
         }
     }
 
-    finish(bot, event, context, resolve, reject) => {
+    finish(bot, event, context, resolve, reject){
         let message = {
             type: "text",
             text: `了解。食べ過ぎはダメよ。`
