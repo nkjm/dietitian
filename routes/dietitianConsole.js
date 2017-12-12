@@ -86,7 +86,8 @@ router.post('/api/push', (req, res, next) => {
         if (response.statusCode == 200){
             res.sendStatus(200).end();
         } else {
-            res.sendStatus(500).json(response.body);
+            debug(response.body);
+            res.sendStatus(500);
         }
     })
 });
