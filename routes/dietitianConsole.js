@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const bodyParser = require('body-parser');
 const request = require("request");
 const crypto = require("crypto");
 const PersonDb = require('../service/personDb');
@@ -14,7 +15,6 @@ Promise.promisifyAll(request);
 router.use(bodyParser.json());
 
 router.get('/api/askDietType', (req, res, next) => {
-    console.log('hoge');
     if (!req.query.line_id) res.status(400).json('Line Id not set.');
     Dietitian.askDietType(req.query.line_id)
     .then(
