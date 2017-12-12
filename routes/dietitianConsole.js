@@ -62,7 +62,7 @@ router.post('/api/push', (req, res, next) => {
     const body = {
         events: [{
             replyToken: "dummy",
-            type: "postback",
+            type: "bot-express:push",
             timestamp: Date.now(),
             source: {
                 type: "user",
