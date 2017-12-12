@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
-const app = require('../app');
+const app = require('../index');
 const PersonalHistoryDb = require('../service/personalHistoryDb');
 
 router.get('/person/:lineId/diet_history/today', (req, res, next) => {

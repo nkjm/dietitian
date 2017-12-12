@@ -3,7 +3,8 @@
 /*
 ** Import Packages
 */
-const server = require("express")();
+const express = require("express");
+const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
@@ -17,28 +18,29 @@ const route_personalHistoryDb = require('./routes/personalHistoryDb');
 const route_personDb = require('./routes/personDb');
 const route_index = require('./routes/index');
 
-// Instantiate socket.io and export it
-exports.io = require('socket.io')(server);
-
 
 /*
 ** Middleware Configuration
 */
-server.listen(process.env.PORT || 5000, () => {
+const server = app.listen(process.env.PORT || 5000, () => {
     console.log("server is running...");
 });
+
+// Instantiate socket.io and export it
+exports.io = require('socket.io')(server);
+
 // -----------------------------------------------------------------------------
 // ミドルウェア設定
-server.set('views', path.join(__dirname, 'views'));
-server.set('view engine', 'ejs');
-server.use(express.static(path.join(__dirname, 'public')));
-server.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 
 /*
 ** Mount bot-express
 */
-server.use("/webhook", bot_express({
+app.use("/webhook", bot_express({
     nlu: {
         type: "dialogflow",
         language: "ja",
@@ -60,9 +62,9 @@ server.use("/webhook", bot_express({
 /*
 ** Mount other routes
 */
-server.use('/dietitianConsole', route_dietitianConsole);
-server.use('/personalHistoryDb', route_personalHistoryDb);
-server.use('/personDb', route_personDb);
-server.use('/', route_index);
+app.use('/dietitianConsole', route_dietitianConsole);
+app.use('/personalHistoryDb', route_personalHistoryDb);
+app.use('/personDb', route_personDb);
+app.use('/', route_index);
 
-module.exports = server;
+module.exports = app;

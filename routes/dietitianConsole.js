@@ -11,7 +11,7 @@ const DIETITIAN_CONSOLE_SECURITY_CODE = process.env.DIETITIAN_CONSOLE_SECURITY_C
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
-outer.get('/api/askDietType', (req, res, next) => {
+router.get('/api/askDietType', (req, res, next) => {
     console.log('hoge');
     if (!req.query.line_id) res.status(400).json('Line Id not set.');
     Dietitian.askDietType(req.query.line_id)
