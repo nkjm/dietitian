@@ -61,20 +61,10 @@ router.post('/api/push', (req, res, next) => {
     const url = `http://localhost:${process.env.PORT || 5000}/webhook`;
     const body = {
         events: [{
-            replyToken: "dummy",
             type: "bot-express:push",
             timestamp: Date.now(),
-            source: {
-                type: "user",
-                userId: "dummy"
-            },
-            postback: {
-                data: {
-                    _type: "intent",
-                    to: req.body.to,
-                    intent: req.body.intent
-                }
-            }
+            to: req.body.to,
+            intent: req.body.intent
         }]
     }
     const signature = crypto.createHmac('sha256', process.env.LINE_CHANNEL_SECRET).update(JSON.stringify(body)).digest('base64');
