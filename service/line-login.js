@@ -73,9 +73,9 @@ class ServiceLineLogin {
             debug("Authorization succeeded.");
 
             this._get_access_token(code).then((response) => {
-                s(response);
+                s(req, res, next, response);
             }).catch((error) => {
-                if (f) return f(error);
+                if (f) return f(req, res, next, error);
                 throw(error);
             });
         });

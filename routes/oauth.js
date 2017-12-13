@@ -5,6 +5,8 @@ require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const debug = require("debug")("bot-express:route");
+const jsforce = require("jsforce");
+const jwt = require('jsonwebtoken');
 const Login = require("../service/line-login");
 Promise = require('bluebird');
 
@@ -19,13 +21,42 @@ const login = new Login({
 router.get("/", login.auth());
 
 router.get("/callback", login.callback(
-    (response) => {
-        debug(response);
+    (req, res, next, login_response) => {
+        debug(jwt.decode(login_response.id_token));
+        let t = jwt.decode(login_response.id_token)
+        let user = {
+            user_id__c: t.sub,
+            display_name__c: t.name,
+            profile_picture__c: t.picture,
+            email__c: t.email,
+            phone__c: t.phone
+        }
+        debug(user);
+        create_user(user).then((response) => {
+            return res.redirect("/dashboard");
+        });
     },
-    (error) => {
+    (req, res, next, error) => {
         debug(error);
+        return res.render("error", {
+            severity: 'danger',
+            message: 'error'
+        });
     }
 ));
+
+function create_user(user){
+    const conn = new jsforce.Connection();
+    return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
+        return conn.sobject("dietitian_user__c").upsert(user, "user_id__c");
+    }).then((response) => {
+        if (response.success){
+            return;
+        } else {
+            return Promise.reject(new Error(response));
+        }
+    })
+}
 
 /*
 router.get('/', (req, res, next) => {

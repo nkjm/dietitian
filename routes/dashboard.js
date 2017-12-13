@@ -13,7 +13,7 @@ router.get('/', (req, res, next) => {
         Yes => Display Dashboard.
         No => Redirect to LINE Login.
     */
-
+    return res.send("welcome");
     user_db.get_user(req.session.user_id).then((person) => {
         if (person){
             // Socket.IOのチャネル(Name Space)をオープン。
