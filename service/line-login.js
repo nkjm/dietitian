@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 
-const router = require("express").Router();
+const app = require("express");
 const debug = require("debug")("bot-express:service");
 const request = require("request");
 const session = require("express-session");
@@ -10,7 +10,17 @@ const api_version = "v2.1";
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
-module.exports = class ServiceLineLogin {
+class ServiceLineLogin {
+    /**
+    @constructor
+    @prop {Object} options
+    @prop {String} options.channel_id - LINE Channel Id
+    @prop {String} options.channel_secret - LINE Channel secret
+    @prop {String} options.callback_url - LINE Callback URL
+    @prop {String} options.scope - Permission to ask user to approve. Supported values are "profile" and "openid".
+    @prop {string} options.bot_prompt - Flag to switch how Bot Prompt is displayed after authentication. Supported values are "normal" and "aggressive".
+    @prop {Object} options.session_options - Option object for express-session. Refer to https://github.com/expressjs/session for detail.
+    */
     constructor(options){
         this.channel_id = options.channel_id;
         this.channel_secret = options.channel_secret;
@@ -24,11 +34,14 @@ module.exports = class ServiceLineLogin {
             saveUninitialized: true,
             cookie: {secure: false}
         }
-
-        router.use(session(session_options));
+        app.use(session(session_options));
     }
 
+    /**
+    @method
+    */
     auth(){
+        let router = app.Router();
         router.get("/", (req, res, next) => {
             const client_id = encodeURIComponent(this.channel_id);
             const redirect_uri = encodeURIComponent(this.callback_url);
@@ -42,7 +55,13 @@ module.exports = class ServiceLineLogin {
         return router;
     }
 
+    /**
+    @method
+    @param {Function} s - Callback function on success.
+    @param {Function} f - Callback function on failure.
+    */
     callback(s, f){
+        let router = app.Router();
         router.get("/", (req, res, next) => {
             const code = req.query.code;
             const state = req.query.state;
@@ -92,3 +111,5 @@ module.exports = class ServiceLineLogin {
         return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
 }
+
+module.exports = ServiceLineLogin;
