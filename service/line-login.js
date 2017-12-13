@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 
-const app = require("express");
+const express = require("express");
 const debug = require("debug")("bot-express:service");
 const request = require("request");
 const session = require("express-session");
@@ -27,21 +27,20 @@ class ServiceLineLogin {
         this.callback_url = options.callback_url;
         this.scope = options.scope;
         this.bot_prompt = options.bot_prompt;
-        this.session_options = options.session_options;
-        const session_options = options.session_options || {
+        this.session_options = options.session_options || {
             secret: options.channel_secret,
             resave: false,
             saveUninitialized: true,
             cookie: {secure: false}
         }
-        app.use(session(session_options));
     }
 
     /**
     @method
     */
     auth(){
-        let router = app.Router();
+        let router = express.Router();
+        router.use(session(this.session_options));
         router.get("/", (req, res, next) => {
             const client_id = encodeURIComponent(this.channel_id);
             const redirect_uri = encodeURIComponent(this.callback_url);
@@ -61,7 +60,8 @@ class ServiceLineLogin {
     @param {Function} f - Callback function on failure.
     */
     callback(s, f){
-        let router = app.Router();
+        let router = express.Router();
+        router.use(session(this.session_options));
         router.get("/", (req, res, next) => {
             const code = req.query.code;
             const state = req.query.state;
