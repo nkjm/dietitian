@@ -1,6 +1,7 @@
 "use strict";
 
 const lmo = require("../service/line-message-object");
+const debug = require("debug")("bot-express:skill");
 
 module.exports = class SkillKeepDietRecord {
     constructor(){
