@@ -22,8 +22,9 @@ router.get("/", login.auth());
 
 router.get("/callback", login.callback(
     (req, res, next, login_response) => {
-        debug(jwt.decode(login_response.id_token));
-        let t = jwt.decode(login_response.id_token)
+        debug(login_response);
+        let t = jwt.decode(login_response.id_token, {json:true});
+        debug(t);
         let user = {
             user_id__c: t.sub,
             display_name__c: t.name,
