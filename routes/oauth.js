@@ -16,9 +16,9 @@ const login = new Login({
     bot_prompt: "normal"
 });
 
-router.use("/", login.auth());
+router.get("/", login.auth());
 
-router.use("/callback", login.callback(
+router.get("/callback", login.callback(
     (response) => {
         debug(response);
     },

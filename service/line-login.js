@@ -2,7 +2,7 @@
 
 require("dotenv").config();
 
-const express = require("express");
+const router = require("express").Router();
 const debug = require("debug")("bot-express:service");
 const request = require("request");
 const session = require("express-session");
@@ -33,14 +33,13 @@ class ServiceLineLogin {
             saveUninitialized: true,
             cookie: {secure: false}
         }
+        router.use(session(this.session_options));
     }
 
     /**
     @method
     */
     auth(){
-        let router = express.Router();
-        router.use(session(this.session_options));
         router.get("/", (req, res, next) => {
             const client_id = encodeURIComponent(this.channel_id);
             const redirect_uri = encodeURIComponent(this.callback_url);
@@ -60,9 +59,7 @@ class ServiceLineLogin {
     @param {Function} f - Callback function on failure.
     */
     callback(s, f){
-        let router = express.Router();
-        router.use(session(this.session_options));
-        router.get("/", (req, res, next) => {
+        router.get("/callback", (req, res, next) => {
             const code = req.query.code;
             const state = req.query.state;
             const friendship_status_changed = req.query.friendship_status_changed;
