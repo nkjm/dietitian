@@ -1,5 +1,7 @@
 'use strict';
 
+require("dotenv").config();
+
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
@@ -53,10 +55,10 @@ API to send bot-express:push event to bot.
 @param {Object} intent
 */
 router.post('/api/push', (req, res, next) => {
-    if (!req.body.to) res.status(400).send('Required parameter: to not set.');
-    if (!req.body.to.type) res.status(400).send('Required parameter: to.type not set');
-    if (!req.body.to[`${req.body.to.type}Id`]) res.status(400).send(`Required parameter: to.${req.body.to.type}Id not set`);
-    if (!req.body.intent) res.status(400).json('Required parameter: intent not set.');
+    if (!req.body.to) return res.status(400).send('Required parameter: to not set.');
+    if (!req.body.to.type) return res.status(400).send('Required parameter: to.type not set');
+    if (!req.body.to[`${req.body.to.type}Id`]) return res.status(400).send(`Required parameter: to.${req.body.to.type}Id not set`);
+    if (!req.body.intent) return res.status(400).json('Required parameter: intent not set.');
 
     const url = `http://localhost:${process.env.PORT || 5000}/webhook`;
     const body = {
@@ -71,7 +73,7 @@ router.post('/api/push', (req, res, next) => {
     const headers = {
         "X-Line-Signature": signature
     }
-    debug(url);
+
     request.postAsync({
         url: url,
         headers: headers,

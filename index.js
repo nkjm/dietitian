@@ -1,5 +1,7 @@
 "use strict";
 
+require("dotenv").config();
+
 /*
 ** Import Packages
 */
@@ -23,7 +25,7 @@ const route_index = require('./routes/index');
 ** Middleware Configuration
 */
 const server = app.listen(process.env.PORT || 5000, () => {
-    console.log("server is running...");
+    console.log(`server is listening to ${process.env.PORT || 5000}...`);
 });
 
 // Instantiate socket.io and export it
