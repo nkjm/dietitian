@@ -39,8 +39,7 @@ class ServiceLineLogin {
         this.session_options = options.session_options || {
             secret: options.channel_secret,
             resave: false,
-            saveUninitialized: true,
-            cookie: {secure: true}
+            saveUninitialized: true
         }
         router.use(session(this.session_options));
     }
