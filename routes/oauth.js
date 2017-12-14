@@ -28,7 +28,7 @@ router.get("/callback", login.callback(
         let user = {
             user_id__c: t.sub,
             display_name__c: t.name,
-            profile_picture__c: t.picture,
+            picture_url__c: t.picture,
             email__c: t.email,
             phone__c: t.phone_number
         }
@@ -39,7 +39,7 @@ router.get("/callback", login.callback(
             debug(error.message);
             return res.render("error", {
                 severity: "danger",
-                message: "Failed to create account." + error.message
+                message: "Failed to create account. - " + error.message
             });
         });
     },
@@ -47,7 +47,7 @@ router.get("/callback", login.callback(
         debug(error);
         return res.render("error", {
             severity: "danger",
-            message: "Failed to authorize." + error.message
+            message: "Failed to authorize. - " + error.message
         });
     }
 ));
