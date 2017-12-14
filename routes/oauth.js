@@ -31,7 +31,7 @@ router.get("/callback", login.callback(
             email__c: t.email,
             phone__c: t.phone_number
         }
-        db.create_user(user).then((response) => {
+        db.upsert_user(user).then((response) => {
             debug(`Save following user to session.`);
             debug(user);
             req.session.user = user;

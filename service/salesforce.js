@@ -10,12 +10,13 @@ Promise = require('bluebird');
 
 class ServiceSalesforce {
 
-    static create_user(user){
+    static upsert_user(user){
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
             if (response.success){
+                debug(response);
                 return response;
             } else {
                 return Promise.reject(new Error(response));
