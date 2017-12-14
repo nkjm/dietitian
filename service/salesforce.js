@@ -16,7 +16,6 @@ class ServiceSalesforce {
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
             if (response.success){
-                debug(response);
                 return response;
             } else {
                 return Promise.reject(new Error(response));

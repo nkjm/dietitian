@@ -32,8 +32,9 @@ router.get("/callback", login.callback(
             phone__c: t.phone_number
         }
         db.upsert_user(user).then((response) => {
-            debug(`Save following user to session.`);
-            debug(user);
+            if (response.id){
+                user.id = response.id;
+            }
             req.session.user = user;
             return res.redirect("/dashboard");
         }).catch((error) => {
