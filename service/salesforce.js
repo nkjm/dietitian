@@ -28,10 +28,7 @@ class ServiceSalesforce {
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c").retrieve(user_id);
         }).then((user) => {
-            if (user){
-                debug(user);
-                return user;
-            }
+            return user;
         }).catch((error) => {
             return Promise.reject(new Error(error));
         })

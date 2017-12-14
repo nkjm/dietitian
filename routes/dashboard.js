@@ -18,6 +18,7 @@ router.get('/', (req, res, next) => {
         No => Redirect to LINE Login.
     */
     if (req.session.user_id){
+        debug("Found user_id in session.");
         // Socket.IOのチャネル(Name Space)をオープン。
         if (!cache.get('channel-' + req.session.user_id)){
             let channel = app.io.of('/' + req.session.user_id);
