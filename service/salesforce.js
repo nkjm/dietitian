@@ -62,7 +62,7 @@ class ServiceSalesforce {
         }).then((response) => {
             debug(response);
             let history_list = [];
-            response.records.map((h) => {
+            JSON.parse(response).records.map((h) => {
                 history_list.push({
                     diet_type: h.diet_type__c,
                     diet_date: h.diet_date__c,
