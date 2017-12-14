@@ -80,9 +80,11 @@ class ServiceLineLogin {
             const friendship_status_changed = req.query.friendship_status_changed;
 
             if (!code){
+                debug("Authorization failed.");
                 return f(new Error("Authorization failed."));
             }
             if (req.session.line_login_state !== state){
+                debug("Authorization failed. State does not match.");
                 return f(new Error("Authorization failed. State does not match."));
             }
             debug("Authorization succeeded.");
@@ -90,6 +92,7 @@ class ServiceLineLogin {
             this._get_access_token(code).then((response) => {
                 s(req, res, next, response);
             }).catch((error) => {
+                debug(error);
                 if (f) return f(req, res, next, error);
                 throw(error);
             });
