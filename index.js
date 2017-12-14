@@ -18,7 +18,6 @@ const bot_express = require("bot-express");
 const route_dietitianConsole = require('./routes/dietitianConsole');
 const route_personalHistoryDb = require('./routes/personalHistoryDb');
 const route_personDb = require('./routes/personDb');
-const route_login = require("./routes/login");
 const route_dashboard = require("./routes/dashboard");
 const route_oauth = require("./routes/oauth");
 
@@ -69,11 +68,10 @@ app.use("/webhook", bot_express({
 app.use('/dietitianConsole', route_dietitianConsole);
 app.use('/personalHistoryDb', route_personalHistoryDb);
 app.use('/personDb', route_personDb);
-app.use("/login", route_login);
 app.use("/dashboard", route_dashboard);
 app.use("/oauth", route_oauth);
 app.get("/", (req, res) => {
-    res.redirect("/dashboard");
+    return res.render("login");
 });
 
 module.exports = app;
