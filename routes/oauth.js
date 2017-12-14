@@ -30,16 +30,16 @@ router.get("/callback", login.callback(
             display_name__c: t.name,
             profile_picture__c: t.picture,
             email__c: t.email,
-            phone__c: t.phone
+            phone__c: t.phone_number
         }
         debug(user);
         db.create_user(user).then((response) => {
             return res.redirect("/dashboard");
         }).catch((error) => {
-            debug(error);
+            debug(error.message);
             return res.render("error", {
                 severity: "danger",
-                message: "Failed to create account."
+                message: "Failed to create account." + error.message
             });
         });
     },
@@ -47,7 +47,7 @@ router.get("/callback", login.callback(
         debug(error);
         return res.render("error", {
             severity: "danger",
-            message: "Failed to authorize."
+            message: "Failed to authorize." + error.message
         });
     }
 ));
