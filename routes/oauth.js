@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const express = require('express');
 const router = express.Router();
+const session = require("express-session");
 const debug = require("debug")("bot-express:route");
 const jwt = require('jsonwebtoken');
 const Login = require("../service/line-login");
@@ -17,6 +18,12 @@ const login = new Login({
     scope: "openid profile phone email",
     bot_prompt: "normal"
 });
+
+router.use(session({
+    secret: process.env.LINE_LOGIN_CHANNELSECRET,
+    resave: false,
+    saveUninitialized: true
+}));
 
 router.get("/", login.auth());
 
