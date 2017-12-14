@@ -13,9 +13,10 @@ class ServiceSalesforce {
         debug("Going to upsert user.");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
+            debug("Logged in to salesforce.");
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
-            debug("Done.");
+            debug("Upser user done.");
             if (response.success){
                 return response;
             } else {
@@ -28,9 +29,10 @@ class ServiceSalesforce {
         debug("Going to get user...");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
-            return conn.sobject("diet_user__c").retrieve(user_id);
+            debug("Logged in to salesforce.");
+            return conn.sobject("diet_user__c/user_id__c").retrieve(user_id);
         }).then((user) => {
-            debug("Done.");
+            debug("Get user done.");
             return user;
         }).catch((error) => {
             return Promise.reject(new Error(error));
