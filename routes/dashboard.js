@@ -17,10 +17,10 @@ router.get('/', (req, res, next) => {
         Yes => Display Dashboard.
         No => Redirect to LINE Login.
     */
-    if (req.session.user){
+    if (req.session.user_id){
         // Socket.IOのチャネル(Name Space)をオープン。
-        if (!cache.get('channel-' + req.session.user.user_id__c)){
-            let channel = app.io.of('/' + req.session.user.user_id__c);
+        if (!cache.get('channel-' + req.session.user_id)){
+            let channel = app.io.of('/' + req.session.user_id);
 
             // Socket.IOでListenするEventを登録。
             channel.on('connection', (socket) => {
@@ -31,9 +31,23 @@ router.get('/', (req, res, next) => {
             });
 
             // Channelを共有キャッシュに保存。
-            cache.put('channel-' + req.session.user.user_id__c, channel);
+            cache.put('channel-' + req.session.user_id, channel);
         }
-        return res.render("dashboard", {user: req.session.user});
+        db.get_user(req.session.user_id).then((user) => {
+            let person = {
+                line_id: user.user_id__c,
+                sex: user.sex__c,
+                birthday: user.birthday__c,
+                height: user.height__c,
+                weight: user.weight__c,
+                picture_url: user.picture_url__c,
+                activity: user.activity__c,
+                display_name: user.display_name__c,
+                first_login: user.first_login__c,
+                security_code: user.security_code__c
+            }
+            return res.render("dashboard", {person: person});
+        });
     } else {
         res.redirect("/oauth");
     }

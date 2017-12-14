@@ -4,10 +4,17 @@ const express = require('express');
 const router = express.Router();
 const cache = require('memory-cache');
 const app = require('../index');
-const PersonalHistoryDb = require('../service/personalHistoryDb');
+//const PersonalHistoryDb = require('../service/personalHistoryDb');
+const db = require("../service/salesforce");
 
-router.get('/person/:lineId/diet_history/today', (req, res, next) => {
-    PersonalHistoryDb.getTodayHistory(req.params.lineId)
+router.get('/person/:user_id/diet_history/today', (req, res, next) => {
+    db.get_today_history(req.params.user_id).then((history) => {
+        return res.json(history);
+    }).catch((error) => {
+        return Promise.reject(new Error(error));
+    });
+    /*
+    PersonalHistoryDb.getTodayHistory(req.params.user_id)
     .then(
         function(history){
             res.json(history);
@@ -16,6 +23,7 @@ router.get('/person/:lineId/diet_history/today', (req, res, next) => {
             res.json(error);
         }
     );
+    */
 });
 
 module.exports = router;
