@@ -60,7 +60,7 @@ class ServiceSalesforce {
             `;
             return conn.query(query);
         }).then((response) => {
-            debug(history_list__c);
+            debug(response);
             let history_list = [];
             response.records.map((h) => {
                 history_list.push({
