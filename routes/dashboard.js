@@ -35,6 +35,7 @@ router.get('/', (req, res, next) => {
             cache.put('channel-' + req.session.user_id, channel);
         }
         db.get_user(req.session.user_id).then((user) => {
+            debug("Got user.");
             let person = {
                 line_id: user.user_id__c,
                 sex: user.sex__c,

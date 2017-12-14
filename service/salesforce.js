@@ -2,19 +2,20 @@
 
 require("dotenv").config();
 
-const debug = require("debug")("bot-express:route");
+const debug = require("debug")("bot-express:service");
 const jsforce = require("jsforce");
-const jwt = require('jsonwebtoken');
 
 Promise = require('bluebird');
 
 class ServiceSalesforce {
 
     static upsert_user(user){
+        debug("Going to upsert user.");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
+            debug("Done.");
             if (response.success){
                 return response;
             } else {
@@ -24,10 +25,12 @@ class ServiceSalesforce {
     }
 
     static get_user(user_id){
+        debug("Going to get user...");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c").retrieve(user_id);
         }).then((user) => {
+            debug("Done.");
             return user;
         }).catch((error) => {
             return Promise.reject(new Error(error));
