@@ -10,7 +10,7 @@ const db = require("../service/salesforce");
 const cache = require("memory-cache");
 const app = require("../index");
 const CalorieCalc = require("../service/calorieCalc");
-const nutritionCalc = require("../service/nutritionCalc");
+const NutritionCalc = require("../service/nutritionCalc");
 Promise = require('bluebird');
 
 router.get('/', (req, res, next) => {
