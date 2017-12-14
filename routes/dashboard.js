@@ -51,6 +51,7 @@ router.get('/', (req, res, next) => {
                 security_code: user.security_code__c
             }
             debug(person);
+            person.birthday = new Date(person.birthday).getTime() / 1000;
             person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex, person.activity);
             person.requiredNutrition = NutritionCalc.getRequiredNutrition(person.birthday, person.height, person.sex, person.activity);
             person.age = Math.floor(((new Date()).getTime() - person.birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
