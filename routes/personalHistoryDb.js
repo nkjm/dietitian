@@ -14,7 +14,7 @@ router.get('/person/:user_id/diet_history/today', (req, res, next) => {
         return res.json(history);
     }).catch((error) => {
         debug(error);
-        return res.statusCode(500).end();
+        return res.json(error);
     });
     /*
     PersonalHistoryDb.getTodayHistory(req.params.user_id)
