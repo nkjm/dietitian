@@ -48,7 +48,7 @@ router.get('/', (req, res, next) => {
                 first_login: user.first_login__c,
                 security_code: user.security_code__c
             }
-            return res.render("dashboard", {person: person});
+            return res.render("dashboard", {releadMode: "development", person: person});
         });
     } else {
         res.redirect("/oauth");
