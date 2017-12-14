@@ -13,10 +13,8 @@ class ServiceSalesforce {
         debug("Going to upsert user.");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
-            debug("Logged in to salesforce.");
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
-            debug("Upser user done.");
             if (response.success){
                 return response;
             } else {
@@ -29,10 +27,8 @@ class ServiceSalesforce {
         debug("Going to get user...");
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
-            debug("Logged in to salesforce.");
             return conn.sobject("diet_user__c/user_id__c").retrieve(user_id);
         }).then((user) => {
-            debug("Get user done.");
             return user;
         }).catch((error) => {
             return Promise.reject(new Error(error));
@@ -63,29 +59,27 @@ class ServiceSalesforce {
                     diet_date__c = today
             `;
             return conn.query(query);
-        }).then((history_list__c) => {
-            if (history_list__c){
-                debug(history_list__c);
-                let history_list = [];
-                history_list__c.map((h) => {
-                    history.push({
-                        diet_type: h.diet_type__c,
-                        diet_date: h.diet_date__c,
-                        food: h.diet_food__r.food_name__c,
-                        food_id: h.diet_food__r.food_id__c,
-                        category: h.diet_food__r.food_name__c,
-                        calorie: h.diet_food__r.calorie__c,
-                        carb: h.diet_food__r.carb__c,
-                        fat: h.diet_food__r.fat__c,
-                        fiber: h.diet_food__r.fiber__c,
-                        water: h.diet_food__r.water__c,
-                        ash: h.diet_food__r.ash__c,
-                        cholesterol: h.diet_food__r.cholesterol__c,
-                        unidentifyied: h.diet_food__r.unidentified__c
-                    });
-                })
-                return history_list;
-            }
+        }).then((response) => {
+            debug(history_list__c);
+            let history_list = [];
+            response.records.map((h) => {
+                history_list.push({
+                    diet_type: h.diet_type__c,
+                    diet_date: h.diet_date__c,
+                    food: h.diet_food__r.food_name__c,
+                    food_id: h.diet_food__r.food_id__c,
+                    category: h.diet_food__r.food_name__c,
+                    calorie: h.diet_food__r.calorie__c,
+                    carb: h.diet_food__r.carb__c,
+                    fat: h.diet_food__r.fat__c,
+                    fiber: h.diet_food__r.fiber__c,
+                    water: h.diet_food__r.water__c,
+                    ash: h.diet_food__r.ash__c,
+                    cholesterol: h.diet_food__r.cholesterol__c,
+                    unidentifyied: h.diet_food__r.unidentified__c
+                });
+            })
+            return history_list;
         }).catch((error) => {
             return Promise.reject(new Error(error));
         })
