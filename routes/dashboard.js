@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => {
             // Channelを共有キャッシュに保存。
             cache.put('channel-' + req.session.user.user_id__c, channel);
         }
-        return res.render("dashboard", {user: user});
+        return res.render("dashboard", {user: req.session.user});
     } else {
         res.redirect("/oauth");
     }
