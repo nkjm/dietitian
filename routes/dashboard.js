@@ -19,8 +19,8 @@ router.get('/', (req, res, next) => {
     */
     if (req.session.user){
         // Socket.IOのチャネル(Name Space)をオープン。
-        if (!cache.get('channel-' + user.user_id__c)){
-            let channel = app.io.of('/' + user.user_id__c);
+        if (!cache.get('channel-' + req.session.user.user_id__c)){
+            let channel = app.io.of('/' + req.session.user.user_id__c);
 
             // Socket.IOでListenするEventを登録。
             channel.on('connection', (socket) => {
@@ -31,7 +31,7 @@ router.get('/', (req, res, next) => {
             });
 
             // Channelを共有キャッシュに保存。
-            cache.put('channel-' + user.user_id__c, channel);
+            cache.put('channel-' + req.session.user.user_id__c, channel);
         }
         return res.render("dashboard", {user: user});
     } else {
