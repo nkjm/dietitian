@@ -8,12 +8,13 @@ const app = require('../index');
 const db = require("../service/salesforce");
 
 router.get('/person/:user_id/diet_history/today', (req, res, next) => {
-    db.get_today_history(req.params.user_id).then((history) => {
+    return db.get_today_history(req.params.user_id).then((history) => {
         debug("Responding following diet history.");
         debug(history);
         return res.json(history);
     }).catch((error) => {
-        return Promise.reject(new Error(error));
+        debug(error);
+        return res.statusCode(500).end();
     });
     /*
     PersonalHistoryDb.getTodayHistory(req.params.user_id)
