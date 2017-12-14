@@ -7,6 +7,7 @@ const app = require('../index');
 //const PersonalHistoryDb = require('../service/personalHistoryDb');
 const db = require("../service/salesforce");
 const debug = require("debug")("bot-epxress:route");
+Promise = require("bluebird");
 
 router.get('/person/:user_id/diet_history/today', (req, res, next) => {
     return db.get_today_history(req.params.user_id).then((history) => {

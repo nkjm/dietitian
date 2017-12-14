@@ -9,6 +9,8 @@ const Login = require("../service/line-login");
 const db = require("../service/salesforce");
 const cache = require("memory-cache");
 const app = require("../index");
+const CalorieCalc = require("../service/calorieCalc");
+const nutritionCalc = require("./service/nutritionCalc");
 Promise = require('bluebird');
 
 router.get('/', (req, res, next) => {
@@ -48,6 +50,10 @@ router.get('/', (req, res, next) => {
                 first_login: user.first_login__c,
                 security_code: user.security_code__c
             }
+            debug(person);
+            person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex, person.activity);
+            person.requiredNutrition = NutritionCalc.getRequiredNutrition(person.birthday, person.height, person.sex, person.activity);
+            person.age = Math.floor(((new Date()).getTime() - person.birthday * 1000) / (1000 * 60 * 60 * 24 * 365));
             return res.render("dashboard", {releaseMode: "development", person: person});
         });
     } else {

@@ -60,11 +60,8 @@ class ServiceSalesforce {
             `;
             return conn.query(query);
         }).then((response) => {
-            debug(response);
             let history_list = [];
-            debug(response.records);
             response.records.map((h) => {
-                debug(h);
                 history_list.push({
                     diet_type: h.diet_type__c,
                     diet_date: h.diet_date__c,
@@ -81,7 +78,6 @@ class ServiceSalesforce {
                     unidentifyied: h.diet_food__r.unidentified__c
                 });
             })
-            debug(history_list);
             return history_list;
         }).catch((error) => {
             return Promise.reject(new Error(error));
