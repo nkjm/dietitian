@@ -6,6 +6,7 @@ require("dotenv").config();
 ** Import Packages
 */
 const express = require("express");
+const session = require("express-session");
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -34,6 +35,11 @@ exports.io = require('socket.io')(server);
 
 // -----------------------------------------------------------------------------
 // ミドルウェア設定
+app.use(session({
+    secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));

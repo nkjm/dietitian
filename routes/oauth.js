@@ -4,7 +4,6 @@ require("dotenv").config();
 
 const express = require('express');
 const router = express.Router();
-const session = require("express-session");
 const debug = require("debug")("bot-express:route");
 const jwt = require('jsonwebtoken');
 const Login = require("../service/line-login");
@@ -18,12 +17,6 @@ const login = new Login({
     scope: "openid profile phone email",
     bot_prompt: "normal"
 });
-
-router.use(session({
-    secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
 
 router.get("/", login.auth());
 
@@ -39,6 +32,8 @@ router.get("/callback", login.callback(
             phone__c: t.phone_number
         }
         db.create_user(user).then((response) => {
+            debug(`Save following user to session.`);
+            debug(user);
             req.session.user = user;
             return res.redirect("/dashboard");
         }).catch((error) => {

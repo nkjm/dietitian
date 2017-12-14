@@ -4,19 +4,12 @@ require("dotenv").config();
 
 const express = require('express');
 const router = express.Router();
-const session = require("express-session");
 const debug = require("debug")("bot-express:route");
 const Login = require("../service/line-login");
 const db = require("../service/salesforce");
 const cache = require("memory-cache");
 const app = require("../index");
 Promise = require('bluebird');
-
-router.use(session({
-    secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
 
 router.get('/', (req, res, next) => {
     /**
