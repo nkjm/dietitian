@@ -22,7 +22,7 @@ const login = new Login({
 router.use(session({
     secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
 }));
 
 router.get("/", login.auth());
