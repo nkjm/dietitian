@@ -10,36 +10,48 @@ const api_version = "v2.1";
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
+/**
+@class
+@prop {String} channel_id - LINE Channel Id
+@prop {String} channel_secret - LINE Channel secret
+@prop {String} callback_url - LINE Callback URL
+@prop {String} scope - Permission to ask user to approve. Supported values are "profile" and "openid".
+@prop {string} bot_prompt - Flag to switch how Bot Prompt is displayed after authentication. Supported values are "normal" and "aggressive".
+@prop {Object} session_options - Option object for express-session. Refer to https://github.com/expressjs/session for detail.
+*/
 class ServiceLineLogin {
     /**
     @constructor
-    @prop {Object} options
-    @prop {String} options.channel_id - LINE Channel Id
-    @prop {String} options.channel_secret - LINE Channel secret
-    @prop {String} options.callback_url - LINE Callback URL
-    @prop {String} options.scope - Permission to ask user to approve. Supported values are "profile" and "openid".
-    @prop {string} options.bot_prompt - Flag to switch how Bot Prompt is displayed after authentication. Supported values are "normal" and "aggressive".
-    @prop {Object} options.session_options - Option object for express-session. Refer to https://github.com/expressjs/session for detail.
+    @param {Object} options
+    @param {String} options.channel_id - LINE Channel Id
+    @param {String} options.channel_secret - LINE Channel secret
+    @param {String} options.callback_url - LINE Callback URL
+    @param {String} [options.scope="profile openid"] - Permission to ask user to approve. Supported values are "profile" and "openid".
+    @param {string} [options.bot_prompt="normal"] - Flag to switch how Bot Prompt is displayed after authentication. Supported values are "normal" and "aggressive".
+    @param {Object} [options.session_options] - Option object for express-session. Refer to https://github.com/expressjs/session for detail.
     */
     constructor(options){
         this.channel_id = options.channel_id;
         this.channel_secret = options.channel_secret;
         this.callback_url = options.callback_url;
-        this.scope = options.scope;
-        this.bot_prompt = options.bot_prompt;
+        this.scope = options.scope || "profile openid";
+        this.bot_prompt = options.bot_prompt || "normal";
         this.session_options = options.session_options || {
             secret: options.channel_secret,
             resave: false,
             saveUninitialized: true,
-            cookie: {secure: false}
+            cookie: {secure: true}
         }
         router.use(session(this.session_options));
     }
 
     /**
+    Middlware to initiate OAuth2 flow by redirecting user to LINE authorization endpoint.
+    Mount this middleware to the path you like to initiate authorization.
     @method
+    @param {String} [nonce] - String to prevent reply attack.
     */
-    auth(){
+    auth(nonce){
         router.get("/", (req, res, next) => {
             const client_id = encodeURIComponent(this.channel_id);
             const redirect_uri = encodeURIComponent(this.callback_url);
@@ -47,6 +59,7 @@ class ServiceLineLogin {
             const bot_prompt = encodeURIComponent(this.bot_prompt);
             const state = req.session.line_login_state = encodeURIComponent(ServiceLineLogin._generate_state());
             let url = `https://access.line.me/oauth2/${api_version}/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&bot_prompt=${bot_prompt}&state=${state}`;
+            if (nonce) url += encodeURIComponent(nonce);
             debug(`Redirecting to ${url}.`);
             return res.redirect(url);
         });
@@ -54,6 +67,8 @@ class ServiceLineLogin {
     }
 
     /**
+    Middleware to handle callback after authorization.
+    Mount this middleware to the path corresponding to the value of Callback URL in LINE Developers Console.
     @method
     @param {Function} s - Callback function on success.
     @param {Function} f - Callback function on failure.

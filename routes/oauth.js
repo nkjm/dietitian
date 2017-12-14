@@ -24,7 +24,6 @@ router.get("/callback", login.callback(
     (req, res, next, login_response) => {
         debug(login_response);
         let t = jwt.decode(JSON.parse(login_response).id_token, {json:true});
-        debug(t);
         let user = {
             user_id__c: t.sub,
             display_name__c: t.name,
@@ -32,8 +31,8 @@ router.get("/callback", login.callback(
             email__c: t.email,
             phone__c: t.phone_number
         }
-        debug(user);
         db.create_user(user).then((response) => {
+            req.session.user = user;
             return res.redirect("/dashboard");
         }).catch((error) => {
             debug(error.message);
@@ -44,7 +43,7 @@ router.get("/callback", login.callback(
         });
     },
     (req, res, next, error) => {
-        debug(error);
+        debug(error.message);
         return res.render("error", {
             severity: "danger",
             message: "Failed to authorize. - " + error.message
