@@ -200,7 +200,7 @@ module.exports = class ServiceFood {
             let unidentified_food_id_list= [];
             let identified_food_id_list = [];
 
-            for (let food_with_nutrition of ffood_with_nutrition_list){
+            for (let food_with_nutrition of food_with_nutrition_list){
                 if (food_with_nutrition.food_id_list.length > 0){
                     // 可能性のある食品が一つ以上特定された場合。仮の実装でindexが0の食品を返している。
                     identified_food_id_list.push(food_with_nutrition.food_id_list[0]);
