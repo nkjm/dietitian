@@ -73,12 +73,26 @@ module.exports = class SkillKeepDietRecord {
     }
 
     finish(bot, event, context, resolve, reject){
-        let message = {
-            type: "text",
-            text: `了解。食べ過ぎはダメよ。`
-        }
-        return bot.reply(message).then((response) => {
-            resolve();
+        let query = "select sum(calorie__c) today_total_calorie from diet_history__c where diet_date__c = today and diet_user__r.user_id__c = '" + bot.extract_sender_id() + "'";
+        let today_total_calorie;
+        return db.query(query).then((response) => {
+            if (response.records.length != 1){
+                return Promise.reject(new Error("Could not get today total calorie."));
+            }
+            debug(response.records[0]);
+            today_total_calorie = response.records[0].today_total_calorie;
+            return db.get_user(bot.extract_sender_id);
+        }).then((user) => {
+            let calorie_to_go = user.requiredCalorie - today_total_calorie;
+            debug(calorie_to_go);
+            let message = {
+                type: "text",
+                text: `了解。食べ過ぎはダメよ。`
+            }
+            return bot.reply(message);
+        }).then((response) => {
+
+            return resolve();
         })
     }
 }
