@@ -81,7 +81,7 @@ module.exports = class SkillKeepDietRecord {
             }
             debug(response.records[0]);
             today_total_calorie = response.records[0].today_total_calorie;
-            return db.get_user(bot.extract_sender_id);
+            return db.get_user(bot.extract_sender_id());
         }).then((user) => {
             let calorie_to_go = user.requiredCalorie - today_total_calorie;
             debug(calorie_to_go);
