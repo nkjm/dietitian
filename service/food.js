@@ -212,9 +212,6 @@ module.exports = class ServiceFood {
 
             if (identified_food_list.length == 0){
                 debug('We could not identify any of the food you provided.');
-            } else {
-                debug('Here are the foods we identified.');
-                debug(identified_food_list);
             }
 
             return identified_food_list;
@@ -263,7 +260,6 @@ module.exports = class ServiceFood {
                 food_name: food_name,
                 food_list: []
             };
-            debug(response.records);
             response.records.map((f) => {
                 food_with_nutrition.food_list.push({
                     Id: f.Id,

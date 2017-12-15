@@ -60,6 +60,7 @@ class ServiceSalesforce {
             if (channel){
                 let saved_diet_history_list = [];
                 diet_history_list.map((h) => {
+                    h.food_full.diet_type = h.diet_type;
                     saved_diet_history_list.push(h.food_full);
                 })
                 channel.emit('personalHistoryUpdated', saved_diet_history_list);
