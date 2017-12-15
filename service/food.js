@@ -251,7 +251,7 @@ module.exports = class ServiceFood {
             };
             debug(response.records);
             response.records.map((f) => {
-                food_with_nutrition.food_id_list.push(f.id);
+                food_with_nutrition.food_id_list.push(f.Id);
             });
             return food_with_nutrition;
         });
