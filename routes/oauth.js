@@ -33,11 +33,11 @@ router.get("/callback", login.callback(
         debug("Upserting user...");
         db.upsert_user(user).then((response) => {
             debug("Completed upsert user.");
-            req.session.user_id = user.user_id__c;
+            req.session.user_id = user.user_id;
 
             if (response.id){
                 debug("This is a new user. We flag first login.");
-                user.first_login__c = 1;
+                user.first_login = 1;
                 return db.upsert_user({user_id: user.user_id, first_login: 1});
             }
             return Promise.resolve();
