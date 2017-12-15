@@ -3,7 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const debug = require("debug")("bot-express:route");
-const db = require("../service/salesforce");
+const Salesforce = require("../service/salesforce");
+const db = new Salesforce();
+const body_parser = require("body-parser");
+
+router.use(body_parser.json());
 
 router.put('/person/:user_id', (req, res, next) => {
     let user = req.body.person;

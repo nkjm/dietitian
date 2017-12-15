@@ -7,14 +7,38 @@ const jsforce = require("jsforce");
 const calorie = require("./calorie");
 const nutrition = require("./nutrition");
 const moment = require("moment");
+const cache = require("memory-cache");
 
 Promise = require('bluebird');
 
 class ServiceSalesforce {
 
-    static upsert_user__c(user){
-        const conn = new jsforce.Connection();
-        return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
+    constructor(options = {}){
+        const username = options.username || process.env.SF_USERNAME;
+        const password = options.password || process.env.SF_PASSWORD;
+
+        let credential = cache.get("salesforce");
+        if (credential){
+            debug("We have credential to access salesforce.");
+            this.done_connection = Promise.resolve(credential)
+        } else {
+            debug("We don't have credential to access salesforce.");
+            const conn = new jsforce.Connection();
+            this.done_connection = conn.login(username, password).then((response) => {
+                let credential = {
+                    accessToken: conn.accessToken,
+                    instanceUrl: conn.instanceUrl
+                }
+                cache.put("salesforce", credential, 1000 * 60 * 60);
+                return credential;
+            });
+        }
+
+    }
+
+    upsert_user__c(user){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
         }).then((response) => {
             if (response.success){
@@ -25,7 +49,7 @@ class ServiceSalesforce {
         })
     }
 
-    static upsert_user(user){
+    upsert_user(user){
         let user__c = {
             user_id__c: user.user_id,
             display_name__c: user.display_name,
@@ -41,12 +65,12 @@ class ServiceSalesforce {
         if (user__c.birthday__c){
             user__c.birthday__c = moment(user__c.birthday__c * 1000).format("YYYY-MM-DD");
         }
-        return ServiceSalesforce.upsert_user__c(user__c);
+        return this.upsert_user__c(user__c);
     }
 
-    static get_user__c(user_id){
-        const conn = new jsforce.Connection();
-        return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
+    get_user__c(user_id){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
             return conn.sobject("diet_user__c/user_id__c").retrieve(user_id);
         }).then((user) => {
             return user;
@@ -55,8 +79,8 @@ class ServiceSalesforce {
         })
     }
 
-    static get_user(user_id){
-        return ServiceSalesforce.get_user__c(user_id).then((user__c) => {
+    get_user(user_id){
+        return this.get_user__c(user_id).then((user__c) => {
             let user = {
                 line_id: user__c.user_id__c,
                 sex: user__c.sex__c,
@@ -77,9 +101,9 @@ class ServiceSalesforce {
         });
     }
 
-    static get_today_history(user_id){
-        const conn = new jsforce.Connection();
-        return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
+    get_today_history(user_id){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
             let query = `
                 select
                     diet_type__c,

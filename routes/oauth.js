@@ -7,7 +7,8 @@ const router = express.Router();
 const debug = require("debug")("bot-express:route");
 const jwt = require('jsonwebtoken');
 const Login = require("../service/line-login");
-const db = require("../service/salesforce");
+const Salesforce = require("../service/salesforce");
+const db = new Salesforce();
 Promise = require('bluebird');
 
 const login = new Login({

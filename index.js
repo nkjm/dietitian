@@ -9,10 +9,8 @@ const express = require("express");
 const session = require("express-session");
 const app = express();
 const path = require('path');
-const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const bot_express = require("bot-express");
-const body_parser = require('body-parser');
 
 /*
 ** Import routes
@@ -22,6 +20,7 @@ const route_personalHistoryDb = require('./routes/personalHistoryDb');
 const route_personDb = require('./routes/personDb');
 const route_dashboard = require("./routes/dashboard");
 const route_oauth = require("./routes/oauth");
+const route_push = require("./routes/push");
 
 
 /*
@@ -36,7 +35,6 @@ exports.io = require('socket.io')(server);
 
 // -----------------------------------------------------------------------------
 // ミドルウェア設定
-app.use(bodyParser.json());
 app.use(session({
     secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
     resave: false,
@@ -78,6 +76,7 @@ app.use('/personalHistoryDb', route_personalHistoryDb);
 app.use('/personDb', route_personDb);
 app.use("/dashboard", route_dashboard);
 app.use("/oauth", route_oauth);
+app.use("/push", route_push);
 app.get("/", (req, res) => {
     return res.render("login");
 });
