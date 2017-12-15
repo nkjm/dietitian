@@ -265,7 +265,18 @@ module.exports = class ServiceFood {
             };
             debug(response.records);
             response.records.map((f) => {
-                food_with_nutrition.food_list.push(f);
+                food_with_nutrition.food_list.push({
+                    Id: f.Id,
+                    food_name: f.food_name__c,
+                    calorie: f.calorie__c,
+                    fat: f.fat__c,
+                    protein: f.protein__c,
+                    cholesterol: f.cholesterol__c,
+                    carb: f.carb__c,
+                    fiber: f.fiber__c,
+                    ash: f.ash__c,
+                    water: f.water__c
+                });
             });
             return food_with_nutrition;
         });
