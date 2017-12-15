@@ -19,7 +19,7 @@ module.exports = class SkillKeepDietRecord {
                 parser: (value, bot, event, context, resolve, reject) => {
                     if (value == "朝食") return resolve({label: "朝食", name: "breakfast"});
                     if (value == "昼食") return resolve({label: "昼食", name: "lunch"});
-                    if (value == "夕食") return resovle({label: "夕食", name: "dinner"});
+                    if (value == "夕食") return resolve({label: "夕食", name: "dinner"});
                     reject();
                 },
                 reaction: (error, value, bot, event, context, resolve, reject) => {
