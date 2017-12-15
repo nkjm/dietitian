@@ -197,27 +197,27 @@ module.exports = class ServiceFood {
         });
 
         return Promise.all(done_get_all_food_with_nutrition).then((food_with_nutrition_list) => {
-            let unidentified_food_id_list= [];
-            let identified_food_id_list = [];
+            let unidentified_food_list= [];
+            let identified_food_list = [];
 
             for (let food_with_nutrition of food_with_nutrition_list){
-                if (food_with_nutrition.food_id_list.length > 0){
+                if (food_with_nutrition.food_list.length > 0){
                     // 可能性のある食品が一つ以上特定された場合。仮の実装でindexが0の食品を返している。
-                    identified_food_id_list.push(food_with_nutrition.food_id_list[0]);
+                    identified_food_list.push(food_with_nutrition.food_list[0]);
                 } else {
                     // 食品が特定できなかった場合
-                    unidentified_food_id_list.push(food_with_nutrition.food_name);
+                    unidentified_food_list.push(food_with_nutrition.food_name);
                 }
             }
 
-            if (identified_food_id_list.length == 0){
+            if (identified_food_list.length == 0){
                 debug('We could not identify any of the food you provided.');
             } else {
                 debug('Here are the foods we identified.');
-                debug(identified_food_id_list);
+                debug(identified_food_list);
             }
 
-            return identified_food_id_list;
+            return identified_food_list;
 
             /*
             if (autoSaveUnidentifiedFoodList && unidentifiedFoodList.length > 0){
@@ -242,16 +242,30 @@ module.exports = class ServiceFood {
     }
 
     static get_food_with_nutrition(food_name){
-        let query = `select id from diet_food__c where food_name__c like '%${food_name}%'`;
+        let query = `
+            select
+                Id
+                food_name__c,
+                calorie__c,
+                fat__c,
+                protein__c,
+                cholesterol__c,
+                carb__c,
+                fiber__c,
+                ash__c,
+                water__c
+            from
+                diet_food__c where food_name__c like '%${food_name}%'
+        `;
         debug(`Query is "${query}"`);
         return db.query(query).then((response) => {
             let food_with_nutrition = {
                 food_name: food_name,
-                food_id_list: []
+                food_list: []
             };
             debug(response.records);
             response.records.map((f) => {
-                food_with_nutrition.food_id_list.push(f.Id);
+                food_with_nutrition.food_list.push(f);
             });
             return food_with_nutrition;
         });

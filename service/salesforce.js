@@ -54,7 +54,17 @@ class ServiceSalesforce {
                 diet_food__c: h.diet_food
             });
         });
-        return this.save_diet_history_list__c(diet_history_list__c);
+        return this.save_diet_history_list__c(diet_history_list__c).then((response) => {
+            // WebSocketを通じて更新を通知
+            let channel = cache.get('channel-' + diet_history_list[0].diet_user);
+            if (channel){
+                let saved_diet_history_list = [];
+                diet_history_list.map((h) => {
+                    saved_diet_history_list.push(h.food_full);
+                })
+                channel.emit('personalHistoryUpdated', saved_diet_history_list);
+            }
+        });
     }
 
     query(query){

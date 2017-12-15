@@ -49,11 +49,12 @@ module.exports = class SkillKeepDietRecord {
                     if (error) return resolve();
 
                     let diet_history_list = [];
-                    value.map((food_id) => {
+                    value.map((food) => {
                         diet_history_list.push({
                             diet_user: bot.extract_sender_id(),
                             diet_type: context.confirmed.diet_type.name,
-                            diet_food: food_id
+                            diet_food: food.Id,
+                            food_full: food
                         });
                     });
 
