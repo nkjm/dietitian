@@ -17,9 +17,12 @@ module.exports = class SkillKeepDietRecord {
                     labels: ["朝食", "昼食", "夕食"]
                 }), // This parameter is expected to be filled by intent postback.
                 parser: (value, bot, event, context, resolve, reject) => {
-                    if (["朝食", "昼食", "夕食"].includes(value)){
+                    if (["breakfast", "lunch", "dinner"].includes(value)){
                         return resolve(value);
                     }
+                    if (value == "朝食") return resolve("breakfast");
+                    if (value == "昼食") return resolve("lunch");
+                    if (value == "夕食") return resovle("dinner");
                     reject();
                 },
                 reaction: (error, value, bot, event, context, resolve, reject) => {
