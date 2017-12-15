@@ -17,7 +17,7 @@ module.exports = class ServiceFood {
         return mecab.parse(text).then((parsed_text) => {
             let food_list = TextMiner.extractFoodList(parsed_text);
 
-            if (foodList.length == 0){
+            if (food_list.length == 0){
                 console.log('Mecab did not recognize noun.');
                 return [];
             }
