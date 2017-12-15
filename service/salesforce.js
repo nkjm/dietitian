@@ -40,13 +40,7 @@ class ServiceSalesforce {
         return this.done_connection.then((credential) => {
             const conn = new jsforce.Connection(credential);
             return conn.sobject("diet_history__c").create(diet_history_list);
-        }).then((response) => {
-            if (response.success){
-                return response;
-            } else {
-                return Promise.reject(new Error(response));
-            }
-        })
+        });
     }
 
     save_diet_history_list(diet_history_list){
