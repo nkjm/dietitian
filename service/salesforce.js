@@ -4,13 +4,15 @@ require("dotenv").config();
 
 const debug = require("debug")("bot-express:service");
 const jsforce = require("jsforce");
+const calorie = require("./calorie");
+const nutrition = require("./nutrition");
+const moment = require("moment");
 
 Promise = require('bluebird');
 
 class ServiceSalesforce {
 
-    static upsert_user(user){
-        debug("Going to upsert user.");
+    static upsert_user__c(user){
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c").upsert(user, "user_id__c");
@@ -23,8 +25,26 @@ class ServiceSalesforce {
         })
     }
 
-    static get_user(user_id){
-        debug("Going to get user...");
+    static upsert_user(user){
+        let user__c = {
+            user_id__c: user.user_id,
+            display_name__c: user.display_name,
+            picture_url__c: user.picture_url,
+            birthday__c: user.birthday,
+            sex__c: user.sex,
+            height__c: user.height,
+            activity__c: user.activity,
+            first_login__c: user.first_login,
+            email__c: user.email,
+            phone__c: user.phone
+        }
+        if (user__c.birthday__c){
+            user__c.birthday__c = moment(user__c.birthday__c * 1000).format("YYYY-MM-DD");
+        }
+        return ServiceSalesforce.upsert_user__c(user__c);
+    }
+
+    static get_user__c(user_id){
         const conn = new jsforce.Connection();
         return conn.login(process.env.SF_USERNAME, process.env.SF_PASSWORD).then((response) => {
             return conn.sobject("diet_user__c/user_id__c").retrieve(user_id);
@@ -33,6 +53,28 @@ class ServiceSalesforce {
         }).catch((error) => {
             return Promise.reject(new Error(error));
         })
+    }
+
+    static get_user(user_id){
+        return ServiceSalesforce.get_user__c(user_id).then((user__c) => {
+            let user = {
+                line_id: user__c.user_id__c,
+                sex: user__c.sex__c,
+                birthday: user__c.birthday__c,
+                age: user__c.age__c,
+                height: user__c.height__c,
+                picture_url: user__c.picture_url__c,
+                activity: user__c.activity__c,
+                display_name: user__c.display_name__c,
+                first_login: user__c.first_login__c,
+                email: user__c.email__c,
+                phone: user__c.phone__c
+            }
+            user.birthday = new Date(user.birthday).getTime() / 1000;
+            user.requiredCalorie = calorie.getRequiredCalorie(user.birthday, user.height, user.sex, user.activity);
+            user.requiredNutrition = nutrition.getRequiredNutrition(user.birthday, user.height, user.sex, user.activity);
+            return user;
+        });
     }
 
     static get_today_history(user_id){

@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('request');
-const CalorieCalc = require('./calorieCalc');
+const CalorieCalc = require('./calorie');
 const dbPrefix = process.env.PERSONAL_HISTORY_DB_API_BASE;
 Promise = require('bluebird');
 

@@ -12,6 +12,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const bot_express = require("bot-express");
+const body_parser = require('body-parser');
 
 /*
 ** Import routes
@@ -35,6 +36,7 @@ exports.io = require('socket.io')(server);
 
 // -----------------------------------------------------------------------------
 // ミドルウェア設定
+app.use(bodyParser.json());
 app.use(session({
     secret: process.env.LINE_LOGIN_CHANNEL_SECRET,
     resave: false,

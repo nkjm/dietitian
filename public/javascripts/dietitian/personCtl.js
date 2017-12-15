@@ -40,6 +40,7 @@ angular.module("dietitian")
         personDb.getPerson(state.person.line_id)
         .then(
             function(response){
+                $log.log(response);
                 $scope.ui.remoting.setIsRemoting(false);
                 state.person = response.data;
             },

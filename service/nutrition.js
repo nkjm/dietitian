@@ -1,10 +1,10 @@
 'use strict';
 
-const CalorieCalc = require('./calorieCalc');
+const calorie = require('./calorie');
 
-module.exports = class nutritionCalc {
+module.exports = class ServiceNutrition {
     static getRequiredNutrition(birthday, height, sex, activity){
-        const requiredCalorie = CalorieCalc.getRequiredCalorie(birthday, height, sex, activity);
+        const requiredCalorie = calorie.getRequiredCalorie(birthday, height, sex, activity);
         const nutrition = {};
 
         // 身長から適正体重を求める

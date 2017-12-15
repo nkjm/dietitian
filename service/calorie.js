@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class calorieCalc {
+module.exports = class ServiceCalorie {
     static getRequiredCalorie(birthday, height, sex, activity){
         const properWeight = Math.round(height * height * 0.0022);
         const age = Math.floor(((new Date()).getTime() - birthday * 1000) / (1000 * 60 * 60 * 24 * 365));

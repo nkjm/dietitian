@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 const request = require("request");
 const crypto = require("crypto");
 const PersonDb = require('../service/personDb');
@@ -15,7 +15,7 @@ const debug = require("debug")("bot-express:route");
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
-router.use(bodyParser.json());
+//router.use(bodyParser.json());
 
 router.get('/api/askDietType', (req, res, next) => {
     if (!req.query.line_id) res.status(400).json('Line Id not set.');

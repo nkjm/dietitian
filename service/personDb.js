@@ -1,8 +1,8 @@
 'use strict';
 
 const request = require('request');
-const CalorieCalc = require('./calorieCalc');
-const NutritionCalc = require('./nutritionCalc');
+const CalorieCalc = require('./calorie');
+const NutritionCalc = require('./nutrition');
 const dbPrefix = process.env.PERSON_DB_API_BASE;
 const crypto = require('crypto');
 const base64url = require('base64url');

@@ -24,11 +24,11 @@ router.get("/callback", login.callback(
     (req, res, next, login_response) => {
         let t = jwt.decode(JSON.parse(login_response).id_token, {json:true});
         let user = {
-            user_id__c: t.sub,
-            display_name__c: t.name,
-            picture_url__c: t.picture,
-            email__c: t.email,
-            phone__c: t.phone_number
+            user_id: t.sub,
+            display_name: t.name,
+            picture_url: t.picture,
+            email: t.email,
+            phone: t.phone_number
         }
         debug("Upserting user...");
         db.upsert_user(user).then((response) => {
@@ -38,7 +38,7 @@ router.get("/callback", login.callback(
             if (response.id){
                 debug("This is a new user. We flag first login.");
                 user.first_login__c = 1;
-                return db.upsert_user({user_id__c: user.user_id__c, first_login__c: 1});
+                return db.upsert_user({user_id: user.user_id, first_login: 1});
             }
             return Promise.resolve();
         }).then((response) => {
