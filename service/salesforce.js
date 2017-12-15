@@ -36,6 +36,40 @@ class ServiceSalesforce {
 
     }
 
+    save_diet_history_list__c(diet_history_list){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
+            return conn.sobject("diet_history__c").create(diet_history_list);
+        }).then((response) => {
+            if (response.success){
+                return response;
+            } else {
+                return Promise.reject(new Error(response));
+            }
+        })
+    }
+
+    save_diet_history_list(diet_history_list){
+        let diet_history_list__c = [];
+        diet_history_list.map((h) => {
+            diet_history_list__c.push({
+                diet_user__c: h.diet_user,
+                diet_type__c: h.diet_type,
+                diet_food__c: h.diet_food
+            });
+        });
+        return this.save_diet_history_list__c(diet_history_list__c);
+    }
+
+    query(query){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
+            return conn.query(query);
+        }).then((response) => {
+            return response;
+        });
+    }
+
     upsert_user__c(user){
         return this.done_connection.then((credential) => {
             const conn = new jsforce.Connection(credential);
