@@ -95,10 +95,10 @@ module.exports = class SkillKeepDietRecord {
             }
             let message = {
                 type: 'template',
-                altText: messageText,
+                altText: message_text,
                 template: {
                     type: 'buttons',
-                    text: messageText,
+                    text: message_text,
                     actions: [{
                         type: 'uri',
                         label: 'マイページで確認',
