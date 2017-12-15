@@ -242,7 +242,7 @@ module.exports = class ServiceFood {
     }
 
     static get_food_with_nutrition(food_name){
-        let query = `select id from diet_food__c where food_name like '%${food_name}%'`;
+        let query = `select id from diet_food__c where food_name__c like '%${food_name}%'`;
         return db.query(query).then((response) => {
             let food_with_nutrition = {
                 food_name: food_name,
