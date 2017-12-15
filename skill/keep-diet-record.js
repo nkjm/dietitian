@@ -4,6 +4,8 @@ const lmo = require("../service/line-message-object");
 const debug = require("debug")("bot-express:skill");
 const mecab = require("mecabaas-client");
 const food = require("../service/food");
+const Salesforce = require("../service/salesforce");
+const db = new Salesforce();
 
 module.exports = class SkillKeepDietRecord {
     constructor(){
