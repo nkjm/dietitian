@@ -243,11 +243,13 @@ module.exports = class ServiceFood {
 
     static get_food_with_nutrition(food_name){
         let query = `select id from diet_food__c where food_name__c like '%${food_name}%'`;
+        debug(`Query is "${query}"`);
         return db.query(query).then((response) => {
             let food_with_nutrition = {
                 food_name: food_name,
                 food_id_list: []
             };
+            debug(response.records);
             response.records.map((f) => {
                 food_with_nutrition.food_id_list.push(f.id);
             });
