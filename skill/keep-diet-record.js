@@ -32,7 +32,7 @@ module.exports = class SkillKeepDietRecord {
             },
             diet: {
                 parser: (value, bot, event, context, resolve, reject) => {
-                    food.extract_food_list_with_nutrition_by_text(value).then((food_list_with_nutrition) => {
+                    return food.extract_food_list_with_nutrition_by_text(value).then((food_list_with_nutrition) => {
                         // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
                         if (!food_list_with_nutrition || food_list_with_nutrition.length == 0){
                             debug('Could not find corresponding food in database.');
@@ -56,6 +56,9 @@ module.exports = class SkillKeepDietRecord {
                             diet_food: food_id
                         });
                     });
+
+                    debug("Going to save following history.");
+                    debug(diet_history_list);
 
                     // Save diet history.
                     return db.save_diet_history_list(diet_history_list).then((response) => {
