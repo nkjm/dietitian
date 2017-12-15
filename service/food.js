@@ -244,7 +244,7 @@ module.exports = class ServiceFood {
     static get_food_with_nutrition(food_name){
         let query = `
             select
-                Id
+                Id,
                 food_name__c,
                 calorie__c,
                 fat__c,
