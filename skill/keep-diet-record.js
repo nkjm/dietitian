@@ -17,18 +17,15 @@ module.exports = class SkillKeepDietRecord {
                     labels: ["朝食", "昼食", "夕食"]
                 }), // This parameter is expected to be filled by intent postback.
                 parser: (value, bot, event, context, resolve, reject) => {
-                    if (["breakfast", "lunch", "dinner"].includes(value)){
-                        return resolve(value);
-                    }
-                    if (value == "朝食") return resolve("breakfast");
-                    if (value == "昼食") return resolve("lunch");
-                    if (value == "夕食") return resovle("dinner");
+                    if (value == "朝食") return resolve({label: "朝食", name: "breakfast"});
+                    if (value == "昼食") return resolve({label: "昼食", name: "lunch"});
+                    if (value == "夕食") return resovle({label: "夕食", name: "dinner"});
                     reject();
                 },
                 reaction: (error, value, bot, event, context, resolve, reject) => {
                     bot.change_message_to_confirm("diet", {
                         type: "text",
-                        text: `${value}には何を食べたのかしら？`
+                        text: `${value.label}には何を食べたのかしら？`
                     });
                     resolve();
                 }
@@ -55,7 +52,7 @@ module.exports = class SkillKeepDietRecord {
                     value.map((food_id) => {
                         diet_history_list.push({
                             diet_user: bot.extract_sender_id(),
-                            diet_type: context.confirmed.diet_type,
+                            diet_type: context.confirmed.diet_type.name,
                             diet_food: food_id
                         });
                     });

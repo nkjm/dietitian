@@ -53,7 +53,7 @@ class ServiceSalesforce {
         let diet_history_list__c = [];
         diet_history_list.map((h) => {
             diet_history_list__c.push({
-                diet_user__c: h.diet_user,
+                "diet_user__r.user_id__c": h.diet_user,
                 diet_type__c: h.diet_type,
                 diet_food__c: h.diet_food
             });
