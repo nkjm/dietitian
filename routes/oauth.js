@@ -30,9 +30,18 @@ router.get("/callback", login.callback(
             email__c: t.email,
             phone__c: t.phone_number
         }
+        debug("Upserting user...");
         db.upsert_user(user).then((response) => {
-            debug("Upsert user completed.");
+            debug("Completed upsert user.");
             req.session.user_id = user.user_id__c;
+
+            if (response.id){
+                debug("This is a new user. We flag first login.");
+                user.first_login__c = 1;
+                return db.upsert_user({user_id__c: user.user_id__c, first_login__c: 1});
+            }
+            return Promise.resolve();
+        }).then((response) => {
             debug("Redirecting to dashboard.");
             return res.redirect("/dashboard");
         }).catch((error) => {

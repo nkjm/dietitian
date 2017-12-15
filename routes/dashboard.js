@@ -19,6 +19,11 @@ router.get('/', (req, res, next) => {
         Yes => Display Dashboard.
         No => Redirect to LINE Login.
     */
+
+    if (process.env.NODE_ENV != "production"){
+        req.session.user_id = "U2e250c5c3b8d3af3aa7dd9ad34ed15f9";
+    }
+
     if (req.session.user_id){
         debug("Found user_id in session.");
         // Socket.IOのチャネル(Name Space)をオープン。
@@ -36,6 +41,7 @@ router.get('/', (req, res, next) => {
             // Channelを共有キャッシュに保存。
             cache.put('channel-' + req.session.user_id, channel);
         }
+        debug("Going to get user.");
         db.get_user(req.session.user_id).then((user) => {
             debug("Got user.");
             let person = {
@@ -50,7 +56,6 @@ router.get('/', (req, res, next) => {
                 first_login: user.first_login__c,
                 security_code: user.security_code__c
             }
-            debug(person);
             person.birthday = new Date(person.birthday).getTime() / 1000;
             person.requiredCalorie = CalorieCalc.getRequiredCalorie(person.birthday, person.height, person.sex, person.activity);
             person.requiredNutrition = NutritionCalc.getRequiredNutrition(person.birthday, person.height, person.sex, person.activity);
@@ -58,6 +63,7 @@ router.get('/', (req, res, next) => {
             return res.render("dashboard", {releaseMode: "development", person: person});
         });
     } else {
+        debug("Could not find user id in session. Initiating OAuth flow.");
         res.redirect("/oauth");
     }
 });
