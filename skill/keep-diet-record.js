@@ -79,15 +79,32 @@ module.exports = class SkillKeepDietRecord {
             if (response.records.length != 1){
                 return Promise.reject(new Error("Could not get today total calorie."));
             }
-            debug(response.records[0]);
             today_total_calorie = response.records[0].today_total_calorie;
             return db.get_user(bot.extract_sender_id());
         }).then((user) => {
             let calorie_to_go = user.requiredCalorie - today_total_calorie;
-            debug(calorie_to_go);
+            let message_text;
+            if (calorie_to_go > 0){
+                message_text = '了解。カロリー満タンまであと' + calorie_to_go + 'kcalですよー。';
+            } else if (calorie_to_go < 0){
+                message_text = 'もう絶対食べたらあかん。' + calorie_to_go * -1 + 'kcal超過してます。';
+            } else if (calorie_to_go == 0){
+                message_text = 'カロリー、ちょうど満タンです！';
+            } else {
+                message_text = 'あれ、満タンまであとどれくらいだろう・・';
+            }
             let message = {
-                type: "text",
-                text: `了解。食べ過ぎはダメよ。`
+                type: 'template',
+                altText: messageText,
+                template: {
+                    type: 'buttons',
+                    text: messageText,
+                    actions: [{
+                        type: 'uri',
+                        label: 'マイページで確認',
+                        uri: "https://dietitian.herokuapp.com/dashboard"
+                    }]
+                }
             }
             return bot.reply(message);
         }).then((response) => {

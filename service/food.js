@@ -254,7 +254,6 @@ module.exports = class ServiceFood {
             from
                 diet_food__c where food_name__c like '%${food_name}%'
         `;
-        debug(`Query is "${query}"`);
         return db.query(query).then((response) => {
             let food_with_nutrition = {
                 food_name: food_name,
