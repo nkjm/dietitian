@@ -61,6 +61,7 @@ class ServiceSalesforce {
                 let saved_diet_history_list = [];
                 diet_history_list.map((h) => {
                     h.food_full.diet_type = h.diet_type;
+                    h.food_full.food = h.food_full.food_name;
                     saved_diet_history_list.push(h.food_full);
                 })
                 channel.emit('personalHistoryUpdated', saved_diet_history_list);
