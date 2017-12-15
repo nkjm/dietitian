@@ -25,7 +25,7 @@ module.exports = class SkillKeepDietRecord {
                 reaction: (error, value, bot, event, context, resolve, reject) => {
                     bot.change_message_to_confirm("diet", {
                         type: "text",
-                        text: `${value.label}には何を食べたのかしら？`
+                        text: `今日の${value.label}は何を食べたのかしら？`
                     });
                     resolve();
                 }

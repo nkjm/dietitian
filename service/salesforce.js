@@ -167,6 +167,7 @@ class ServiceSalesforce {
                     calorie: h.diet_food__r.calorie__c,
                     carb: h.diet_food__r.carb__c,
                     fat: h.diet_food__r.fat__c,
+                    protein: h.diet_food__r.protein__c.
                     fiber: h.diet_food__r.fiber__c,
                     water: h.diet_food__r.water__c,
                     ash: h.diet_food__r.ash__c,
