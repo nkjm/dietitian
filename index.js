@@ -15,8 +15,6 @@ const bot_express = require("bot-express");
 /*
 ** Import routes
 */
-const route_dietitianConsole = require('./routes/dietitianConsole');
-const route_personalHistoryDb = require('./routes/personalHistoryDb');
 const route_personDb = require('./routes/personDb');
 const route_dashboard = require("./routes/dashboard");
 const route_oauth = require("./routes/oauth");
@@ -71,8 +69,6 @@ app.use("/webhook", bot_express({
 /*
 ** Mount other routes
 */
-app.use('/dietitianConsole', route_dietitianConsole);
-app.use('/personalHistoryDb', route_personalHistoryDb);
 app.use('/personDb', route_personDb);
 app.use("/dashboard", route_dashboard);
 app.use("/oauth", route_oauth);

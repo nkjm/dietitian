@@ -54,10 +54,10 @@ angular.module("dietitian", ["ui.bootstrap"])
     }
 })
 .service("personalHistoryDb", function($log, $http, $q, person){
-    this.dbPrefix = location.protocol + '//' + location.host + '/personalHistoryDb';
+    this.dbPrefix = location.protocol + '//' + location.host;
 
     this.getTodayHistory = function(){
-        var url = this.dbPrefix + "/person/" + person.line_id + "/diet_history/today";
+        var url = this.dbPrefix + "/dashboard/api/today_diet_history/" + person.line_id;
         return $http({
             url: url,
             method: "get"

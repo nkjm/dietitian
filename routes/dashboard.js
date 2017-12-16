@@ -42,7 +42,7 @@ router.get('/', (req, res, next) => {
             // Channelを共有キャッシュに保存。
             cache.put('channel-' + req.session.user_id, channel);
         }
-        debug("Going to get user.");
+        debug("Going to get user...");
         db.get_user(req.session.user_id).then((user) => {
             debug("Completed get user.");
             return res.render("dashboard", {releaseMode: "development", person: user});
@@ -51,6 +51,20 @@ router.get('/', (req, res, next) => {
         debug("Could not find user id in session. Initiating OAuth flow.");
         res.redirect("/oauth");
     }
+});
+
+router.get('/api/today_diet_history/:user_id', (req, res, next) => {
+    if (req.session.user_id != req.params.user_id){
+        debug("session not found.");
+    }
+    debug("Going to get today diet history...");
+    return db.get_today_history(req.params.user_id).then((history) => {
+        debug("Completed get today diet history.");
+        return res.json(history);
+    }).catch((error) => {
+        debug(error);
+        return res.status(500).end();
+    });
 });
 
 module.exports = router;
