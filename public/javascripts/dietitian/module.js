@@ -42,7 +42,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     this.getPerson = function(lineId){
         var url = this.dbPrefix + "/user/" + lineId;
         return $http({
-            headers: headers,
+            headers: this.headers,
             url: url,
             method: "get"
         });
@@ -51,7 +51,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     this.updatePerson = function(person){
         var url = this.dbPrefix + "/user/" + person.line_id;
         return $http({
-            headers: headers,
+            headers: this.headers,
             url: url,
             method: "put",
             data: { person: person }
@@ -67,7 +67,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     this.getTodayHistory = function(){
         var url = this.dbPrefix + "/today_diet_history/" + person.line_id;
         return $http({
-            headers: headers,
+            headers: this.headers,
             url: url,
             method: "get"
         });
