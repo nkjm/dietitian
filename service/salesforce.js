@@ -4,9 +4,6 @@ require("dotenv").config();
 
 const debug = require("debug")("bot-express:service");
 const jsforce = require("jsforce");
-const calorie = require("./calorie");
-const nutrition = require("./nutrition");
-const moment = require("moment");
 const cache = require("memory-cache");
 
 Promise = require('bluebird');
