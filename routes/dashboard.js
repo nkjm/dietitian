@@ -66,7 +66,7 @@ router.get('/api/today_diet_history/:user_id', (req, res, next) => {
         return res.json(history);
     }).catch((error) => {
         debug(error);
-        return res.status(500).end();
+        return res.sendStatus(500);
     });
 });
 
@@ -77,10 +77,10 @@ router.put('/api/user/:user_id', (req, res, next) => {
     debug("Going to upsert user...");
     return db.upsert_user(user, "user_id__c").then((response) => {
         debug("Completed upsert user.");
-        return res.status(200).end();
+        return res.sendStatus(200);
     }, (error) => {
         debug(error);
-        return res.status(500).end();
+        return res.sendStatus(500);
     });
 });
 
@@ -91,7 +91,7 @@ router.get('/api/user/:user_id', (req, res, next) => {
         return res.json(response);
     }, (error) => {
         debug(error);
-        return res.status(500).end();
+        return res.sendStatus(500);
     });
 });
 

@@ -25,7 +25,7 @@ API to send bot-express:push event to bot.
 router.post('/', (req, res, next) => {
 
     debug(req.body);
-    
+
     if (!req.body.to) return res.status(400).send('Required parameter: to not set.');
     if (!req.body.to.type) return res.status(400).send('Required parameter: to.type not set');
     if (!req.body.to[`${req.body.to.type}Id`]) return res.status(400).send(`Required parameter: to.${req.body.to.type}Id not set`);
@@ -52,10 +52,10 @@ router.post('/', (req, res, next) => {
         json: true
     }).then((response) => {
         if (response.statusCode == 200){
-            res.sendStatus(200).end();
+            res.sendStatus(200);
         } else {
             debug(response.body);
-            res.sendStatus(500).end();
+            res.sendStatus(500);
         }
     })
 });

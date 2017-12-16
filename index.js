@@ -15,7 +15,6 @@ const bot_express = require("bot-express");
 /*
 ** Import routes
 */
-const route_personDb = require('./routes/personDb');
 const route_dashboard = require("./routes/dashboard");
 const route_oauth = require("./routes/oauth");
 const route_push = require("./routes/push");
@@ -69,7 +68,6 @@ app.use("/webhook", bot_express({
 /*
 ** Mount other routes
 */
-app.use('/personDb', route_personDb);
 app.use("/dashboard", route_dashboard);
 app.use("/oauth", route_oauth);
 app.use("/push", route_push);
