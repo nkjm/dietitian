@@ -5,14 +5,13 @@ require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const debug = require("debug")("bot-express:route");
-const Login = require("../service/line-login");
-const Salesforce = require("../service/salesforce");
-const db = new Salesforce();
 const cache = require("memory-cache");
+const body_parser = require("body-parser");
 const app = require("../index");
 const calorie = require("../service/calorie");
 const nutrition = require("../service/nutrition");
-const body_parser = require("body-parser");
+const Salesforce = require("../service/salesforce");
+const db = new Salesforce();
 Promise = require('bluebird');
 
 router.use(body_parser.json());

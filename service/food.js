@@ -6,7 +6,7 @@ const debug = require("debug")("bot-express:service");
 const Salesforce = require("../service/salesforce");
 const db = new Salesforce();
 const dbPrefix = process.env.FOOD_DB_API_BASE;
-const TextMiner = require('./textMiner');
+const text_miner = require('./text-miner');
 Promise = require('bluebird');
 Promise.promisifyAll(request);
 
@@ -15,7 +15,7 @@ module.exports = class ServiceFood {
     static extract_food_list_with_nutrition_by_text(text){
         debug("Going to process message by mecab...");
         return mecab.parse(text).then((parsed_text) => {
-            let food_list = TextMiner.extractFoodList(parsed_text);
+            let food_list = text_miner.extractFoodList(parsed_text);
 
             if (food_list.length == 0){
                 console.log('Mecab did not recognize noun.');

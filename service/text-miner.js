@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = class textMiner {
+module.exports = class ServiceTextMiner {
     static extractFoodList(parsedText){
         // 各形態素を調べ、名詞だったら食品として食品リストに追加。
         const party = ['飲み会','歓迎会','送別会','忘年会','新年会'];

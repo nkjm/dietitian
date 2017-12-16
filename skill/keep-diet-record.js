@@ -11,7 +11,7 @@ module.exports = class SkillKeepDietRecord {
     constructor(){
         this.required_parameter = {
             diet_type: {
-                message_to_confirm: lmo.createTemplateButtonMessage({
+                message_to_confirm: lmo.create_template_button_message({
                     text: "どの食事でいただいたの？",
                     altText: "どの食事でいただいたの？朝食？昼食？夕食?",
                     labels: ["朝食", "昼食", "夕食"]

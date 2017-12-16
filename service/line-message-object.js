@@ -1,7 +1,7 @@
 "use strict";
 
-module.exports = class LineMessageObject {
-    static createTemplateButtonMessage(options){
+module.exports = class ServiceLineMessageObject {
+    static create_template_button_message(options){
         let mo = {
             type: "template",
             altText: options.alt_text || options.text,

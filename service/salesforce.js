@@ -33,7 +33,6 @@ class ServiceSalesforce {
                 return credential;
             });
         }
-
     }
 
     save_diet_history_list__c(diet_history_list){
