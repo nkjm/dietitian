@@ -94,7 +94,7 @@ router.get('/api/user/:user_id', (req, res, next) => {
     });
 });
 
-function validate_dietitian_token(req, dietitian_token) => {
+function validate_dietitian_token(req, dietitian_token){
     if (!req.get("X-DIETITIAN-TOKEN")) return false;
     if (!dietian_token) return false;
 
