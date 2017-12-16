@@ -96,7 +96,7 @@ router.get('/api/user/:user_id', (req, res, next) => {
 
 function validate_dietitian_token(req, dietitian_token){
     if (!req.get("X-DIETITIAN-TOKEN")) return false;
-    if (!dietian_token) return false;
+    if (!dietitian_token) return false;
 
     if (req.get("X-DIETITIAN-TOKEN") === dietitian_token){
         return true;
