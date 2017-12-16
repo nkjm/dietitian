@@ -34,10 +34,10 @@ angular.module("dietitian", ["ui.bootstrap"])
 	}
 })
 .service("personDb", function($log, $http, $q){
-    this.dbPrefix = location.protocol + '//' + location.host + '/personDb';
+    this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
 
     this.getPerson = function(lineId){
-        var url = this.dbPrefix + "/person/" + lineId;
+        var url = this.dbPrefix + "/user/" + lineId;
         return $http({
             url: url,
             method: "get"
@@ -45,7 +45,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     }
 
     this.updatePerson = function(person){
-        var url = this.dbPrefix + "/person/" + person.line_id;
+        var url = this.dbPrefix + "/user/" + person.line_id;
         return $http({
             url: url,
             method: "put",
@@ -54,10 +54,10 @@ angular.module("dietitian", ["ui.bootstrap"])
     }
 })
 .service("personalHistoryDb", function($log, $http, $q, person){
-    this.dbPrefix = location.protocol + '//' + location.host;
+    this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
 
     this.getTodayHistory = function(){
-        var url = this.dbPrefix + "/dashboard/api/today_diet_history/" + person.line_id;
+        var url = this.dbPrefix + "/today_diet_history/" + person.line_id;
         return $http({
             url: url,
             method: "get"

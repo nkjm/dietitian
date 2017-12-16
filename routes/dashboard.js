@@ -12,7 +12,10 @@ const cache = require("memory-cache");
 const app = require("../index");
 const calorie = require("../service/calorie");
 const nutrition = require("../service/nutrition");
+const body_parser = require("body-parser");
 Promise = require('bluebird');
+
+router.use(body_parser.json());
 
 router.get('/', (req, res, next) => {
     /**
@@ -62,6 +65,31 @@ router.get('/api/today_diet_history/:user_id', (req, res, next) => {
         debug("Completed get today diet history.");
         return res.json(history);
     }).catch((error) => {
+        debug(error);
+        return res.status(500).end();
+    });
+});
+
+router.put('/api/user/:user_id', (req, res, next) => {
+    let user = req.body.person;
+    user.user_id = req.params.user_id;
+    user.first_login = 0;
+    debug("Going to upsert user...");
+    return db.upsert_user(user, "user_id__c").then((response) => {
+        debug("Completed upsert user.");
+        return res.status(200).end();
+    }, (error) => {
+        debug(error);
+        return res.status(500).end();
+    });
+});
+
+router.get('/api/user/:user_id', (req, res, next) => {
+    debug("Going to get user...");
+    return db.get_user(req.params.user_id).then((response) => {
+        debug("Completed get user.");
+        return res.json(response);
+    }, (error) => {
         debug(error);
         return res.status(500).end();
     });
