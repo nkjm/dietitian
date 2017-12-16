@@ -8,25 +8,6 @@ var zip = require('gulp-zip');
 var replace = require('gulp-replace');
 var debug = require('debug')('compile');
 
-gulp.task('default', function(){
-    // Replace process.env.VARIABLE_NAME to actual value.
-    // This replacement is necessary since ACCS does not accept special charactors like +^ for environment variables.
-    debug('Compiling environment_variables.js...');
-    var stream = gulp.src(['environment_variables.js']);
-    for (var environment_variable_key of Object.keys(process.env)){
-        debug('Replacing process.env.' + environment_variable_key + ' to ' + process.env[environment_variable_key] + '...');
-        stream = stream.pipe(replace('process.env.' + environment_variable_key, "'" + process.env[environment_variable_key] + "'"));
-    }
-    stream.pipe(gulp.dest('./'));
-    debug('Done.');
-
-    // Compress all files into artifact.zip. This zip file will be used to deploy application.
-    debug('Creating artifact.zip...');
-    return gulp.src('./**')
-        .pipe(zip('artifact.zip'))
-        .pipe(gulp.dest('./'));
-});
-
 gulp.task('compress', function(){
 	var src = [
 		'public/javascripts/dietitian/*.js',
