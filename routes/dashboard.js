@@ -21,11 +21,6 @@ router.get('/', (req, res, next) => {
         Yes => Display Dashboard.
         No => Redirect to LINE Login.
     */
-
-    if (process.env.NODE_ENV == "local"){
-        req.session.user_id = "U2e250c5c3b8d3af3aa7dd9ad34ed15f9";
-    }
-
     if (req.session.user_id){
         debug("Found user_id in session.");
         // Socket.IOのチャネル(Name Space)をオープン。
@@ -46,7 +41,7 @@ router.get('/', (req, res, next) => {
         debug("Going to get user...");
         user_db.get_user(req.session.user_id).then((user) => {
             debug("Completed get user.");
-            return res.render("dashboard", {releaseMode: process.env.NODE_ENV, person: user});
+            return res.render("dashboard", {release_mode: process.env.NODE_ENV, person: user, dietitian_token: req.session.dietitian_token});
         });
     } else {
         debug("Could not find user id in session. Initiating OAuth flow.");
@@ -55,6 +50,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/api/today_diet_history/:user_id', (req, res, next) => {
+    if (!validate_dietitian_token(req, req.session.dietitian_token)){
+        return res.sendStatus(403);
+    }
     debug("Going to get today diet history...");
     return user_db.get_today_history(req.params.user_id).then((history) => {
         debug("Completed get today diet history.");
@@ -66,6 +64,9 @@ router.get('/api/today_diet_history/:user_id', (req, res, next) => {
 });
 
 router.put('/api/user/:user_id', (req, res, next) => {
+    if (!validate_dietitian_token(req, req.session.dietitian_token)){
+        return res.sendStatus(403);
+    }
     let user = req.body.person;
     user.user_id = req.params.user_id;
     user.first_login = 0;
@@ -80,6 +81,9 @@ router.put('/api/user/:user_id', (req, res, next) => {
 });
 
 router.get('/api/user/:user_id', (req, res, next) => {
+    if (!validate_dietitian_token(req, req.session.dietitian_token)){
+        return res.sendStatus(403);
+    }
     debug("Going to get user...");
     return user_db.get_user(req.params.user_id).then((response) => {
         debug("Completed get user.");
@@ -89,5 +93,15 @@ router.get('/api/user/:user_id', (req, res, next) => {
         return res.sendStatus(500);
     });
 });
+
+function validate_dietitian_token(req, dietitian_token) => {
+    if (!req.get("X-DIETITIAN-TOKEN")) return false;
+    if (!dietian_token) return false;
+
+    if (req.get("X-DIETITIAN-TOKEN") === dietitian_token){
+        return true;
+    }
+    return false;
+}
 
 module.exports = router;

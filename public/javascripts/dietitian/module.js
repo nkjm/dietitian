@@ -33,7 +33,7 @@ angular.module("dietitian", ["ui.bootstrap"])
 		this.connection = io(location.protocol + '//' + location.host + '/' + channel);
 	}
 })
-.service("personDb", function($log, $http, $q){
+.service("personDb", function($log, $http, $q, dietitian_token){
     this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
 
     this.getPerson = function(lineId){
@@ -53,7 +53,7 @@ angular.module("dietitian", ["ui.bootstrap"])
         });
     }
 })
-.service("personalHistoryDb", function($log, $http, $q, person){
+.service("personalHistoryDb", function($log, $http, $q, person, dietitian_token){
     this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
 
     this.getTodayHistory = function(){

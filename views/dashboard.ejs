@@ -8,7 +8,7 @@
 <link rel='stylesheet' href='/bower_components/bootstrap/dist/css/bootstrap.min.css' />
 <link rel='stylesheet' href='/stylesheets/dashboard.css' />
 <script src="/socket.io/socket.io.js"></script>
-<% if (releaseMode == 'production'){ %>
+<% if (release_mode == 'production'){ %>
     <script type="text/javascript" src="javascripts/dist/dietitian.min.js"></script>
 <% } else { %>
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -25,6 +25,7 @@
 <script>
 angular.module("dietitian")
 .constant("person", <%- JSON.stringify(person) %>);
+.constant("dietitian_token", "<%- dietian_token %>");
 </script>
 </head>
 
