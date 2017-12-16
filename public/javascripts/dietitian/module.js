@@ -35,10 +35,14 @@ angular.module("dietitian", ["ui.bootstrap"])
 })
 .service("personDb", function($log, $http, $q, dietitian_token){
     this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
+    this.headers = {
+        "X-DIETITIAN-TOKEN": dietitian_token
+    }
 
     this.getPerson = function(lineId){
         var url = this.dbPrefix + "/user/" + lineId;
         return $http({
+            headers: headers,
             url: url,
             method: "get"
         });
@@ -47,6 +51,7 @@ angular.module("dietitian", ["ui.bootstrap"])
     this.updatePerson = function(person){
         var url = this.dbPrefix + "/user/" + person.line_id;
         return $http({
+            headers: headers,
             url: url,
             method: "put",
             data: { person: person }
@@ -55,10 +60,14 @@ angular.module("dietitian", ["ui.bootstrap"])
 })
 .service("personalHistoryDb", function($log, $http, $q, person, dietitian_token){
     this.dbPrefix = location.protocol + '//' + location.host + '/dashboard/api';
+    this.headers = {
+        "X-DIETITIAN-TOKEN": dietitian_token
+    }
 
     this.getTodayHistory = function(){
         var url = this.dbPrefix + "/today_diet_history/" + person.line_id;
         return $http({
+            headers: headers,
             url: url,
             method: "get"
         });
