@@ -10,8 +10,7 @@ const body_parser = require("body-parser");
 const app = require("../index");
 const calorie = require("../service/calorie");
 const nutrition = require("../service/nutrition");
-const Salesforce = require("../service/salesforce");
-const db = new Salesforce();
+const user_db = require("../service/user");
 Promise = require('bluebird');
 
 router.use(body_parser.json());
@@ -23,7 +22,7 @@ router.get('/', (req, res, next) => {
         No => Redirect to LINE Login.
     */
 
-    if (process.env.NODE_ENV != "production"){
+    if (process.env.NODE_ENV == "local"){
         req.session.user_id = "U2e250c5c3b8d3af3aa7dd9ad34ed15f9";
     }
 
@@ -45,9 +44,9 @@ router.get('/', (req, res, next) => {
             cache.put('channel-' + req.session.user_id, channel);
         }
         debug("Going to get user...");
-        db.get_user(req.session.user_id).then((user) => {
+        user_db.get_user(req.session.user_id).then((user) => {
             debug("Completed get user.");
-            return res.render("dashboard", {releaseMode: "development", person: user});
+            return res.render("dashboard", {releaseMode: process.env.NODE_ENV, person: user});
         });
     } else {
         debug("Could not find user id in session. Initiating OAuth flow.");
@@ -56,11 +55,8 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/api/today_diet_history/:user_id', (req, res, next) => {
-    if (req.session.user_id != req.params.user_id){
-        debug("session not found.");
-    }
     debug("Going to get today diet history...");
-    return db.get_today_history(req.params.user_id).then((history) => {
+    return user_db.get_today_history(req.params.user_id).then((history) => {
         debug("Completed get today diet history.");
         return res.json(history);
     }).catch((error) => {
@@ -74,7 +70,7 @@ router.put('/api/user/:user_id', (req, res, next) => {
     user.user_id = req.params.user_id;
     user.first_login = 0;
     debug("Going to upsert user...");
-    return db.upsert_user(user, "user_id__c").then((response) => {
+    return user_db.upsert_user(user, "user_id__c").then((response) => {
         debug("Completed upsert user.");
         return res.sendStatus(200);
     }, (error) => {
@@ -85,7 +81,7 @@ router.put('/api/user/:user_id', (req, res, next) => {
 
 router.get('/api/user/:user_id', (req, res, next) => {
     debug("Going to get user...");
-    return db.get_user(req.params.user_id).then((response) => {
+    return user_db.get_user(req.params.user_id).then((response) => {
         debug("Completed get user.");
         return res.json(response);
     }, (error) => {

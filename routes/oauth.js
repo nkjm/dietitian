@@ -7,8 +7,7 @@ const router = express.Router();
 const debug = require("debug")("bot-express:route");
 const jwt = require('jsonwebtoken');
 const Login = require("line-login");
-const Salesforce = require("../service/salesforce");
-const db = new Salesforce();
+const user_db = require("../service/user");
 Promise = require('bluebird');
 
 const login = new Login({
@@ -32,14 +31,14 @@ router.get("/callback", login.callback(
             phone: t.phone_number
         }
         debug("Upserting user...");
-        db.upsert_user(user).then((response) => {
+        user_db.upsert_user(user).then((response) => {
             debug("Completed upsert user.");
             req.session.user_id = user.user_id;
 
             if (response.id){
-                debug("This is a new user. We flag first login.");
+                debug("This is a new user. Going to flag first login...");
                 user.first_login = 1;
-                return db.upsert_user({user_id: user.user_id, first_login: 1});
+                return user_db.upsert_user({user_id: user.user_id, first_login: 1});
             }
             return Promise.resolve();
         }).then((response) => {

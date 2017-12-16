@@ -1,5 +1,7 @@
 "use strict";
 
+require("dotenv").config();
+
 const lmo = require("../service/line-message-object");
 const debug = require("debug")("bot-express:skill");
 const mecab = require("mecabaas-client");
@@ -62,7 +64,7 @@ module.exports = class SkillKeepDietRecord {
                     debug(diet_history_list);
 
                     // Save diet history.
-                    return db.save_diet_history_list(diet_history_list).then((response) => {
+                    return user_db.save_diet_history_list(diet_history_list).then((response) => {
                         return resolve();
                     }).catch((error) => {
                         return reject(error);
@@ -73,16 +75,7 @@ module.exports = class SkillKeepDietRecord {
     }
 
     finish(bot, event, context, resolve, reject){
-        let query = "select sum(calorie__c) today_total_calorie from diet_history__c where diet_date__c = today and diet_user__r.user_id__c = '" + bot.extract_sender_id() + "'";
-        let today_total_calorie;
-        return db.query(query).then((response) => {
-            if (response.records.length != 1){
-                return Promise.reject(new Error("Could not get today total calorie."));
-            }
-            today_total_calorie = response.records[0].today_total_calorie;
-            return db.get_user(bot.extract_sender_id());
-        }).then((user) => {
-            let calorie_to_go = user.requiredCalorie - today_total_calorie;
+        return user_db.get_calorie_to_go(bot.extract_sender_id()).then((calorie_to_go) => {
             let message_text;
             if (calorie_to_go > 0){
                 message_text = '了解。カロリー満タンまであと' + calorie_to_go + 'kcalですよー。';
@@ -108,8 +101,10 @@ module.exports = class SkillKeepDietRecord {
             }
             return bot.reply(message);
         }).then((response) => {
-
             return resolve();
+        }).catch((error) => {
+            debug(error);
+            return reject(error);
         })
     }
 }
