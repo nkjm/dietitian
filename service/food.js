@@ -12,7 +12,7 @@ Promise.promisifyAll(request);
 
 module.exports = class ServiceFood {
 
-    static extract_food_list_with_nutrition_by_text(text){
+    static get_food_list_by_text(text){
         debug("Going to process message by mecab...");
         return mecab.parse(text).then((parsed_text) => {
             let food_name_list = text_miner.extractFoodList(parsed_text);

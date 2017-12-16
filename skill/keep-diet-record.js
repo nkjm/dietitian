@@ -5,9 +5,8 @@ require("dotenv").config();
 const lmo = require("../service/line-message-object");
 const debug = require("debug")("bot-express:skill");
 const mecab = require("mecabaas-client");
-const food = require("../service/food");
-const Salesforce = require("../service/salesforce");
-const db = new Salesforce();
+const user_db = require("../service/user");
+const food_db = require("../service/food");
 
 module.exports = class SkillKeepDietRecord {
     constructor(){
@@ -34,9 +33,9 @@ module.exports = class SkillKeepDietRecord {
             },
             diet: {
                 parser: (value, bot, event, context, resolve, reject) => {
-                    return food.extract_food_list_with_nutrition_by_text(value).then((food_list_with_nutrition) => {
+                    return food_db.get_food_list_by_text(value).then((food_list) => {
                         // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                        if (!food_list_with_nutrition || food_list_with_nutrition.length == 0){
+                        if (!food_list || food_list.length == 0){
                             debug('Could not find corresponding food in database.');
                             bot.change_message_to_confirm("diet", {
                                 type: "text",
@@ -44,7 +43,7 @@ module.exports = class SkillKeepDietRecord {
                             });
                             return reject();
                         }
-                        return resolve(food_list_with_nutrition);
+                        return resolve(food_list);
                     });
                 },
                 reaction: (error, value, bot, event, context, resolve, reject) => {
