@@ -7,6 +7,7 @@ const moment = require("moment");
 const db = require("../service/salesforce");
 const calorie = require("../service/calorie");
 const nutrition = require("../service/nutrition");
+const cache = require("memory-cache");
 
 Promise = require('bluebird');
 
@@ -40,7 +41,7 @@ class ServiceUser {
             if (!responses[1].records || responses[1].records.length !== 1){
                 return Promise.reject(new Error(`Failed to get today total calorie of user: ${user_id}.`));
             }
-            
+
             let required_calorie = responses[0].requiredCalorie;
             let today_total_calorie = responses[1].records[0].today_total_calorie;
 
