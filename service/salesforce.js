@@ -29,7 +29,7 @@ class ServiceSalesforce {
                     accessToken: conn.accessToken,
                     instanceUrl: conn.instanceUrl
                 }
-                cache.put("salesforce", credential, 1000 * 60 * 60);
+                cache.put("salesforce", credential, 1000 * 60 * 60); // Retain 60 min.
                 return credential;
             });
         }
