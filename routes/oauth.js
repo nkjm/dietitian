@@ -5,7 +5,6 @@ require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const debug = require("debug")("bot-express:route");
-const jwt = require('jsonwebtoken');
 const Login = require("line-login");
 const user_db = require("../service/user");
 const crypto = require("crypto");
@@ -23,8 +22,8 @@ const login = new Login({
 router.get("/", login.auth());
 
 router.get("/callback", login.callback(
-    (req, res, next, login_response) => {
-        let t = jwt.decode(JSON.parse(login_response).id_token, {json:true});
+    (req, res, next, token_response) => {
+        let t = token_response.id_token;
         let user = {
             user_id: t.sub,
             display_name: t.name,
