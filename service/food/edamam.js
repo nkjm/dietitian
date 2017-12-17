@@ -26,10 +26,11 @@ module.exports = class ServiceFoodEdamam {
             return googlet.translate(text_ja, "en");
         }).then((response) => {
             let text_en = response[0];
-            debug(`Translated text is ${text_en}.`);
+            debug(`Translated text is ${text_en}`);
             // Going to search food.
             let endpoint = "https://api.edamam.com/api/food-database/parser";
             let url = endpoint + `?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}&ingr=${encodeURIComponent(text_en)}`;
+            debug(`Going to extract food...`);
             return request.getAsync({
                 url: url,
                 json: true
@@ -46,7 +47,7 @@ module.exports = class ServiceFoodEdamam {
             let url = endpoint + `?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}`;
             let body = {
                 ingredients: [{
-                    quantity: 0.2,
+                    quantity: 0.3,
                     measureURI: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
                     foodURI: response.body.hints[0].food.uri
                 }]

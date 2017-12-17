@@ -68,22 +68,34 @@ module.exports = class SkillKeepDietRecord {
             },
             diet: {
                 parser: (value, bot, event, context, resolve, reject) => {
-                    return food_db.search_food(value).then((food_list) => {
-                        if (food_list && food_list.length > 0){
-                            // We found some foods.
-                            return resolve(food_list);
-                        }
+                    return nlu.identify_intent(value, bot.extract_sender_id()).then((intent) => {
+                        if (intent.name == "skip-meal"){
+                            return resolve("skip");
+                        } else {
+                            return food_db.search_food(value).then((food_list) => {
+                                if (food_list && food_list.length > 0){
+                                    // We found some foods.
+                                    return resolve(food_list);
+                                }
 
-                        debug('Could not find food.');
-                        bot.change_message_to_confirm("diet", {
-                            type: "text",
-                            text: "ごめんなさい、何を食べたのかわからなかったわ。もうちょっとわかりやすくお願いできるかしら？"
-                        });
-                        return reject();
+                                debug('Could not find food.');
+                                bot.change_message_to_confirm("diet", {
+                                    type: "text",
+                                    text: "ごめんなさい、何を食べたのかわからなかったわ。もうちょっとわかりやすくお願いできるかしら？"
+                                });
+                                return reject();
+                            }).catch((error) => {
+                                return reject();
+                            });
+                        }
                     });
                 },
                 reaction: (error, food_list, bot, event, context, resolve, reject) => {
                     if (error) return resolve();
+                    if (food_list === "skip"){
+                        debug("Since user have not eaten anything, we skip reaction.");
+                        return resolve();
+                    }
 
                     // Save diet history.
                     return user_db.save_diet_history_list(
@@ -101,6 +113,14 @@ module.exports = class SkillKeepDietRecord {
     }
 
     finish(bot, event, context, resolve, reject){
+        if (context.confirmed.diet == "skip"){
+            // User did not eat anything.
+            return bot.reply({
+                type: "text",
+                text: "なんと。ダイエット中でも食べないのは体によくないわ。そこらへんの芋か何か食べときなさい。"
+            });
+        }
+
         return user_db.get_calorie_to_go(bot.extract_sender_id()).then((calorie_to_go) => {
             let message_text;
             if (calorie_to_go > 0){
