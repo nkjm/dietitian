@@ -7,6 +7,12 @@ const debug = require("debug")("bot-express:skill");
 const mecab = require("mecabaas-client");
 const user_db = require("../service/user");
 const food_db = require("../service/food");
+const Nlu = require("../node_modules/bot-express/module/nlu");
+const nlu = new Nlu({
+    options: {
+        client_access_token: process.env.DIALOGFLOW_CLIENT_ACCESS_TOKEN
+    }
+});
 
 module.exports = class SkillKeepDietRecord {
     constructor(){
@@ -62,37 +68,29 @@ module.exports = class SkillKeepDietRecord {
             },
             diet: {
                 parser: (value, bot, event, context, resolve, reject) => {
-                    return food_db.get_food_list_by_text(value).then((food_list) => {
-                        // もし認識された食品がなければ、処理をストップしてごめんねメッセージを送る。
-                        if (!food_list || food_list.length == 0){
-                            debug('Could not find corresponding food in database.');
-                            bot.change_message_to_confirm("diet", {
-                                type: "text",
-                                text: "ごめんなさい、何を食べたのかわからなかったわ。もうちょっとわかりやすくお願いできるかしら？"
-                            });
-                            return reject();
+                    return food_db.search_food(value).then((food_list) => {
+                        if (food_list && food_list.length > 0){
+                            // We found some foods.
+                            return resolve(food_list);
                         }
-                        return resolve(food_list);
-                    });
+
+                        debug('Could not find food.');
+                        bot.change_message_to_confirm("diet", {
+                            type: "text",
+                            text: "ごめんなさい、何を食べたのかわからなかったわ。もうちょっとわかりやすくお願いできるかしら？"
+                        });
+                        return reject();
+                    }));
                 },
-                reaction: (error, value, bot, event, context, resolve, reject) => {
+                reaction: (error, food_list, bot, event, context, resolve, reject) => {
                     if (error) return resolve();
 
-                    let diet_history_list = [];
-                    value.map((food) => {
-                        diet_history_list.push({
-                            diet_user: bot.extract_sender_id(),
-                            diet_type: context.confirmed.diet_type.name,
-                            diet_food: food.Id,
-                            food_full: food
-                        });
-                    });
-
-                    debug("Going to save following history.");
-                    debug(diet_history_list);
-
                     // Save diet history.
-                    return user_db.save_diet_history_list(diet_history_list).then((response) => {
+                    return user_db.save_diet_history_list(
+                        bot.extract_sender_id(),
+                        context.confirmed.diet_type.name,
+                        food_list
+                    ).then((response) => {
                         return resolve();
                     }).catch((error) => {
                         return reject(error);

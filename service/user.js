@@ -50,28 +50,36 @@ class ServiceUser {
         });
     }
 
-    static save_diet_history_list(diet_history_list){
+    static save_diet_history_list(user_id, diet_type, food_list){
         let diet_history_list__c = [];
-        diet_history_list.map((h) => {
+        food_list.map((f) => {
             diet_history_list__c.push({
                 diet_user__r: {
-                    user_id__c: h.diet_user
+                    user_id__c: user_id
                 },
-                diet_type__c: h.diet_type,
-                diet_food__c: h.diet_food
+                diet_type__c: diet_type,
+                food_name__c: f.name,
+                db_type__c: f.db_type,
+                food_id__c: f.id,
+                calorie__c: f.calorie,
+                protein__c: f.protein,
+                fat__c: f.fat,
+                cholesterol__c: f.cholesterol,
+                fiber__c: f.fiber,
+                water__c: f.water,
+                ash__c: f.ash
             });
         });
         return db.create("diet_history__c", diet_history_list__c).then((response) => {
             // WebSocketを通じて更新を通知
-            let channel = cache.get('channel-' + diet_history_list[0].diet_user);
+            let channel = cache.get('channel-' + user_id);
             if (channel){
-                let saved_diet_history_list = [];
-                diet_history_list.map((h) => {
-                    h.food_full.diet_type = h.diet_type;
-                    h.food_full.food = h.food_full.food_name;
-                    saved_diet_history_list.push(h.food_full);
+                let diet_history_list_to_emit = food_list;
+                food_list.map((f) => {
+                    f.diet_type = diet_type;
+                    f.food = f.name;
                 })
-                channel.emit('personalHistoryUpdated', saved_diet_history_list);
+                channel.emit('personalHistoryUpdated', diet_history_list_to_emit);
             }
         });
     }
@@ -122,18 +130,17 @@ class ServiceUser {
             select
                 diet_type__c,
                 diet_date__c,
-                diet_food__r.food_id__c,
-                diet_food__r.category__c,
-                diet_food__r.food_name__c,
-                diet_food__r.calorie__c,
-                diet_food__r.protein__c,
-                diet_food__r.carb__c,
-                diet_food__r.fat__c,
-                diet_food__r.fiber__c,
-                diet_food__r.water__c,
-                diet_food__r.ash__c,
-                diet_food__r.cholesterol__c,
-                diet_food__r.unidentified__c
+                food_name__c,
+                db_type__c,
+                food_id__c,
+                calorie__c,
+                carb__c,
+                protein__c,
+                fat__c,
+                cholesterol__c,
+                fiber__c,
+                water__c,
+                ash__c
             from diet_history__c where
                 diet_user__r.user_id__c = '${user_id}' and
                 diet_date__c = today
@@ -144,18 +151,16 @@ class ServiceUser {
                 history_list.push({
                     diet_type: h.diet_type__c,
                     diet_date: h.diet_date__c,
-                    food: h.diet_food__r.food_name__c,
-                    food_id: h.diet_food__r.food_id__c,
-                    category: h.diet_food__r.food_name__c,
-                    calorie: h.diet_food__r.calorie__c,
-                    carb: h.diet_food__r.carb__c,
-                    fat: h.diet_food__r.fat__c,
-                    protein: h.diet_food__r.protein__c,
-                    fiber: h.diet_food__r.fiber__c,
-                    water: h.diet_food__r.water__c,
-                    ash: h.diet_food__r.ash__c,
-                    cholesterol: h.diet_food__r.cholesterol__c,
-                    unidentifyied: h.diet_food__r.unidentified__c
+                    food: h.food_name__c,
+                    food_id: h.food_id__c,
+                    calorie: h.calorie__c,
+                    carb: h.carb__c,
+                    protein: h.protein__c,
+                    fat: h.fat__c,
+                    cholesterol: h.cholesterol__c,
+                    fiber: h.fiber__c,
+                    water: h.water__c,
+                    ash: h.ash__c
                 });
             });
             return history_list;
