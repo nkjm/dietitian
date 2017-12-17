@@ -72,6 +72,8 @@ module.exports = class ServiceFoodEdamam {
                 return null;
             }
 
+            let endpoint = "https://api.edamam.com/api/food-database/nutrients";
+            let url = endpoint + `?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}`;
             let body = {
                 ingredients: ingredients
             }
