@@ -124,7 +124,7 @@ module.exports = class SkillKeepDietRecord {
                     message_text = '了解。カロリー満タンまであと' + calorie_to_go + 'kcalですよー。';
                 }
             } else if (calorie_to_go < 0){
-                let stikcer_messages = [{
+                let sticker_messages = [{
                     type: "sticker",
                     packageId: 2,
                     stickerId: 520
