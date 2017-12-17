@@ -68,7 +68,7 @@ module.exports = class SkillKeepDietRecord {
             },
             diet: {
                 parser: (value, bot, event, context, resolve, reject) => {
-                    return nlu.identify_intent(value, bot.extract_sender_id()).then((intent) => {
+                    return nlu.identify_intent(value, {session_id: bot.extract_sender_id()}).then((intent) => {
                         if (intent.name == "skipped-meal"){
                             return resolve("skip");
                         } else {
