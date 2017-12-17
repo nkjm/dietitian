@@ -6,7 +6,6 @@ const debug = require("debug")("bot-express:service");
 const food_db_standard = require("./food/standard");
 // const food_db_edaman = require("./food/edaman");
 Promise = require('bluebird');
-Promise.promisifyAll(request);
 
 module.exports = class ServiceFood {
     /**
