@@ -119,10 +119,6 @@ module.exports = class SkillKeepDietRecord {
                         type: "sticker",
                         packageId: 1,
                         stickerId: 407
-                    },{
-                        type: "sticker",
-                        packageId: 2,
-                        stickerId: 45
                     }];
                     bot.queue(lmo.random(sticker_messages));
                     message_text = '了解。カロリー満タンまであと' + calorie_to_go + 'kcalですよー。';
@@ -148,7 +144,7 @@ module.exports = class SkillKeepDietRecord {
                 bot.queue(lmo.random(sticker_messages));
                 message_text = 'もう絶対食べたらあかん。' + calorie_to_go * -1 + 'kcal超過してます。';
             } else if (calorie_to_go == 0){
-                let stikcer_messages = [{
+                let sticker_messages = [{
                     type: "sticker",
                     packageId: 2,
                     stickerId: 144
