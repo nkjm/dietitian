@@ -39,8 +39,6 @@ module.exports = class ServiceFoodEdamam {
                 return null;
             }
 
-            debug(`Got follwing hints.`);
-            debug(response.body.hints[0]);
             food.name = response.body.hints[0].food.label;
 
             // Going to get nutrient info.
@@ -73,11 +71,14 @@ module.exports = class ServiceFoodEdamam {
                 {code:"CHOLE", prop: "cholesterol"}
             ];
             nutrient_codes.map((code) => {
-                if (response.body.totalNutrients[code.code]) food[code.prop] = response.body.totalNutrients[code.code].quantity;
+                if (response.body.totalNutrients[code.code]) food[code.prop] = Math.floor(response.body.totalNutrients[code.code].quantity);
             });
-            debug(`Got following food.`);
-            debug(food);
+
+            // Translate food name.
+            return googlet.translate(food.name, "ja");
+        }).then((response) => {
+            food.name = response[0];
             return [food];
-        });
+        })
     }
 };
