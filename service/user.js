@@ -62,6 +62,7 @@ class ServiceUser {
                 db_type__c: f.db_type,
                 food_id__c: f.id,
                 calorie__c: f.calorie,
+                carb__c: f.carb,
                 protein__c: f.protein,
                 fat__c: f.fat,
                 cholesterol__c: f.cholesterol,

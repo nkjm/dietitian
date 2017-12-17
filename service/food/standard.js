@@ -75,10 +75,10 @@ module.exports = class ServiceFoodStandard {
                 Id,
                 food_name__c,
                 calorie__c,
+                carb__c,
                 fat__c,
                 protein__c,
                 cholesterol__c,
-                carb__c,
                 fiber__c,
                 ash__c,
                 water__c
