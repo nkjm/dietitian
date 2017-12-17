@@ -41,9 +41,11 @@ module.exports = class ServiceFoodEdamam {
             if (response.body.parsed && response.body.parsed.length > 0){
                 // We have extracted result.
                 response.body.parsed.map((entity) => {
+                    if (!entity.quantity) entity.quantity = 0.3;
+                    if (!entity.measure) entity.measure = {uri: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram"};
                     ingredients.push({
-                        quantity: entity.quantity || 0.3,
-                        measureURI: entity.measure.uri || "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
+                        quantity: entity.quantity,
+                        measureURI: entity.measure.uri,
                         foodURI: entity.food.uri
                     });
                     if (food_name === ""){
@@ -53,9 +55,16 @@ module.exports = class ServiceFoodEdamam {
                     }
                 });
             } else if (response.body.hints || response.body.hints.length > 0){
+                let measureURI, quantity;
+                response.body.hints[0].measures.map((measure) => {
+                    if (measure.label == "Whole"){
+                        measureURI = "http://www.edamam.com/ontologies/edamam.owl#Measure_unit";
+                        quantity = 1;
+                    }
+                });
                 ingredients.push({
-                    quantity: 0.3,
-                    measureURI: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
+                    quantity: quantity || 0.3,
+                    measureURI: measureURI || "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
                     foodURI: response.body.hints[0].food.uri
                 });
                 food_name = response.body.hints[0].food.label;
