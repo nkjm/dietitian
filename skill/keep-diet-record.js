@@ -33,7 +33,7 @@ module.exports = class SkillKeepDietRecord {
                             text: `今日の${value.label}は何を食べたのかしら？`
                         }
                     } else {
-                        let stikcer_messages = [{
+                        let sticker_messages = [{
                             type: "sticker",
                             packageId: 2,
                             stickerId: 179
@@ -107,18 +107,24 @@ module.exports = class SkillKeepDietRecord {
             let message_text;
             if (calorie_to_go > 0){
                 if (calorie_to_go < 300){
-                    bot.queue({
+                    let sticker_messages = [{
                         type: "sticker",
                         packageId: 1,
                         stickerId: 425
-                    });
+                    }];
+                    bot.queue(lmo.random(sticker_messages));
                     message_text = 'そろそろやばいよ。カロリー満タンまであと' + calorie_to_go + 'kcalですからね。';
                 } else {
-                    bot.queue({
+                    let sticker_messages = [{
                         type: "sticker",
                         packageId: 1,
                         stickerId: 407
-                    });
+                    },{
+                        type: "sticker",
+                        packageId: 2,
+                        stickerId: 45
+                    }];
+                    bot.queue(lmo.random(sticker_messages));
                     message_text = '了解。カロリー満タンまであと' + calorie_to_go + 'kcalですよー。';
                 }
             } else if (calorie_to_go < 0){
