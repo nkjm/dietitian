@@ -89,6 +89,7 @@ module.exports = class ServiceFoodEdamam {
             if (response === null){
                 return null;
             }
+            debug(response.body);
             food = {
                 db_type: "edamam",
                 calorie: response.body.calories
