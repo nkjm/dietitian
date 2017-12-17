@@ -6,6 +6,7 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "@google-cloud/translate": "^1.1.0",
     "base64url": "^2.0.0",
     "bluebird": "^3.4.6",
     "body-parser": "~1.13.2",
