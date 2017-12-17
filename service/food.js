@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const debug = require("debug")("bot-express:service");
 const food_db_standard = require("./food/standard");
-const food_db_edaman = require("./food/edamam");
+const food_db_edamam = require("./food/edamam");
 Promise = require('bluebird');
 
 module.exports = class ServiceFood {
