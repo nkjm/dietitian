@@ -48,7 +48,7 @@ module.exports = class ServiceFoodEdamam {
             let url = endpoint + `?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}`;
             let body = {
                 ingredients: [{
-                    quantity: 1,
+                    quantity: 0.2,
                     measureURI: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
                     foodURI: response.body.hints[0].food.uri
                 }]
