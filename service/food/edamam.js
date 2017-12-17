@@ -8,7 +8,7 @@ const google_translate = require('@google-cloud/translate');
 Promise = require('bluebird');
 Promise.promisifyAll(request);
 
-googlet = google_translate({
+const googlet = google_translate({
     projectId: process.env.GOOGLE_PROJECT_ID
 });
 
