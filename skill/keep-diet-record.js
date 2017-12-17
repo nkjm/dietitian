@@ -85,6 +85,7 @@ module.exports = class SkillKeepDietRecord {
                                 });
                                 return reject();
                             }).catch((error) => {
+                                debug(error);
                                 return reject();
                             });
                         }
