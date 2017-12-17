@@ -5,6 +5,8 @@ require("dotenv").config();
 const debug = require("debug")("bot-express:service");
 const food_db_standard = require("./food/standard");
 const food_db_edamam = require("./food/edamam");
+const preferred_food_db = process.env.PREFERRED_FOOD_DB || "standard";
+
 Promise = require('bluebird');
 
 module.exports = class ServiceFood {
@@ -36,10 +38,18 @@ module.exports = class ServiceFood {
         done_all_search.push(food_db_edamam.search_food(text));
 
         return Promise.all(done_all_search).then((responses) => {
-            if (responses[0].length > 0){
-                return responses[0];
-            } else {
-                return responses[1];
+            if (preferred_food_db == "standard"){
+                if (responses[0].length > 0){
+                    return responses[0];
+                } else {
+                    return responses[1];
+                }
+            } else if (preferred_food_db == "edamam"){
+                if (responses[1].length > 0){
+                    return responses[1];
+                } else {
+                    return responses[0];
+                }
             }
             /*
             let merged_food_list = [];
