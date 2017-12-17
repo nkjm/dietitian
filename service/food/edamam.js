@@ -63,14 +63,20 @@ module.exports = class ServiceFoodEdamam {
             if (!response.body){
                 return [];
             }
-            debug(`Got following nutrients`);
-            debug(response.body);
             food.db_type = "edamam";
             food.calorie = response.body.calories;
-            food.fat = response.body.totalNutrients.FAT.quantitiy;
-            food.carb = response.body.totalNutrients.CHOCDF.quantity;
-            food.protein = response.body.totalNutrients.PRCNT.quantity;
-            food.fiber = response.body.totalNutrients.FIBTG.quantity;
+            const nutrient_codes = [
+                {code:"FAT", prop:"fat"},
+                {code:"CHOCDF", prop: "carb"},
+                {code:"PROCNT", prop: "protein"},
+                {code:"FIBTG", prop: "fiber"},
+                {code:"CHOLE", prop: "cholesterol"}
+            ];
+            nutrient_codes.map((code) => {
+                if (response.body.totalNutrients[code.code]) food[code.prop] = response.body.totalNutrients[code.code].quantity;
+            });
+            debug(`Got following food.`);
+            debug(food);
             return [food];
         });
     }
