@@ -24,10 +24,21 @@ module.exports = class SkillKeepDietRecord {
                     reject();
                 },
                 reaction: (error, value, bot, event, context, resolve, reject) => {
-                    bot.change_message_to_confirm("diet", {
-                        type: "text",
-                        text: `今日の${value.label}は何を食べたのかしら？`
-                    });
+                    if (error) return resolve();
+
+                    let message;
+                    if (context._flow == "push"){
+                        message = {
+                            type: "text",
+                            text: `今日の${value.label}は何を食べたのかしら？`
+                        }
+                    } else {
+                        message = {
+                            type: "text",
+                            text: `エライ！何を食べたの？`
+                        }
+                    }
+                    bot.change_message_to_confirm("diet", message);
                     resolve();
                 }
             },
