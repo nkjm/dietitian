@@ -20,4 +20,9 @@ module.exports = class ServiceLineMessageObject {
         });
         return mo;
     }
+
+    static random(messages){
+        let offset = Math.floor(Math.random() * (messages.length));
+        return messages[offset];
+    }
 }
