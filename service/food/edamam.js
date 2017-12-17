@@ -60,17 +60,17 @@ module.exports = class ServiceFoodEdamam {
                 json: true
             });
         }).then((response) => {
-            if (!response){
+            if (!response.body){
                 return [];
             }
             debug(`Got following nutrients`);
-            debug(response);
+            debug(response.body);
             food.db_type = "edamam";
-            food.calorie = response.calories;
-            food.fat = response.totalNutrients.FAT.quantitiy;
-            food.carb = response.totalNutrients.CHOCDF.quantity;
-            food.protein = response.totalNutrients.PRCNT.quantity;
-            food.fiber = response.totalNutrients.FIBTG.quantity;
+            food.calorie = response.body.calories;
+            food.fat = response.body.totalNutrients.FAT.quantitiy;
+            food.carb = response.body.totalNutrients.CHOCDF.quantity;
+            food.protein = response.body.totalNutrients.PRCNT.quantity;
+            food.fiber = response.body.totalNutrients.FIBTG.quantity;
             return [food];
         });
     }
