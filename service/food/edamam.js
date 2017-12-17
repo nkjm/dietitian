@@ -20,6 +20,7 @@ module.exports = class ServiceFoodEdamam {
     @return {Array.<food>} - Array of food object.
     */
     static search_food(text_ja){
+        let food;
         debug("Going to translate text...");
         return Promise.resolve().then((response) => {
             return googlet.translate(text_ja, "en");
@@ -28,7 +29,6 @@ module.exports = class ServiceFoodEdamam {
             // Going to search food.
             let endpoint = "https://api.edamam.com/api/food-database/parser";
             let url = endpoint + `?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}&ingr=${encodeURIComponent(text_en)}`;
-            let food;
             return request.getAsync({
                 url: url,
                 json: true
