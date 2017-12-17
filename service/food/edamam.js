@@ -41,7 +41,7 @@ module.exports = class ServiceFoodEdamam {
 
             debug(`Got follwing hints.`);
             debug(response.body.hints[0]);
-            food.name = response.body.hints[0].label;
+            food.name = response.body.hints[0].food.label;
 
             // Going to get nutrient info.
             let endpoint = "https://api.edamam.com/api/food-database/nutrients";
