@@ -118,7 +118,9 @@ module.exports = class SkillKeepDietRecord {
             return bot.reply({
                 type: "text",
                 text: "なんと。ダイエット中でも食べないのは体によくないわ。そこらへんの芋か何か食べときなさい。"
-            });
+            }).then((response) => {
+                return resolve();
+            })
         }
 
         return user_db.get_calorie_to_go(bot.extract_sender_id()).then((calorie_to_go) => {
