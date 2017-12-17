@@ -63,7 +63,7 @@ module.exports = class ServiceFoodEdamam {
                         if (found_whole){
                             entity.measure = {uri: "http://www.edamam.com/ontologies/edamam.owl#Measure_unit"};
                         } else {
-                            {uri: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram"};
+                            entity.measure = {uri: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram"};
                         }
                     }
                     ingredients.push({
