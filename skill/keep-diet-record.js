@@ -117,7 +117,7 @@ module.exports = class SkillKeepDietRecord {
             // User did not eat anything.
             return bot.reply({
                 type: "text",
-                text: "なんと。ダイエット中でも食べないのは体によくないわ。そこらへんの芋か何か食べときなさい。"
+                text: "なんと。そこらへんの芋か何か食べときなさい。"
             }).then((response) => {
                 return resolve();
             })
