@@ -36,7 +36,7 @@ module.exports = class ServiceFood {
         //done_all_search.push(food_db_edamam.search_food(text));
 
         return Promise.all(done_all_search).then((responses) => {
-            merged_food_list = [];
+            let merged_food_list = [];
             responses.map((food_list) => {
                 food_list.map((food) => {
                     merged_food_list.push(food);
