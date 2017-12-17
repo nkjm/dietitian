@@ -80,7 +80,7 @@ module.exports = class SkillKeepDietRecord {
                             text: "ごめんなさい、何を食べたのかわからなかったわ。もうちょっとわかりやすくお願いできるかしら？"
                         });
                         return reject();
-                    }));
+                    });
                 },
                 reaction: (error, food_list, bot, event, context, resolve, reject) => {
                     if (error) return resolve();
