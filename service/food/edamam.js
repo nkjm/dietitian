@@ -40,24 +40,18 @@ module.exports = class ServiceFoodEdamam {
 
             debug(`Got follwing hints.`);
             debug(response.body.hints[0]);
+            food.name = response.body.hints[0].label;
+
             // Going to get nutrient info.
             let endpoint = "https://api.edamam.com/api/food-database/nutrients";
             let url = endpoint;
             let body = {
                 ingredients: [{
-                    quaantity: 1,
-                    measureURI: response.body.hints[0].measures,
-                    foodURI:
-                }]
-            }
-            food.name = response.body.hints[0].label;
-            response.body.hints.map((entity) => {
-                body.ingredients.push({
                     quantity: 1,
                     measureURI: "http://www.edamam.com/ontologies/edamam.owl#Measure_kilogram",
                     foodURI: response.body.hints[0].food.uri
-                });
-            })
+                }]
+            }
             debug(`Going to get nutrient info.`);
             return request.postAsync({
                 url: url,
@@ -70,17 +64,13 @@ module.exports = class ServiceFoodEdamam {
             }
             debug(`Got following nutrients`);
             debug(response);
-            let food = {
-                name: "",
-                db_type: "edamam",
-                id: "",
-                calorie: response.calories,
-                fat: response.totalNutrients.FAT.quantitiy
-                carb: response.totalNutrients.CHOCDF.quantity,
-                protein: response.totalNutrients.PRCNT.quantity,
-                fiber: response.totalNutrients.FIBTG.quantity
-            }
-            return [response];
+            food.db_type = "edamam";
+            food.calorie = response.calories;
+            food.fat = response.totalNutrients.FAT.quantitiy;
+            food.carb = response.totalNutrients.CHOCDF.quantity;
+            food.protein = response.totalNutrients.PRCNT.quantity;
+            food.fiber = response.totalNutrients.FIBTG.quantity;
+            return [food];
         });
     }
 };
