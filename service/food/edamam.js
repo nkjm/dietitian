@@ -75,7 +75,7 @@ module.exports = class ServiceFoodEdamam {
                         name: entity.food.label
                     });
                 });
-            } else if (response.body.hints || response.body.hints.length > 0){
+            } else if (response.body.hints && response.body.hints.length > 0){
                 let measureURI, quantity;
                 response.body.hints[0].measures.map((measure) => {
                     if (measure.label == "Whole"){
