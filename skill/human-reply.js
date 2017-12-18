@@ -10,7 +10,6 @@ module.exports = class SkillHumanReply {
     constructor(){
         this.required_parameter = {
             user_id: {},
-            question: {},
             answer: {
                 message_to_confirm: {
                     text: "では回答をお願いします。"
@@ -49,6 +48,7 @@ module.exports = class SkillHumanReply {
         }
 
         this.optional_parameter = {
+            question: {},
             is_new_intent: {
                 message_to_confirm: {
                     type: "template",
