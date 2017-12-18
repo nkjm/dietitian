@@ -16,6 +16,8 @@ const nlu = new Nlu({
 
 module.exports = class SkillKeepDietRecord {
     constructor(){
+        this.clear_context_on_finish = true;
+        
         this.required_parameter = {
             diet_type: {
                 message_to_confirm: lmo.create_template_button_message({
