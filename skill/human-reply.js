@@ -10,11 +10,32 @@ module.exports = class SkillHumanReply {
     constructor(){
         this.required_parameter = {
             user_id: {},
-            answer: {
+            answer_message: {
                 message_to_confirm: {
-                    text: "では回答をお願いします。"
+                    text: "ではメッセージをお願いします。"
+                },
+                parser: (value, bot, event, context, resolve, reject) => {
+                    if (["text", "sticker", "location"].includes(event.message.type)){
+                        let answer_message = JSON.parse(JSON.stringify(event.message));
+                        delete answer_message.id;
+                        return resolve(answer_message);
+                    } else {
+                        return reject();
+                    }
+                },
+                reaction: (error, value, bot, event, context, resolve, reject) => {
+                    if (error) return resolve();
+
+                    if (event.message.type == "text"){
+                        bot.collect("enable_learning");
+                    }
+                    return resolve();
                 }
-            },
+            }
+        }
+
+        this.optional_parameter = {
+            question: {},
             enable_learning: {
                 message_to_confirm: {
                     type: "template",
@@ -44,11 +65,7 @@ module.exports = class SkillHumanReply {
                     bot.collect("is_new_intent");
                     return resolve();
                 }
-            }
-        }
-
-        this.optional_parameter = {
-            question: {},
+            },
             is_new_intent: {
                 message_to_confirm: {
                     type: "template",
@@ -72,7 +89,7 @@ module.exports = class SkillHumanReply {
                             context.confirmed.question,
                             "robot-reply",
                             context.confirmed.question,
-                            context.confirmed.answer
+                            context.confirmed.answer_message.text
                         ).then((response) => {
                             bot.queue({
                                 type: "text",
@@ -113,7 +130,7 @@ module.exports = class SkillHumanReply {
                             context.confirmed.question,
                             "robot-reply",
                             context.confirmed.question,
-                            context.confirmed.answer
+                            context.confirmed.answer_message.text
                         ).then((response) => {
                             bot.queue({
                                 type: "text",
@@ -187,9 +204,7 @@ module.exports = class SkillHumanReply {
         }));
 
         // -> Reply to original user.
-        tasks.push(bot.send(context.confirmed.user_id, {
-            text: context.confirmed.answer
-        }));
+        tasks.push(bot.send(context.confirmed.user_id, context.confirmed.answer_message));
 
         return Promise.all(tasks).then((response) => {
             return resolve();
