@@ -56,7 +56,7 @@ module.exports = class SkillActivateAccount {
         this.clear_context_on_finish = true;
     }
 
-    finish(bot, event, context, resolve, reject) => {
+    finish(bot, event, context, resolve, reject){
         let message;
         if (context.confirmed.activate == "いいえ"){
             message = {
