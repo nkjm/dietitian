@@ -48,6 +48,9 @@ module.exports = class SkillActivateAccount {
                             });
                         }).then((response) => {
                             return resolve()
+                        }).catch((exception) => {
+                            debug(exception);
+                            return reject(exception);
                         })
                     }
                 }
