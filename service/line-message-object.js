@@ -1,6 +1,14 @@
 "use strict";
 
 module.exports = class ServiceLineMessageObject {
+    /**
+    Method to create template button message object.
+    @method
+    @param {Object} options - Option object
+    @param {String} alt_text - Alt text of the message.
+    @param {String} text - Text of the message.
+    @param {Array.<String>} labels - String array which will be used as button label and text.
+    */
     static create_template_button_message(options){
         let mo = {
             type: "template",
