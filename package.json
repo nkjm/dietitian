@@ -26,7 +26,7 @@
     "gulp-zip": "^4.0.0",
     "jsforce": "^1.8.0",
     "line-login": "^1.0.5",
-    "line-pay": "^1.0.0",
+    "line-pay": "^1.0.1",
     "mecabaas-client": "^1.0.3",
     "memory-cache": "^0.2.0",
     "moment": "^2.20.0",
