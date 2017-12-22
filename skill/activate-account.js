@@ -1,7 +1,7 @@
 "use javascript";
 
 const debug = require("debug")("bot-express:skill");
-const lmo = require("line-message-object");
+const lmo = require("../service/line-message-object");
 const line_pay = require("line-pay");
 const user_db = require("../service/user");
 Promise = require("bluebird");
