@@ -58,7 +58,7 @@ app.use("/webhook", bot_express({
     },
     memory: {
         type: "memory-cache",
-        retention: 600
+        retention: Number(process.env.MEMORY_RETENTION)
     },
     line_channel_secret: process.env.LINE_CHANNEL_SECRET,
     line_access_token: process.env.LINE_ACCESS_TOKEN,

@@ -59,6 +59,13 @@ class ServiceSalesforce {
             return conn.query(query);
         });
     }
+
+    delete(sobject, id){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
+            return conn.sobject(sobject).destroy(id);
+        });
+    }
 }
 
 module.exports = new ServiceSalesforce();

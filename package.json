@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
+    "test": "mocha --exit",
     "start": "node index.js"
   },
   "dependencies": {
@@ -34,5 +35,10 @@
     "request": "^2.75.0",
     "serve-favicon": "^2.3.0",
     "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^4.0.1"
   }
 }

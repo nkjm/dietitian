@@ -31,44 +31,41 @@ router.get('/confirm', (req, res, next) => {
         // Confirm payment.
         return pay.confirm({
             transactionId: req.query.transactionId,
-            amount: response.amount,
-            currency: response.currency
+            amount: order.amount,
+            currency: order.currency
+        });
+    }).then((response) => {
+        // Update order status to captured.
+        return user_db.save_order({
+            transaction_id: order.transaction_id,
+            status: "captured"
         });
     }).then((response) => {
         // Notify user that payment has been completed.
-        const url = `http://localhost:${process.env.PORT || 5000}/webhook`;
-        const body = {
-            events: [{
-                type: "bot-express:push",
-                timestamp: Date.now(),
-                to: order.user_id,
-                intent: {
-                    name: "simple-response",
-                    fulfillment: {
-                        messages: [{
-                            speech: `${order.amount}円を決済しました。`
-                        }]
-                    }
+        let event = {
+            type: "bot-express:push",
+            timestamp: Date.now(),
+            to: {
+                type: "user",
+                userId: order.user_id,
+            },
+            intent: {
+                name: "simple-response",
+                fulfillment: {
+                    messages: [{
+                        speech: `${order.amount}円を決済しました。`
+                    }]
                 }
-            }]
-        }
-        const signature = crypto.createHmac('sha256', process.env.LINE_CHANNEL_SECRET).update(JSON.stringify(body)).digest('base64');
-        const headers = {
-            "X-Line-Signature": signature
-        }
-        request.postAsync({
-            url: url,
-            headers: headers,
-            body: body,
-            json: true
-        }).then((response) => {
-            if (response.statusCode == 200){
-                res.send("決済が完了しました。この画面は閉じてOKです。");
-            } else {
-                debug(response.body);
-                res.sendStatus(500);
             }
-        })
+        }
+        return line_event.fire(event);
+    }).then((response) => {
+        if (response.statusCode == 200){
+            res.send("決済が完了しました。この画面は閉じてOKです。");
+        } else {
+            debug(response.body);
+            res.sendStatus(500);
+        }
     })
 });
 

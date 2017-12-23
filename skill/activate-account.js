@@ -36,12 +36,13 @@ module.exports = class SkillActivateAccount {
                         // Reserve payment via LINE Pay API
                         return pay.reserve(options).then((response) => {
                             context.confirmed.transaction_id = response.info.transactionId;
+                            context.confirmed.order_id = options.orderId;
                             context.confirmed.payment_url = response.info.paymentUrl.app;
 
                             // Save order to order database.
-                            user_db.reserve_order({
+                            return user_db.save_order({
                                 order_id: options.orderId,
-                                transacation_id: response.info.transactionId,
+                                transaction_id: response.info.transactionId,
                                 amount: options.amount,
                                 currency: options.currency,
                                 user_id: bot.extract_sender_id()
@@ -49,14 +50,13 @@ module.exports = class SkillActivateAccount {
                         }).then((response) => {
                             return resolve()
                         }).catch((exception) => {
-                            debug(exception);
                             return reject(exception);
                         })
                     }
                 }
             }
         }
-        this.clear_context_on_finish = true;
+        //this.clear_context_on_finish = true;
     }
 
     finish(bot, event, context, resolve, reject){
