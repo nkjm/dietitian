@@ -16,7 +16,7 @@ module.exports = class SkillActivateAccount {
     constructor(){
         this.required_parameter = {
             activate: {
-                message_to_confirm: lmo.create_template_button_message({
+                message_to_confirm: lmo.create_template_confirm_message({
                     text: "サブスクリプションを購入しますか？",
                     altText: "サブスクリプションを購入しますか？",
                     labels: ["はい", "いいえ"]
@@ -30,6 +30,7 @@ module.exports = class SkillActivateAccount {
                             amount: 1,
                             currency: "JPY",
                             confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
+                            confirmUrlType: "SERVER",
                             orderId: bot.extract_sender_id() + "-" + Date.now()
                         }
 
@@ -37,7 +38,7 @@ module.exports = class SkillActivateAccount {
                         return pay.reserve(options).then((response) => {
                             context.confirmed.transaction_id = response.info.transactionId;
                             context.confirmed.order_id = options.orderId;
-                            context.confirmed.payment_url = response.info.paymentUrl.app;
+                            context.confirmed.payment_url = response.info.paymentUrl.web;
 
                             // Save order to order database.
                             return user_db.save_order({

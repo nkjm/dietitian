@@ -13,12 +13,10 @@ Promise = require('bluebird');
 
 class ServiceUser {
 
-    static get_order_reservation(transaction_id){
-        return db.retrieve("diet_order__c/transaction_id__c", transaction_id).then((response) => {
-            if (!response.records){
-                return null
-            }
+    static get_order_reservation(order_id){
+        return db.retrieve("diet_order__c/order_id__c", order_id).then((order__c) => {
             let order = {
+                id: order__c.Id,
                 transaction_id: order__c.transaction_id__c,
                 order_id: order__c.order_id__c,
                 amount: order__c.amount__c,
@@ -42,7 +40,15 @@ class ServiceUser {
             currency__c: order.currency,
             status__c: order.status || "reserved"
         }
-        return db.upsert("diet_order__c", diet_order__c, "transaction_id__c");
+        return db.upsert("diet_order__c", diet_order__c, "order_id__c");
+    }
+
+    static update_order_status(order){
+        let diet_order__c = {
+            Id: order.id,
+            status__c: order.status
+        }
+        return db.update("diet_order__c", diet_order__c);
     }
 
     static get_calorie_to_go(user_id){

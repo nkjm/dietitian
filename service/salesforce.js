@@ -46,6 +46,13 @@ class ServiceSalesforce {
         });
     }
 
+    update(sobject, data){
+        return this.done_connection.then((credential) => {
+            const conn = new jsforce.Connection(credential);
+            return conn.sobject(sobject).update(data);
+        });
+    }
+
     retrieve(sobject, id){
         return this.done_connection.then((credential) => {
             const conn = new jsforce.Connection(credential);

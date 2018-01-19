@@ -24,7 +24,20 @@ module.exports = class SkillSimpleResponse {
                 message = context.intent.fulfillment.messages[offset].payload;
             }
         }
-        return bot.reply(message).then((response) => {
+
+        let done_reply;
+
+        // Send question to the user.
+        if (context._flow == "push"){
+            debug("We use send method to collect parameter since this is push flow.");
+            debug("Reciever userId is " + event.to[`${event.to.type}Id`]);
+            done_reply = bot.send(event.to[`${event.to.type}Id`], message);
+        } else {
+            debug("We use reply method to collect parameter.");
+            done_reply = bot.reply(message);
+        }
+
+        done_reply.then((response) => {
             return resolve();
         });
     }

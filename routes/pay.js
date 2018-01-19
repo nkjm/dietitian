@@ -8,6 +8,7 @@ const request = require("request");
 const debug = require("debug")("bot-express:route");
 const line_pay = require("line-pay");
 const user_db = require("../service/user");
+const line_event = require("../service/line-event");
 Promise = require("bluebird");
 Promise.promisifyAll(request);
 
@@ -21,14 +22,14 @@ const pay = new line_pay({
 Payment confirm URL
 */
 router.get('/confirm', (req, res, next) => {
-
-    debug(req.body);
-
     // Get reserved info
     let order;
-    user_db.get_order_reservation(req.query.transactionId).then((response) => {
+    debug(`Transaction Id is ${req.query.transactionId}`);
+    debug(`Order Id is ${req.query.orderId}`);
+    user_db.get_order_reservation(req.query.orderId).then((response) => {
         order = response;
         // Confirm payment.
+        debug(`Going to confirm/capture payment...`);
         return pay.confirm({
             transactionId: req.query.transactionId,
             amount: order.amount,
@@ -36,8 +37,9 @@ router.get('/confirm', (req, res, next) => {
         });
     }).then((response) => {
         // Update order status to captured.
-        return user_db.save_order({
-            transaction_id: order.transaction_id,
+        debug(`Going to save order to database...`);
+        return user_db.update_order_status({
+            id: order.id,
             status: "captured"
         });
     }).then((response) => {
@@ -53,19 +55,20 @@ router.get('/confirm', (req, res, next) => {
                 name: "simple-response",
                 fulfillment: {
                     messages: [{
-                        speech: `${order.amount}円を決済しました。`
+                        type: 0,
+                        speech: `${order.amount}円の決済が完了し、アカウントがアクティベートされました。`
                     }]
                 }
             }
         }
+        debug(`Going to notify to user that payment has been completed.`);
+        debug(event);
         return line_event.fire(event);
     }).then((response) => {
-        if (response.statusCode == 200){
-            res.send("決済が完了しました。この画面は閉じてOKです。");
-        } else {
-            debug(response.body);
-            res.sendStatus(500);
-        }
+        res.sendStatus(200);
+    }).catch((response) => {
+        debug(response);
+        res.sendStatus(500);
     })
 });
 
