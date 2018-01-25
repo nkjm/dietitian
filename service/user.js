@@ -14,7 +14,7 @@ Promise = require('bluebird');
 class ServiceUser {
 
     static check_subscription(user_id){
-        return db.query(`select id from diet_order__c where user_id__c = '${user_id}' and status = 'captured'`).then((response) => {
+        return db.query(`select id from diet_order__c where user_id__c = '${user_id}' and status__c = 'captured'`).then((response) => {
             if (response.records && response.records.length > 0){
                 return true;
             }
