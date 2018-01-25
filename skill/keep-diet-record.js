@@ -17,7 +17,7 @@ const nlu = new Nlu({
 module.exports = class SkillKeepDietRecord {
     constructor(){
         this.clear_context_on_finish = true;
-        
+
         this.required_parameter = {
             diet_type: {
                 message_to_confirm: lmo.create_template_button_message({
@@ -30,45 +30,41 @@ module.exports = class SkillKeepDietRecord {
                     if (value == "昼食") return resolve({label: "昼食", name: "lunch"});
                     if (value == "夕食") return resolve({label: "夕食", name: "dinner"});
                     reject();
-                },
-                reaction: (error, value, bot, event, context, resolve, reject) => {
-                    if (error) return resolve();
-
-                    let message;
-                    if (context._flow == "push"){
-                        message = {
-                            type: "text",
-                            text: `今日の${value.label}は何を食べたのかしら？`
-                        }
-                    } else {
-                        let sticker_messages = [{
-                            type: "sticker",
-                            packageId: 2,
-                            stickerId: 179
-                        },{
-                            type: "sticker",
-                            packageId: 2,
-                            stickerId: 172
-                        },{
-                            type: "sticker",
-                            packageId: 1,
-                            stickerId: 13
-                        }];
-                        bot.queue(lmo.random(sticker_messages));
-                        let messages = [{
-                            type: "text",
-                            text: "わざわざどうも。何を食べたの？"
-                        },{
-                            type: "text",
-                            text: "これはこれは。では教えてください。"
-                        }];
-                        message = lmo.random(messages);
-                    }
-                    bot.change_message_to_confirm("diet", message);
-                    resolve();
                 }
             },
             diet: {
+                message_to_confirm: (bot, event, context, resolve, reject) => {
+                    if (context._flow == "push"){
+                        let message = {
+                            type: "text",
+                            text: `今日の${value.label}は何を食べたのかしら？`
+                        }
+                        return resolve(message);
+                    }
+
+                    let sticker_messages = [{
+                        type: "sticker",
+                        packageId: 2,
+                        stickerId: 179
+                    },{
+                        type: "sticker",
+                        packageId: 2,
+                        stickerId: 172
+                    },{
+                        type: "sticker",
+                        packageId: 1,
+                        stickerId: 13
+                    }];
+                    bot.queue(lmo.random(sticker_messages));
+                    let messages = [{
+                        type: "text",
+                        text: "わざわざどうも。何を食べたの？"
+                    },{
+                        type: "text",
+                        text: "これはこれは。では教えてください。"
+                    }];
+                    return resolve(lmo.random(messages));
+                },
                 parser: (value, bot, event, context, resolve, reject) => {
                     return nlu.identify_intent(value, {session_id: bot.extract_sender_id()}).then((intent) => {
                         if (intent.name == "skipped-meal"){
@@ -116,11 +112,11 @@ module.exports = class SkillKeepDietRecord {
     }
 
     finish(bot, event, context, resolve, reject){
-        if (context.confirmed.diet == "skip"){
+        if (context.confirmed.diet === "skip"){
             // User did not eat anything.
             return bot.reply({
                 type: "text",
-                text: "なんと。そこらへんの芋か何か食べときなさい。"
+                text: "なんと。カロリーメイトか何か食べときなさい。"
             }).then((response) => {
                 return resolve();
             })
