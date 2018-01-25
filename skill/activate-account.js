@@ -18,8 +18,8 @@ module.exports = class SkillActivateAccount {
         this.required_parameter = {
             activate: {
                 message_to_confirm: lmo.create_template_confirm_message({
-                    text: "サブスクリプションを購入しますか？",
-                    altText: "サブスクリプションを購入しますか？",
+                    text: "このスキルを利用するには専属栄養士Pro（月額300円）へのアップグレードが必要です。アップグレードしますか？",
+                    altText: "このスキルを利用するには専属栄養士Pro（月額300円）へのアップグレードが必要です。アップグレードしますか？",
                     labels: ["はい", "いいえ"]
                 }),
                 reaction: (error, value, bot, event, context, resolve, reject) => {

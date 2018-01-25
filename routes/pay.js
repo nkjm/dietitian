@@ -57,7 +57,7 @@ router.get('/confirm', (req, res, next) => {
                 fulfillment: {
                     messages: [{
                         type: 0,
-                        speech: `${order.amount}円の決済が完了し、アカウントがアクティベートされました。`
+                        speech: `${order.amount}円の決済が完了し、アカウントがアップグレードされました。`
                     }]
                 }
             }

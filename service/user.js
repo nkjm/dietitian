@@ -13,6 +13,15 @@ Promise = require('bluebird');
 
 class ServiceUser {
 
+    static check_subscription(user_id){
+        return db.query(`select id from diet_order__c where user_id__c = '${user_id}' and status = 'captured'`).then((response) => {
+            if (response.records && response.records.length > 0){
+                return true;
+            }
+            return false;
+        })
+    }
+
     static get_order_reservation(order_id){
         return db.retrieve("diet_order__c/order_id__c", order_id).then((order__c) => {
             let order = {
