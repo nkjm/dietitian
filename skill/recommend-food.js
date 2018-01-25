@@ -12,9 +12,10 @@ module.exports = class SkillRecommendFood {
         return user_db.check_subscription(bot.extract_sender_id()).then((response) => {
             if (response === true){
                 context.confirmed.subscription = true;
+                debug("This user has subscription");
                 return resolve();
             }
-
+            debug("This user does not have subscription");
             context.confirmed.subscription = false;
             return resolve();
         })
