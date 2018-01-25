@@ -66,10 +66,13 @@ module.exports = class SkillActivateAccount {
     finish(bot, event, context, resolve, reject){
         let message;
         if (context.confirmed.activate == "いいえ"){
-            message = {
+            message = lmo.random([{
                 type: "text",
                 text: "なんだよ。"
-            }
+            },{
+                type: "text",
+                text: "器が小さいなー"
+            }]);
         } else {
             message = {
                 type: "template",
