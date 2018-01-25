@@ -37,7 +37,7 @@ module.exports = class SkillKeepDietRecord {
                     if (context._flow == "push"){
                         let message = {
                             type: "text",
-                            text: `今日の${value.label}は何を食べたのかしら？`
+                            text: `今日の${context.confirmed.diet_type.label}は何を食べたのかしら？`
                         }
                         return resolve(message);
                     }

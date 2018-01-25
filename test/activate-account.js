@@ -16,7 +16,7 @@ chai.use(chaiAsPromised);
 let should = chai.should();
 
 describe("Test activate-account skill", function(){
-    let user_id = "U2e250c5c3b8d3af3aa7dd9ad34ed15f9";
+    let user_id = process.env.TEST_USER_ID;
 
     describe("User agrees to activate account.", function(){
         it("should reserve payment and get transaction id. also create order record in database.", function(){
