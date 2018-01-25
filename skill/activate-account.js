@@ -25,36 +25,38 @@ module.exports = class SkillActivateAccount {
                 reaction: (error, value, bot, event, context, resolve, reject) => {
                     if (error) return resolve();
 
-                    if (value == "はい"){
-                        let options = {
-                            productName: "専属栄養士",
-                            amount: 1,
-                            currency: "JPY",
-                            confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
-                            confirmUrlType: "SERVER",
-                            orderId: bot.extract_sender_id() + "-" + Date.now()
-                        }
-
-                        // Reserve payment via LINE Pay API
-                        return pay.reserve(options).then((response) => {
-                            context.confirmed.transaction_id = response.info.transactionId;
-                            context.confirmed.order_id = options.orderId;
-                            context.confirmed.payment_url = response.info.paymentUrl.web;
-
-                            // Save order to order database.
-                            return user_db.save_order({
-                                order_id: options.orderId,
-                                transaction_id: response.info.transactionId,
-                                amount: options.amount,
-                                currency: options.currency,
-                                user_id: bot.extract_sender_id()
-                            });
-                        }).then((response) => {
-                            return resolve()
-                        }).catch((exception) => {
-                            return reject(exception);
-                        })
+                    if (value === "いいえ"){
+                        return resolve();
                     }
+
+                    let options = {
+                        productName: "専属栄養士",
+                        amount: 1,
+                        currency: "JPY",
+                        confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
+                        confirmUrlType: "SERVER",
+                        orderId: bot.extract_sender_id() + "-" + Date.now()
+                    }
+
+                    // Reserve payment via LINE Pay API
+                    return pay.reserve(options).then((response) => {
+                        context.confirmed.transaction_id = response.info.transactionId;
+                        context.confirmed.order_id = options.orderId;
+                        context.confirmed.payment_url = response.info.paymentUrl.web;
+
+                        // Save order to order database.
+                        return user_db.save_order({
+                            order_id: options.orderId,
+                            transaction_id: response.info.transactionId,
+                            amount: options.amount,
+                            currency: options.currency,
+                            user_id: bot.extract_sender_id()
+                        });
+                    }).then((response) => {
+                        return resolve()
+                    }).catch((exception) => {
+                        return reject(exception);
+                    })
                 }
             }
         }
