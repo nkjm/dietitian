@@ -31,7 +31,7 @@ module.exports = class SkillActivateAccount {
 
                     let options = {
                         productName: "専属栄養士",
-                        amount: 1,
+                        amount: 300,
                         currency: "JPY",
                         confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
                         confirmUrlType: "SERVER",
@@ -68,7 +68,7 @@ module.exports = class SkillActivateAccount {
         if (context.confirmed.activate == "いいえ"){
             message = {
                 type: "text",
-                text: "無念"
+                text: "なんだよ。"
             }
         } else {
             message = {
