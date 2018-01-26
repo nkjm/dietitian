@@ -30,7 +30,7 @@ module.exports = class SkillActivateAccount {
                     }
 
                     let options = {
-                        productName: "専属栄養士",
+                        productName: "専属栄養士Pro",
                         amount: 300,
                         currency: "JPY",
                         confirmUrl: process.env.LINE_PAY_CONFIRM_URL,
